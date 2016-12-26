@@ -1,0 +1,60 @@
+package com.katruk.web.controller;
+
+import static java.util.Objects.isNull;
+
+import com.katruk.web.PageAttribute;
+import com.katruk.web.controller.commands.LoginCommand;
+import com.katruk.web.controller.commands.LogoutCommand;
+import com.katruk.web.controller.commands.RegistrationCommand;
+import com.katruk.web.controller.commands.UnknownCommand;
+
+import java.util.HashMap;
+
+import javax.servlet.http.HttpServletRequest;
+
+final class DispatcherHelper implements PageAttribute {
+
+  private HashMap<String, ICommand> commands;
+
+  DispatcherHelper() {
+    commands = new HashMap<String, ICommand>();
+
+    commands.put("login", new LoginCommand());
+    commands.put("registration", new RegistrationCommand());
+    commands.put("logout", new LogoutCommand());
+
+//    commands.put("redirectToProfile", new RedirectToProfileCommand());
+//
+//    commands.put("getAllHumans", new GetAllHumansCommand());
+//    commands.put("getAllStudents", new GetAllStudentsCommand());
+//    commands.put("getAllTeachers", new GetAllTeachersCommand());
+//    commands.put("getAllDisciplines", new GetAllDisciplinesCommand());
+//
+//    commands.put("setRole", new SetRoleCommand());
+//    commands.put("setPosition", new SetPositionCommand());
+//    commands.put("setContract", new SetContractCommand());
+//
+//    commands.put("redirectToTeacherDisciplines", new RedirectToTeacherDisciplinesCommand());
+//    commands.put("redirectToConfirmed", new RedirectToConfirmedCommand());
+//    commands.put("redirectToEvaluation", new RedirectToEvaluationCommand());
+//    commands.put("feedback", new FeedbackCommand());
+//    commands.put("addDiscipline", new AddDisciplineCommand());
+//
+//    commands.put("redirectToMarks", new RedirectToMarksCommand());
+//    commands.put("redirectToDeclaredDisciplines", new RedirectToDeclaredDisciplinesCommand());
+//
+//    commands.put("declared", new DeclaredCommand());
+//    commands.put("revoked", new RevokedCommand());
+//    commands.put("confirmed", new ConfirmedCommand());
+//    commands.put("deleted", new DeletedCommand());
+  }
+
+  ICommand getCommand(final HttpServletRequest request) {
+    ICommand resultCommand = this.commands.get(request.getParameter("command"));
+    if (isNull(resultCommand)) {
+      resultCommand = new UnknownCommand();
+    }
+    System.out.println(">>> getCommand resultCommand="+resultCommand);
+    return resultCommand;
+  }
+}
