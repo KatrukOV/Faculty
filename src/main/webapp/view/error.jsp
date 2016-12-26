@@ -1,16 +1,13 @@
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jstl/fmt" %>
 <html>
 <head>
-    <title>Error</title>
+    <title><fmt:message key="error.title"/></title>
 </head>
-
 <body>
-<h1>
+<h3>
     Sorry
-    <label>Error: ${error}</label>
-</h1>
-
+    Error: ${error}
+</h3>
 <a href="/index.jsp"><input type="button" value="back"/></a>
-
 </body>
-
 </html>

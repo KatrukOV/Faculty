@@ -11,15 +11,15 @@ import javax.servlet.http.HttpServletResponse;
 public class UnknownCommand implements ICommand {
 
   private final String ERROR_LOGIN = "Unknown Command";
-//  private final Logger logger;
+  private final Logger logger;
 
   public UnknownCommand() {
-//    this.logger = Logger.getLogger(UnknownCommand.class);
+    this.logger = Logger.getLogger(UnknownCommand.class);
   }
 
   @Override
   public String execute(HttpServletRequest request, HttpServletResponse response) {
-//    this.logger.error(ERROR_LOGIN);
+    this.logger.error(ERROR_LOGIN);
     System.out.println(">>> UnknownCommand execute");
     request.setAttribute("error", ERROR_LOGIN);
     return Config.getInstance().getValue(Config.ERROR_PAGE);

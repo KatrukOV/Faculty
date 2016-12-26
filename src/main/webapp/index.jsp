@@ -10,12 +10,11 @@
 <!DOCTYPE html>
 <html lang="${locate}">
 <head>
-    <title>
-        <fmt:message key="index.authorization"/>
-    </title>
+    <title><fmt:message key="index.title"/></title>
 </head>
 
 <h3><fmt:message key="index.welcome"/></h3>
+<h3><fmt:message key="index.do"/></h3>
 
 <body style="text-align:center;">
 <form>
@@ -25,7 +24,7 @@
     </select>
 </form>
 <hr/>
-<form action="/dispatcher" method="POST">
+<form method="POST">
     <label for="username"><fmt:message key="index.username"/>: </label>
     <input type="text" id="username" name="username">
     <br>
@@ -37,9 +36,13 @@
     <input type="submit" name="submit" value="${buttonValue}">
 </form>
 <hr/>
-<form action="/dispatcher" method="GET">
-    <input type="hidden" name="command" value="registration"/>
-    <input type="submit" value="<fmt:message key="index.registration"/>"/>
-</form>
+<%--<form action="/dispatcher" method="GET">--%>
+<%--<input type="hidden" name="command" value="registration"/>--%>
+<%--<input type="submit" value="<fmt:message key="index.registration"/>"/>--%>
+<%--</form>--%>
+<a href="view/registration.jsp">
+    <input type="button" value="<fmt:message key="index.registration"/>"/>
+</a>
+
 </body>
 </html>
