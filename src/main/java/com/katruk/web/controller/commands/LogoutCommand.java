@@ -4,18 +4,26 @@ import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.ICommand;
 
+import org.apache.log4j.Logger;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class LogoutCommand implements ICommand, PageAttribute {
 
-  private final String logout = "User was logout";
+  private final Logger logger;
+  private final String LOGOUT = "User was logout";
+
+  public LogoutCommand() {
+    this.logger = Logger.getLogger(LogoutCommand.class);
+  }
 
   @Override
   public String execute(HttpServletRequest request, HttpServletResponse response) {
-//    request.getSession().removeAttribute(USERNAME);
+    request.getSession().removeAttribute(USERNAME);
     request.getSession().invalidate();
-    request.setAttribute("info", logout);
+    request.setAttribute(INFO, LOGOUT);
+    logger.info(LOGOUT);
     return Config.getInstance().getValue(Config.INDEX);
   }
 }

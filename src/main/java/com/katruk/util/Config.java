@@ -8,10 +8,13 @@ public class Config {
   private static final String BUNDLE_NAME = "config";
   private ResourceBundle configFile;
 
-  public static final String DRIVER = "driver";
-  public static final String URL = "url";
+  static final String DRIVER = "driver";
+  static final String URL = "url";
+
   public static final String INDEX = "index";
   public static final String REGISTRATION = "registration";
+  public static final String PROFILE = "profile";
+
 
   public static final String ADMIN_PROFILE = "ADMIN_PROFILE";
   public static final String ALL_HUMANS = "ALL_HUMANS";

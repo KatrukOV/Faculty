@@ -2,9 +2,7 @@
 <head>
     <title>Registration</title>
 </head>
-
 <body style="text-align:center;">
-
 <h3>Create your login</h3>
 <hr/>
 <form method="POST">

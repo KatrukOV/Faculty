@@ -7,7 +7,7 @@
 <fmt:setLocale value="${locate}"/>
 <fmt:setBundle basename="page"/>
 
-<!DOCTYPE html>
+<%--<!DOCTYPE html>--%>
 <html lang="${locate}">
 <head>
     <title><fmt:message key="index.title"/></title>
@@ -23,6 +23,12 @@
         <option value="ru" ${locate == 'ru' ? 'selected' : ''}>Russia</option>
     </select>
 </form>
+<hr/>
+
+<c:if test="${not empty info}">
+<p>Info :<c:out value="${info}"/><p>
+    </c:if>
+
 <hr/>
 <form method="POST">
     <label for="username"><fmt:message key="index.username"/>: </label>
