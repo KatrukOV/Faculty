@@ -3,9 +3,13 @@ package com.katruk.web;
 public interface PageAttribute {
 
   String USER = "user";
+  String LAST_NAME = "lastName";
+  String NAME = "name";
+  String PATRONYMIC = "patronymic";
   String USER_DTO = "userDto";
   String USERNAME = "username";
   String PASSWORD = "password";
+  String CONFIRM_PASSWORD = "confirmPassword";
   String ROLE = "role";
 
   String HUMAN = "human";
@@ -13,6 +17,7 @@ public interface PageAttribute {
   String TEACHER = "teacher";
 
   String CONTRACT = "contract";
+  String FORM = "form";
   String POSITION = "position";
 
   String DISCIPLINE = "discipline";

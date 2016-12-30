@@ -1,7 +1,9 @@
 package com.katruk.web.controller.commands;
 
+import com.katruk.entity.User;
 import com.katruk.entity.dto.UserDto;
 import com.katruk.exception.DaoException;
+import com.katruk.exception.ServiceException;
 import com.katruk.exception.ValidateException;
 import com.katruk.service.UserService;
 import com.katruk.service.impl.UserServiceImpl;
@@ -31,8 +33,13 @@ public class RegistrationCommand implements ICommand, PageAttribute {
 
   @Override
   public String execute(HttpServletRequest request, HttpServletResponse response) {
+    System.out.println(">>> Begin reg");
     String page = Config.getInstance().getValue(Config.INDEX);
-    UserDto userDto = (UserDto) request.getAttribute(USER_DTO);
+//    UserDto userDto = (UserDto) request.getAttribute(USER_DTO);
+    UserDto userDto = getUserDtoFromRequest(request);
+
+    System.out.println(">>> userDto=" + userDto);
+
     try {
       this.userValidator.validate(userDto);
     } catch (ValidateException e) {
@@ -42,7 +49,7 @@ public class RegistrationCommand implements ICommand, PageAttribute {
     }
     try {
       this.userService.create(userDto);
-    } catch (DaoException e) {
+    } catch (ServiceException e) {
       request.setAttribute(ERROR, e.getMessage());
       logger.error(e);
       page = Config.getInstance().getValue(Config.ERROR_PAGE);
@@ -50,5 +57,17 @@ public class RegistrationCommand implements ICommand, PageAttribute {
     request.setAttribute(INFO, REGISTRATION_OK);
     logger.info(REGISTRATION_OK);
     return page;
+  }
+
+  private UserDto getUserDtoFromRequest(final HttpServletRequest request) {
+    final UserDto userDto = new UserDto();
+    userDto.setLastName(request.getParameter(LAST_NAME));
+    userDto.setName(request.getParameter(NAME));
+    userDto.setPatronymic(request.getParameter(PATRONYMIC));
+    userDto.setUsername(request.getParameter(USERNAME));
+    userDto.setPassword(request.getParameter(PASSWORD));
+    userDto.setConfirmPassword(request.getParameter(CONFIRM_PASSWORD));
+    userDto.setRole(User.Role.STUDENT.name());
+    return userDto;
   }
 }

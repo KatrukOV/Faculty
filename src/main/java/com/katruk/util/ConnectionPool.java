@@ -9,7 +9,7 @@ import org.apache.tomcat.jdbc.pool.PoolProperties;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class ConnectionPool {
+public final class ConnectionPool {
 
   //max amount of thread that are allowed to idle at the same time
   private final int MAX_AMOUNT_OF_THREAD = 10;

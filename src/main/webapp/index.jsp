@@ -30,7 +30,7 @@
     </c:if>
 
 <hr/>
-<form method="POST">
+<form action="/dispatcher" method="POST">
     <label for="username"><fmt:message key="index.username"/>: </label>
     <input type="text" id="username" name="username">
     <br>

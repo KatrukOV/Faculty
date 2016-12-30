@@ -2,7 +2,7 @@ package com.katruk.util;
 
 import java.util.ResourceBundle;
 
-public class Config {
+public final class Config {
 
   private static Config instance = new Config();
   private static final String BUNDLE_NAME = "config";

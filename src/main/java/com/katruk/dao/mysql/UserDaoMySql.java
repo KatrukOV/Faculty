@@ -12,11 +12,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.NoSuchElementException;
 
 public class UserDaoMySql implements UserDao {
 
   private final ConnectionPool connectionPool;
-//  private final Logger logger;
+  private final Logger logger;
 
   private final String CREATE_PERSON =
       "INSERT INTO person (last_name, name, patronymic) VALUES (?, ?, ?);";
@@ -24,41 +25,43 @@ public class UserDaoMySql implements UserDao {
   private final String GET_PERSON_ID =
       "SELECT id "
       + "FROM person "
-      + "WHERE last_name = ? AND name = ? AND patronymic = ?"
-      + "ORDER BY id DESC"
+      + "WHERE last_name = ? AND name = ? AND patronymic = ? "
+      + "ORDER BY id DESC "
       + "LIMIT 1;";
 
   private final String CREATE_USER =
       "INSERT INTO user (person_id, username, password, role) VALUES (?, ?, ?, ?);";
 
   private final String GET_USER_BY_USERNAME =
-      "SELECT p.last_name, p.name, p.patronymic, u.username, u.password, u.role"
-      + "FROM user AS u"
-      + "INNER JOIN person AS p"
-      + "ON u.person_id = p.id"
+      "SELECT p.last_name, p.name, p.patronymic, u.username, u.password, u.role "
+      + "FROM user AS u "
+      + "INNER JOIN person AS p "
+      + "ON u.person_id = p.id "
       + "WHERE u.username = ?;";
 
   public UserDaoMySql() {
     this.connectionPool = ConnectionPool.getInstance();
-//    this.logger = Logger.getLogger(UserDaoMySql.class);
+    this.logger = Logger.getLogger(UserDaoMySql.class);
   }
 
+  @Override
   public User getUserByUsername(String username) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(GET_USER_BY_USERNAME)) {
-//        statement.setString(1, username);
+
+        statement.setString(1, username);
+
         return getUserByStatement(statement);
       } catch (SQLException e) {
         connection.rollback();
-//        logger.error("", e);
+        logger.error("", e);
         throw new DaoException("", e);
       }
     } catch (SQLException e) {
-//      logger.error("", e);
+      logger.error("", e);
       throw new DaoException("", e);
     }
   }
-
 
   public void create(User user) throws DaoException {
     Person person = user.getPerson();
@@ -67,7 +70,7 @@ public class UserDaoMySql implements UserDao {
       saveUser(connection, person, user);
       connection.commit();
     } catch (SQLException e) {
-//      logger.error("", e);
+      logger.error("", e);
       throw new DaoException("", e);
     }
   }
@@ -80,7 +83,7 @@ public class UserDaoMySql implements UserDao {
       statement.execute();
     } catch (SQLException e) {
       connection.rollback();
-//      logger.error("", e);
+      logger.error("", e);
       throw new DaoException("", e);
     }
   }
@@ -95,7 +98,7 @@ public class UserDaoMySql implements UserDao {
       statement.execute();
     } catch (SQLException e) {
       connection.rollback();
-//      logger.error("", e);
+      logger.error("", e);
       throw new DaoException("", e);
     }
   }
@@ -111,10 +114,9 @@ public class UserDaoMySql implements UserDao {
       }
     } catch (SQLException e) {
       connection.rollback();
-//      logger.error("", e);
+      logger.error("", e);
       throw new DaoException("", e);
     }
-    //todo
     return person.getId();
   }
 
@@ -133,11 +135,9 @@ public class UserDaoMySql implements UserDao {
         return user;
       }
     } catch (SQLException e) {
-//      logger.error("", e);
+      logger.error("", e);
       throw new DaoException("", e);
     }
-    // TODO: return
-    return null;
-//    throw new DaoException("User not exist");
+    throw new DaoException("User not exist", new NoSuchElementException());
   }
 }

@@ -4,21 +4,27 @@ import static java.util.Objects.isNull;
 
 import com.katruk.entity.dto.UserDto;
 import com.katruk.exception.DaoException;
+import com.katruk.exception.ServiceException;
 import com.katruk.exception.ValidateException;
 import com.katruk.service.UserService;
 import com.katruk.service.impl.UserServiceImpl;
 
+import org.apache.log4j.Logger;
+
 public class UserValidator {
 
+  private final UserService userService;
+  private final Logger logger;
   private final int minSizeLastName = 5;
   private final int minSizeName = 3;
   private final int minSizePatronymic = 6;
   private final int minSizeUsername = 4;
   private final int minSizePassword = 4;
-  private final UserService userService;
+
 
   public UserValidator() {
     this.userService = new UserServiceImpl();
+    this.logger = Logger.getLogger(UserValidator.class);
   }
 
   public void validate(UserDto userDto) throws ValidateException {
@@ -72,7 +78,7 @@ public class UserValidator {
   private void existsUser(UserDto userDto) throws ValidateException {
     try {
       this.userService.getUserByUsername(userDto.getUsername());
-    } catch (DaoException e) {
+    } catch (ServiceException e) {
       // TODO: 16.12.2016 log
       return;
     }

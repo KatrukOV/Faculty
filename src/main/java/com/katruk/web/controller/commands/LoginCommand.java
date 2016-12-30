@@ -2,9 +2,17 @@ package com.katruk.web.controller.commands;
 
 import static java.util.Objects.isNull;
 
+import com.katruk.entity.Student;
+import com.katruk.entity.Teacher;
+import com.katruk.entity.User;
 import com.katruk.entity.dto.UserDto;
 import com.katruk.exception.DaoException;
+import com.katruk.exception.ServiceException;
+import com.katruk.service.StudentService;
+import com.katruk.service.TeacherService;
 import com.katruk.service.UserService;
+import com.katruk.service.impl.StudentServiceImpl;
+import com.katruk.service.impl.TeacherServiceImpl;
 import com.katruk.service.impl.UserServiceImpl;
 import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
@@ -24,9 +32,13 @@ public class LoginCommand implements ICommand, PageAttribute {
   private final int MaxInactiveInterval = 60 * 60 * 24;
   private final Logger logger;
   private final UserService userService;
+  private final StudentService studentService;
+  private final TeacherService teacherService;
 
   public LoginCommand() {
     this.userService = new UserServiceImpl();
+    this.studentService = new StudentServiceImpl();
+    this.teacherService = new TeacherServiceImpl();
     this.logger = Logger.getLogger(LoginCommand.class);
   }
 
@@ -43,14 +55,25 @@ public class LoginCommand implements ICommand, PageAttribute {
       this.logger.error(ERROR_LOGIN_EMPTY);
     } else {
       try {
-        UserDto userDto = this.userService.getUserByUsername(username);
-        if (userDto.getPassword().equals(DigestUtils.sha1Hex(password))) {
-          session.setAttribute(USERNAME, userDto.getUsername());
-          session.setAttribute(ROLE, userDto.getRole());
+        final User user = this.userService.getUserByUsername(username);
+        if (user.getPassword().equals(DigestUtils.sha1Hex(password))) {
+          session.setAttribute(LAST_NAME, user.getPerson().getLastName());
+          session.setAttribute(NAME, user.getPerson().getName());
+          session.setAttribute(USERNAME, user.getUsername());
+          session.setAttribute(ROLE, user.getRole());
           session.setMaxInactiveInterval(MaxInactiveInterval);
+          if (user.getRole().equals(User.Role.STUDENT)) {
+            final Student student = this.studentService.getStudentById(user.getId());
+            session.setAttribute(CONTRACT, student.getContract());
+            session.setAttribute(FORM, student.getForm());
+          }
+          if (user.getRole().equals(User.Role.TEACHER)) {
+            final Teacher teacher = this.teacherService.getTeacherById(user.getId());
+            session.setAttribute(POSITION, teacher.getPosition());
+          }
           page = Config.getInstance().getValue(Config.PROFILE);
         }
-      } catch (DaoException e) {
+      } catch (ServiceException e) {
         request.getSession().setAttribute(ERROR, ERROR_LOGIN_WRONG);
         logger.error(ERROR_LOGIN_WRONG, e);
         page = Config.getInstance().getValue(Config.ERROR_PAGE);

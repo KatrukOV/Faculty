@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Registration</title>
@@ -5,7 +6,12 @@
 <body style="text-align:center;">
 <h3>Create your login</h3>
 <hr/>
-<form method="POST">
+
+<%--<c:param name="userDto" value="${userDto}">--%>
+
+    <%--value="${userDto.name}"--%>
+<%--</c:param>--%>
+<form action="/dispatcher" method="POST">
     <label>Last name: </label>
     <input type="text" name="lastName" placeholder="Last Name"/>
     <br>
@@ -25,6 +31,9 @@
     <input type="password" name="confirmPassword" placeholder="Confirm Password"/>
     <br>
     <input type="hidden" name="command" value="registration"/>
+
+    <%--<input type="hidden" name="userDto" value="${userDto}"/>--%>
+
     <input type="submit" value="Sign up"/>
 </form>
 <hr/>
