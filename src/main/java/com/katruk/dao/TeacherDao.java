@@ -10,4 +10,5 @@ public interface TeacherDao {
 
   Optional<Teacher> getTeacherById(Long teacherId) throws DaoException;
 
+  Teacher save(Teacher teacher) throws DaoException;
 }

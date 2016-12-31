@@ -15,7 +15,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class TeacherDaoMySql implements TeacherDao {
 
@@ -23,13 +25,18 @@ public class TeacherDaoMySql implements TeacherDao {
   private final Logger logger;
 
   private final String GET_TEACHER_BY_ID =
-      "SELECT p.last_name, p.name, p.patronymic, u.username, u.password, u.role, t.position "
+      "SELECT p.id, p.last_name, p.name, p.patronymic, u.username, u.password, u.role, t.position "
       + "FROM user AS u "
       + "INNER JOIN person AS p "
       + "ON u.person_id = p.id "
       + "INNER JOIN teacher AS t "
       + "ON t.user_person_id = p.id "
-      + "WHERE t.user_person_id = ?;";
+      + "WHERE t.user_person_id = ? "
+      + "ORDER BY p.id DESC "
+      + "LIMIT 1;";
+
+  private final String CREATE_TEACHER =
+      "INSERT INTO teacher (user_person_id, position) VALUES (?, ?);";
 
   public TeacherDaoMySql() {
     this.connectionPool = ConnectionPool.getInstance();
@@ -37,12 +44,10 @@ public class TeacherDaoMySql implements TeacherDao {
   }
 
   @Override
-  public Teacher getTeacherById(Long teacherId) throws DaoException {
+  public Optional<Teacher> getTeacherById(Long teacherId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(GET_TEACHER_BY_ID)) {
-
         statement.setLong(1, teacherId);
-
         return getTeacherByStatement(statement);
       } catch (SQLException e) {
         connection.rollback();
@@ -55,7 +60,35 @@ public class TeacherDaoMySql implements TeacherDao {
     }
   }
 
-  private Teacher getTeacherByStatement(PreparedStatement statement) throws DaoException {
+  @Override
+  public Teacher save(Teacher teacher) throws DaoException {
+    try (Connection connection = this.connectionPool.getConnection()) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(CREATE_TEACHER, Statement.RETURN_GENERATED_KEYS)) {
+        statement.setLong(1, teacher.getUser().getPerson().getId());
+        statement.setString(2, teacher.getPosition().name());
+        statement.execute();
+        try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+          if (generatedKeys.next()) {
+            teacher.setId(generatedKeys.getLong(1));
+          } else {
+            throw new SQLException("Creating user failed, no ID obtained.");
+          }
+        }
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+    return teacher;
+  }
+
+  private Optional<Teacher> getTeacherByStatement(PreparedStatement statement) throws DaoException {
+    Optional<Teacher> result = Optional.empty();
     try (ResultSet resultSet = statement.executeQuery()) {
       if (resultSet.next()) {
         Teacher teacher = new Teacher();
@@ -70,12 +103,12 @@ public class TeacherDaoMySql implements TeacherDao {
         user.setRole(User.Role.valueOf(resultSet.getString("role")));
         teacher.setUser(user);
         teacher.setPosition(Teacher.Position.valueOf(resultSet.getString("position")));
-        return teacher;
+        result = Optional.of(teacher);
       }
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);
     }
-    throw new DaoException("Teacher not exist", new NoSuchElementException());
+    return result;
   }
 }
