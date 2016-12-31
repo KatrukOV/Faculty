@@ -5,8 +5,6 @@ import static java.util.Objects.isNull;
 import com.katruk.entity.Student;
 import com.katruk.entity.Teacher;
 import com.katruk.entity.User;
-import com.katruk.entity.dto.UserDto;
-import com.katruk.exception.DaoException;
 import com.katruk.exception.ServiceException;
 import com.katruk.service.StudentService;
 import com.katruk.service.TeacherService;
@@ -54,23 +52,38 @@ public class LoginCommand implements ICommand, PageAttribute {
       request.setAttribute(ERROR, ERROR_LOGIN_EMPTY);
       this.logger.error(ERROR_LOGIN_EMPTY);
     } else {
+      System.out.println(">> else ");
       try {
         final User user = this.userService.getUserByUsername(username);
+        System.out.println(">>> user="+user);
         if (user.getPassword().equals(DigestUtils.sha1Hex(password))) {
           session.setAttribute(LAST_NAME, user.getPerson().getLastName());
           session.setAttribute(NAME, user.getPerson().getName());
           session.setAttribute(USERNAME, user.getUsername());
           session.setAttribute(ROLE, user.getRole());
           session.setMaxInactiveInterval(MaxInactiveInterval);
-          if (user.getRole().equals(User.Role.STUDENT)) {
-            final Student student = this.studentService.getStudentById(user.getId());
-            session.setAttribute(CONTRACT, student.getContract());
-            session.setAttribute(FORM, student.getForm());
+          System.out.println(">>> user name="+user.getPerson().getName());
+          System.out.println(">>> user role="+user.getRole());
+          switch (user.getRole()) {
+            case STUDENT: {
+              final Student student = this.studentService.getStudentById(user.getId());
+              session.setAttribute(CONTRACT, student.getContract());
+              session.setAttribute(FORM, student.getForm());
+              break;
+            }
+            case TEACHER: {
+              final Teacher teacher = this.teacherService.getTeacherById(user.getId());
+              session.setAttribute(POSITION, teacher.getPosition());
+              break;
+            }
+            case ADMIN: {
+              System.out.println("Admin");
+              break;
+            }
+            default:
+              System.out.println(" mull ? ");
           }
-          if (user.getRole().equals(User.Role.TEACHER)) {
-            final Teacher teacher = this.teacherService.getTeacherById(user.getId());
-            session.setAttribute(POSITION, teacher.getPosition());
-          }
+
           page = Config.getInstance().getValue(Config.PROFILE);
         }
       } catch (ServiceException e) {

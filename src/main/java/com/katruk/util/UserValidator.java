@@ -80,6 +80,7 @@ public class UserValidator {
       this.userService.getUserByUsername(userDto.getUsername());
     } catch (ServiceException e) {
       // TODO: 16.12.2016 log
+      System.out.println(" !!!!!!!!! e"+e);
       return;
     }
     // TODO: 16.12.2016 log

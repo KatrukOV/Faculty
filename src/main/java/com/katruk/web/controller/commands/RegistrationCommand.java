@@ -42,6 +42,7 @@ public class RegistrationCommand implements ICommand, PageAttribute {
 
     try {
       this.userValidator.validate(userDto);
+      System.out.println(">>> no valid err");
     } catch (ValidateException e) {
       request.setAttribute(ERROR, e.getMessage());
       logger.error(e);

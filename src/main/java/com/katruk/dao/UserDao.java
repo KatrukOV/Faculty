@@ -3,10 +3,12 @@ package com.katruk.dao;
 import com.katruk.exception.DaoException;
 import com.katruk.entity.User;
 
+import java.util.Optional;
+
 public interface UserDao{
 
-  User getUserByUsername(String username) throws DaoException;
+  Optional<User> getUserByUsername(String username) throws DaoException;
 
-  void create(User user) throws DaoException;
+  User save(User user) throws DaoException;
 
 }

@@ -2,9 +2,9 @@ package com.katruk.dao.mysql;
 
 import com.katruk.dao.PersonDao;
 import com.katruk.dao.UserDao;
-import com.katruk.exception.DaoException;
 import com.katruk.entity.Person;
 import com.katruk.entity.User;
+import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
 
 import org.apache.log4j.Logger;
@@ -16,27 +16,40 @@ import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public class UserDaoMySql implements UserDao {
+public class UserDaoMySql1 implements UserDao {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
+  private final PersonDao personDao;
+
+  private final String CREATE_PERSON =
+      "INSERT INTO person (last_name, name, patronymic) VALUES (?, ?, ?);";
+
+  private final String CREATE_STUDENT =
+      "INSERT INTO student VALUES ();";
+
+  private final String GET_PERSON_ID =
+      "SELECT id "
+      + "FROM person "
+      + "WHERE last_name = ? AND name = ? AND patronymic = ? "
+      + "ORDER BY id DESC "
+      + "LIMIT 1;";
 
   private final String CREATE_USER =
-      "INSERT INTO user (person_id, username, password, role) "
-      + "VALUES (?, ?, ?, ?);";
+      "INSERT INTO user (person_id, username, password, role) VALUES (?, ?, ?, ?);";
 
   private final String GET_USER_BY_USERNAME =
-      "SELECT p.id, p.last_name, p.name, p.patronymic, u.username, u.password, u.role "
+      "SELECT p.last_name, p.name, p.patronymic, u.username, u.password, u.role "
       + "FROM user AS u "
       + "INNER JOIN person AS p "
       + "ON u.person_id = p.id "
-      + "WHERE u.username = ? "
-      + "ORDER BY p.id DESC "
-      + "LIMIT 1;";
+      + "WHERE u.username = ?;";
 
-  public UserDaoMySql() {
+  public UserDaoMySql1() {
     this.connectionPool = ConnectionPool.getInstance();
-    this.logger = Logger.getLogger(UserDaoMySql.class);
+    this.logger = Logger.getLogger(UserDaoMySql1.class);
+    // TODO: 31.12.2016  
+    this.personDao = null;
   }
 
   @Override
@@ -60,7 +73,9 @@ public class UserDaoMySql implements UserDao {
   public User save(User user) throws DaoException {
     Person person = user.getPerson();
     try (Connection connection = this.connectionPool.getConnection()) {
-      saveUser(connection, user);
+      savePerson(connection, person);
+      saveStudent(connection, person);
+      saveUser(connection, person, user);
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);
@@ -68,11 +83,34 @@ public class UserDaoMySql implements UserDao {
     return user;
   }
 
+  private void saveStudent(Connection connection, Person person) throws DaoException, SQLException {
+    try (PreparedStatement statement = connection.prepareStatement(CREATE_STUDENT)) {
+      statement.setLong(1, getPersonId(connection, person));
+      statement.execute();
+    } catch (SQLException e) {
+      connection.rollback();
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+  }
 
-  private void saveUser(Connection connection, User user)
+  private void savePerson(Connection connection, Person person) throws DaoException, SQLException {
+    try (PreparedStatement statement = connection.prepareStatement(CREATE_PERSON)) {
+      statement.setString(1, person.getLastName());
+      statement.setString(2, person.getName());
+      statement.setString(3, person.getPatronymic());
+      statement.execute();
+    } catch (SQLException e) {
+      connection.rollback();
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+  }
+
+  private void saveUser(Connection connection, Person person, User user)
       throws DaoException, SQLException {
     try (PreparedStatement statement = connection.prepareStatement(CREATE_USER)) {
-      statement.setLong(1, user.getPerson().getId());
+      statement.setLong(1, getPersonId(connection, person));
       statement.setString(2, user.getUsername());
       statement.setString(3, user.getPassword());
       statement.setString(4, user.getRole().name());
@@ -84,6 +122,23 @@ public class UserDaoMySql implements UserDao {
     }
   }
 
+  private long getPersonId(Connection connection, Person person) throws DaoException, SQLException {
+    try (PreparedStatement statement = connection.prepareStatement(GET_PERSON_ID)) {
+      statement.setString(1, person.getLastName());
+      statement.setString(2, person.getName());
+      statement.setString(3, person.getPatronymic());
+      ResultSet resultSet = statement.executeQuery();
+      if (resultSet.next()) {
+        return resultSet.getLong("id");
+      }
+    } catch (SQLException e) {
+      connection.rollback();
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+    return person.getId();
+  }
+
   private User getUserByStatement(PreparedStatement statement) throws DaoException {
     try (ResultSet resultSet = statement.executeQuery()) {
       if (resultSet.next()) {
@@ -93,7 +148,6 @@ public class UserDaoMySql implements UserDao {
         person.setName(resultSet.getString("name"));
         person.setPatronymic(resultSet.getString("patronymic"));
         user.setPerson(person);
-        user.setId(resultSet.getLong("id"));
         user.setUsername(resultSet.getString("username"));
         user.setPassword(resultSet.getString("password"));
         user.setRole(User.Role.valueOf(resultSet.getString("role")));

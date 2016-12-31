@@ -34,6 +34,7 @@ public final class ConnectionPool {
     poolProperties.setMaxIdle(MAX_AMOUNT_OF_THREAD);
     poolProperties.setMaxWait(MAX_WAIT_AMOUNT);
     poolProperties.setMaxActive(MAX_AMOUNT_OF_ACTIVE_THREADS);
+    poolProperties.setDefaultAutoCommit(false);
     this.dataSource = new DataSource();
     this.dataSource.setPoolProperties(poolProperties);
   }

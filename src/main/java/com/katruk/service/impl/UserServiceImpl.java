@@ -6,11 +6,8 @@ import com.katruk.entity.User;
 import com.katruk.entity.dto.UserDto;
 import com.katruk.exception.DaoException;
 import com.katruk.exception.ServiceException;
-import com.katruk.exception.ValidateException;
 import com.katruk.service.UserService;
 import com.katruk.util.Converter;
-import com.katruk.util.UserValidator;
-import com.katruk.web.controller.commands.LoginCommand;
 
 import org.apache.log4j.Logger;
 
@@ -29,7 +26,7 @@ public class UserServiceImpl implements UserService {
   public User create(UserDto userDto) throws ServiceException {
     User user = this.converter.convertDto(userDto);
     try {
-      this.userDao.create(user);
+      this.userDao.save(user);
     } catch (DaoException e) {
       logger.error("err", e);
       throw new ServiceException("err", e);
