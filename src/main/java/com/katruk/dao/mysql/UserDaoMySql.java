@@ -26,12 +26,10 @@ public class UserDaoMySql implements UserDao {
       + "VALUES (?, ?, ?, ?);";
 
   private final String GET_USER_BY_USERNAME =
-      "SELECT p.id, p.last_name, p.name, p.patronymic, u.username, u.password, u.role "
+      "SELECT u.person_id, u.username, u.password, u.role "
       + "FROM user AS u "
-      + "INNER JOIN person AS p "
-      + "ON u.person_id = p.id "
       + "WHERE u.username = ? "
-      + "ORDER BY p.id DESC "
+      + "ORDER BY u.person_id DESC "
       + "LIMIT 1;";
 
   public UserDaoMySql() {
@@ -58,9 +56,18 @@ public class UserDaoMySql implements UserDao {
 
   @Override
   public User save(User user) throws DaoException {
-    Person person = user.getPerson();
     try (Connection connection = this.connectionPool.getConnection()) {
-      saveUser(connection, user);
+      try (PreparedStatement statement = connection.prepareStatement(CREATE_USER)) {
+        statement.setLong(1, user.getPerson().getId());
+        statement.setString(2, user.getUsername());
+        statement.setString(3, user.getPassword());
+        statement.setString(4, user.getRole().name());
+        statement.execute();
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);
@@ -68,32 +75,14 @@ public class UserDaoMySql implements UserDao {
     return user;
   }
 
-
-  private void saveUser(Connection connection, User user)
-      throws DaoException, SQLException {
-    try (PreparedStatement statement = connection.prepareStatement(CREATE_USER)) {
-      statement.setLong(1, user.getPerson().getId());
-      statement.setString(2, user.getUsername());
-      statement.setString(3, user.getPassword());
-      statement.setString(4, user.getRole().name());
-      statement.execute();
-    } catch (SQLException e) {
-      connection.rollback();
-      logger.error("", e);
-      throw new DaoException("", e);
-    }
-  }
-
   private User getUserByStatement(PreparedStatement statement) throws DaoException {
     try (ResultSet resultSet = statement.executeQuery()) {
       if (resultSet.next()) {
         User user = new User();
         Person person = new Person();
-        person.setLastName(resultSet.getString("last_name"));
-        person.setName(resultSet.getString("name"));
-        person.setPatronymic(resultSet.getString("patronymic"));
+        person.setId(resultSet.getLong("person_id"));
         user.setPerson(person);
-        user.setId(resultSet.getLong("id"));
+        user.setId(person.getId());
         user.setUsername(resultSet.getString("username"));
         user.setPassword(resultSet.getString("password"));
         user.setRole(User.Role.valueOf(resultSet.getString("role")));

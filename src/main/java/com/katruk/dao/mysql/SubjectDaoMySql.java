@@ -7,7 +7,9 @@ import com.katruk.entity.Teacher;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
+
 import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,30 +26,18 @@ public class SubjectDaoMySql implements SubjectDao {
 
   private final String
       GET_SUBJECT_BY_ID =
-      "SELECT s.id, s.title, p.last_name, p.name, p.patronymic, u.username, u.password, u.role, t.position  "
-      + "FROM user AS u "
-      + "INNER JOIN person AS p "
-      + "ON u.person_id = p.id "
-      + "INNER JOIN teacher AS t "
-      + "ON t.user_person_id = p.id "
-      + "INNER JOIN subject AS s "
-      + "ON s.teacher_user_person_id = p.id "
+      "SELECT s.id,  teacher_user_person_id, s.title "
+      + "FROM subject AS s "
       + "WHERE s.id = ? "
-      + "ORDER BY p.id DESC "
+      + "ORDER BY s.id DESC "
       + "LIMIT 1;";
 
   private final String
       GET_SUBJECT_BY_TEACHER =
-      "SELECT s.id, s.title, p.last_name, p.name, p.patronymic, u.username, u.password, u.role, t.position  "
-      + "FROM user AS u "
-      + "INNER JOIN person AS p "
-      + "ON u.person_id = p.id "
-      + "INNER JOIN teacher AS t "
-      + "ON t.user_person_id = p.id "
-      + "INNER JOIN subject AS s "
-      + "ON s.teacher_user_person_id = p.id "
+      "SELECT s.id, teacher_user_person_id, s.title "
+      + "FROM subject AS s "
       + "WHERE s.teacher_user_person_id = ? "
-      + "ORDER BY p.id DESC "
+      + "ORDER BY s.id DESC "
       + "LIMIT 1;";
 
   private final String CREATE_SUBJECT =
@@ -81,7 +71,7 @@ public class SubjectDaoMySql implements SubjectDao {
   public Collection<Subject> getSubjectByTeacher(Teacher teacher) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(GET_SUBJECT_BY_TEACHER)) {
-        statement.setLong(1, teacher.getUser().getPerson().getId());
+        statement.setLong(1, teacher.getId());
         return getSubjectByStatement(statement);
       } catch (SQLException e) {
         connection.rollback();
@@ -99,7 +89,7 @@ public class SubjectDaoMySql implements SubjectDao {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
           .prepareStatement(CREATE_SUBJECT, Statement.RETURN_GENERATED_KEYS)) {
-        statement.setLong(1, subject.getTeacher().getUser().getPerson().getId());
+        statement.setLong(1, subject.getTeacher().getId());
         statement.setString(2, subject.getTitle());
         statement.execute();
         try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
@@ -128,17 +118,7 @@ public class SubjectDaoMySql implements SubjectDao {
       while (resultSet.next()) {
         Subject subject = new Subject();
         Teacher teacher = new Teacher();
-        User user = new User();
-        Person person = new Person();
-        person.setLastName(resultSet.getString("last_name"));
-        person.setName(resultSet.getString("name"));
-        person.setPatronymic(resultSet.getString("patronymic"));
-        user.setPerson(person);
-        user.setUsername(resultSet.getString("username"));
-        user.setPassword(resultSet.getString("password"));
-        user.setRole(User.Role.valueOf(resultSet.getString("role")));
-        teacher.setUser(user);
-        teacher.setPosition(Teacher.Position.valueOf(resultSet.getString("position")));
+        teacher.setId(resultSet.getLong("teacher_user_person_id"));
         subject.setTeacher(teacher);
         subject.setTitle(resultSet.getString("title"));
         result.add(subject);
