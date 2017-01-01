@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public interface PersonDao {
 
-  Optional<Person> getPersonById(Long personId) throws DaoException;
+  Optional<Person> getPersonById(final Long personId) throws DaoException;
 
-  Person save(Person person) throws DaoException;
+  Person save(final Person person) throws DaoException;
 
 }

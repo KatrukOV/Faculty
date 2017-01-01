@@ -1,6 +1,8 @@
 package com.katruk.entity;
 
-public class Model {
+import java.io.Serializable;
+
+class Model implements Serializable {
 
   private long id;
 

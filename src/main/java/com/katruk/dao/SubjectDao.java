@@ -9,9 +9,9 @@ import java.util.Optional;
 
 public interface SubjectDao {
 
-  Optional<Subject> getSubjectById(Long subjectId) throws DaoException;
+  Optional<Subject> getSubjectById(final Long subjectId) throws DaoException;
 
-  Collection<Subject> getSubjectByTeacher(Teacher teacher) throws DaoException;
+  Collection<Subject> getSubjectByTeacher(final Teacher teacher) throws DaoException;
 
-  Subject save(Subject subject) throws DaoException;
+  Subject save(final Subject subject) throws DaoException;
 }

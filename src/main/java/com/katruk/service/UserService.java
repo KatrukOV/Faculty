@@ -11,8 +11,9 @@ import java.util.List;
 
 public interface UserService {
 
-  User create(UserDto userDto) throws ServiceException;
+  User getUserByUsername(final String username) throws ServiceException;
 
-  User getUserByUsername(String username) throws ServiceException;
+  User getUserById(final Long userId) throws ServiceException;
 
+  User create(final UserDto userDto) throws ServiceException;
 }

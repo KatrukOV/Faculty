@@ -6,32 +6,41 @@ import com.katruk.dao.mysql.StudentDaoMySql;
 import com.katruk.dao.mysql.TeacherDaoMySql;
 import com.katruk.entity.Student;
 import com.katruk.entity.Teacher;
+import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.exception.ServiceException;
 import com.katruk.service.StudentService;
 import com.katruk.service.TeacherService;
+import com.katruk.service.UserService;
 
 import org.apache.log4j.Logger;
+
+import java.util.NoSuchElementException;
 
 public class TeacherServiceImpl implements TeacherService {
 
   private final TeacherDao teacherDao;
+  private final UserService userService;
   private final Logger logger;
 
   public TeacherServiceImpl() {
     this.teacherDao = new TeacherDaoMySql();
+    this.userService = new UserServiceImpl();
     this.logger = Logger.getLogger(TeacherServiceImpl.class);
   }
 
   @Override
-  public Teacher getTeacherById(Long teacherId) throws ServiceException {
-    Teacher teacher;
+  public Teacher getTeacherById(final Long teacherId) throws ServiceException {
+    final Teacher teacher;
     try {
-      teacher = this.teacherDao.getTeacherById(teacherId);
+      teacher = this.teacherDao.getTeacherById(teacherId)
+          .orElseThrow(() -> new DaoException("Teacher not found", new NoSuchElementException()));
     } catch (DaoException e) {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
+    final User user = this.userService.getUserById(teacher.getUser().getId());
+    teacher.setUser(user);
     return teacher;
   }
 }

@@ -1,6 +1,6 @@
 package com.katruk.entity;
 
-public class User extends Model {
+public final class User extends Model {
   private Person person;
   private String username;
   private String password;

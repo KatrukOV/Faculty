@@ -6,11 +6,11 @@ public class ValidateException extends Exception {
 
   }
 
-  public ValidateException(String reason, Throwable cause) {
+  public ValidateException(final String reason, final Throwable cause) {
     super(reason, cause);
   }
 
-  public ValidateException(String reason) {
+  public ValidateException(final String reason) {
     super(reason);
   }
 }

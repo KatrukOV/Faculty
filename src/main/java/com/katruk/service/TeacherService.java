@@ -6,6 +6,6 @@ import com.katruk.exception.ServiceException;
 
 public interface TeacherService {
 
-  Teacher getTeacherById(Long teacherId) throws ServiceException;
+  Teacher getTeacherById(final Long teacherId) throws ServiceException;
 
 }

@@ -6,7 +6,7 @@ public class DaoException extends Exception {
 
   }
 
-  public DaoException(String reason, Throwable cause) {
+  public DaoException(final String reason, final Throwable cause) {
     super(reason, cause);
   }
 }

@@ -34,14 +34,21 @@ public class UserDaoMySql implements UserDao {
       + "ORDER BY u.person_id DESC "
       + "LIMIT 1;";
 
+  private final String GET_USER_BY_ID =
+      "SELECT u.person_id, u.username, u.password, u.role "
+      + "FROM user AS u "
+      + "WHERE u.person_id = ? "
+      + "ORDER BY u.person_id DESC "
+      + "LIMIT 1;";
+
   public UserDaoMySql() {
     this.connectionPool = ConnectionPool.getInstance();
     this.logger = Logger.getLogger(UserDaoMySql.class);
   }
 
   @Override
-  public Optional<User> getUserByUsername(String username) throws DaoException {
-    Optional<User> result;
+  public Optional<User> getUserByUsername(final String username) throws DaoException {
+    final Optional<User> result;
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(GET_USER_BY_USERNAME)) {
         statement.setString(1, username);
@@ -59,7 +66,26 @@ public class UserDaoMySql implements UserDao {
   }
 
   @Override
-  public User save(User user) throws DaoException {
+  public Optional<User> getUserById(final Long userId) throws DaoException {
+    final Optional<User> result;
+    try (Connection connection = this.connectionPool.getConnection()) {
+      try (PreparedStatement statement = connection.prepareStatement(GET_USER_BY_ID)) {
+        statement.setLong(1, userId);
+        result = getUserByStatement(statement).stream().findFirst();
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+    return result;
+  }
+
+  @Override
+  public User save(final User user) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(CREATE_USER)) {
         statement.setLong(1, user.getPerson().getId());
@@ -79,7 +105,7 @@ public class UserDaoMySql implements UserDao {
     return user;
   }
 
-  private Collection<User> getUserByStatement(PreparedStatement statement) throws DaoException {
+  private Collection<User> getUserByStatement(final PreparedStatement statement) throws DaoException {
     Collection<User> result = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {

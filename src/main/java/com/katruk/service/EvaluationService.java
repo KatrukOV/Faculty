@@ -9,8 +9,10 @@ import java.util.Collection;
 
 public interface EvaluationService {
 
-  Collection<Evaluation> getEvaluationByTeacherAndSubjects(Teacher teacher, Subject subject);
+  Collection<Evaluation> getEvaluationByTeacherAndSubjects(final Teacher teacher,
+                                                           final Subject subject);
 
-  Collection<Evaluation> getEvaluationByStudentAndSubjects(Student student, Subject subject);
+  Collection<Evaluation> getEvaluationByStudentAndSubjects(final Student student,
+                                                           final Subject subject);
 
 }

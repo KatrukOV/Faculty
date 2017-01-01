@@ -1,6 +1,6 @@
 package com.katruk.entity;
 
-public class Teacher extends Model {
+public final class Teacher extends Model {
 
   private User user;
   private Position position;

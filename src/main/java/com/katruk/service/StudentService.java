@@ -8,6 +8,6 @@ import com.katruk.exception.ServiceException;
 
 public interface StudentService {
 
-  Student getStudentById(Long studentId) throws ServiceException;
+  Student getStudentById(final Long studentId) throws ServiceException;
 
 }

@@ -10,8 +10,8 @@ public interface SubjectService {
 
   Collection<Subject> getSubjects();
 
-  Collection<Subject> getSubjectByTeacher(Teacher teacher);
+  Collection<Subject> getSubjectByTeacher(final Teacher teacher);
 
-  Collection<Subject> getSubjectsByStudent(Student student);
+  Collection<Subject> getSubjectsByStudent(final Student student);
 
 }

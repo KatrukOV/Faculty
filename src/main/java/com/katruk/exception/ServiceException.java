@@ -6,7 +6,7 @@ public class ServiceException extends Exception {
 
   }
 
-  public ServiceException(String reason, Throwable cause) {
+  public ServiceException(final String reason, final Throwable cause) {
     super(reason, cause);
   }
 }

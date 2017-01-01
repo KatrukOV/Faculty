@@ -39,8 +39,8 @@ public class StudentDaoMySql implements StudentDao {
   }
 
   @Override
-  public Optional<Student> getStudentById(Long studentId) throws DaoException {
-    Optional<Student> result;
+  public Optional<Student> getStudentById(final Long studentId) throws DaoException {
+    final Optional<Student> result;
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(GET_STUDENT_BY_ID)) {
         statement.setLong(1, studentId);
@@ -58,7 +58,7 @@ public class StudentDaoMySql implements StudentDao {
   }
 
   @Override
-  public Student save(Student student) throws DaoException {
+  public Student save(final Student student) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
           .prepareStatement(CREATE_STUDENT, Statement.RETURN_GENERATED_KEYS)) {
@@ -85,9 +85,9 @@ public class StudentDaoMySql implements StudentDao {
     return student;
   }
 
-  private Collection<Student> getStudentByStatement(PreparedStatement statement)
+  private Collection<Student> getStudentByStatement(final PreparedStatement statement)
       throws DaoException {
-    Collection<Student> result = new ArrayList<>();
+    final Collection<Student> result = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
         Student student = new Student();

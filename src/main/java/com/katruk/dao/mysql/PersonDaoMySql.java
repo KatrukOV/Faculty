@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 public class PersonDaoMySql implements PersonDao {
@@ -35,12 +37,12 @@ public class PersonDaoMySql implements PersonDao {
   }
 
   @Override
-  public Optional<Person> getPersonById(Long personId) throws DaoException {
-
+  public Optional<Person> getPersonById(final Long personId) throws DaoException {
+   final Optional<Person> result;
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(GET_PERSON_BY_ID)) {
         statement.setLong(1, personId);
-        return getPersonByStatement(statement);
+        result = getPersonByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
         connection.rollback();
         logger.error("", e);
@@ -50,10 +52,11 @@ public class PersonDaoMySql implements PersonDao {
       logger.error("", e);
       throw new DaoException("", e);
     }
+    return result;
   }
 
   @Override
-  public Person save(Person person) throws DaoException {
+  public Person save(final Person person) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
           .prepareStatement(CREATE_PERSON, Statement.RETURN_GENERATED_KEYS)) {
@@ -80,15 +83,16 @@ public class PersonDaoMySql implements PersonDao {
     return person;
   }
 
-  private Optional<Person> getPersonByStatement(PreparedStatement statement) throws DaoException {
-    Optional<Person> result = Optional.empty();
+  private Collection<Person> getPersonByStatement(final PreparedStatement statement)
+      throws DaoException {
+    final Collection<Person> result = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       if (resultSet.next()) {
         Person person = new Person();
         person.setLastName(resultSet.getString("last_name"));
         person.setName(resultSet.getString("name"));
         person.setPatronymic(resultSet.getString("patronymic"));
-        result = Optional.of(person);
+        result.add(person);
       }
     } catch (SQLException e) {
       logger.error("", e);

@@ -49,8 +49,8 @@ public class SubjectDaoMySql implements SubjectDao {
   }
 
   @Override
-  public Optional<Subject> getSubjectById(Long subjectId) throws DaoException {
-    Optional<Subject> result;
+  public Optional<Subject> getSubjectById(final Long subjectId) throws DaoException {
+    final Optional<Subject> result;
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(GET_SUBJECT_BY_ID)) {
         statement.setLong(1, subjectId);
@@ -68,7 +68,7 @@ public class SubjectDaoMySql implements SubjectDao {
   }
 
   @Override
-  public Collection<Subject> getSubjectByTeacher(Teacher teacher) throws DaoException {
+  public Collection<Subject> getSubjectByTeacher(final Teacher teacher) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(GET_SUBJECT_BY_TEACHER)) {
         statement.setLong(1, teacher.getId());
@@ -85,7 +85,7 @@ public class SubjectDaoMySql implements SubjectDao {
   }
 
   @Override
-  public Subject save(Subject subject) throws DaoException {
+  public Subject save(final Subject subject) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
           .prepareStatement(CREATE_SUBJECT, Statement.RETURN_GENERATED_KEYS)) {
@@ -111,9 +111,9 @@ public class SubjectDaoMySql implements SubjectDao {
     return subject;
   }
 
-  private Collection<Subject> getSubjectByStatement(PreparedStatement statement)
+  private Collection<Subject> getSubjectByStatement(final PreparedStatement statement)
       throws DaoException {
-    Collection<Subject> result = new ArrayList<>();
+    final Collection<Subject> result = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
         Subject subject = new Subject();

@@ -60,9 +60,9 @@ public class EvaluationDaoMySql implements EvaluationDao {
   }
 
   @Override
-  public Optional<Evaluation> getEvaluationById(Long subjectId, Long studentId)
+  public Optional<Evaluation> getEvaluationById(final Long subjectId, final Long studentId)
       throws DaoException {
-    Optional<Evaluation> result;
+    final Optional<Evaluation> result;
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(GET_EVALUATION_BY_ID)) {
         statement.setLong(1, subjectId);
@@ -81,7 +81,7 @@ public class EvaluationDaoMySql implements EvaluationDao {
   }
 
   @Override
-  public Collection<Evaluation> getEvaluationByStudent(Long studentId) throws DaoException {
+  public Collection<Evaluation> getEvaluationByStudent(final Long studentId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(GET_EVALUATION_BY_STUDENT)) {
         statement.setLong(1, studentId);
@@ -98,7 +98,7 @@ public class EvaluationDaoMySql implements EvaluationDao {
   }
 
   @Override
-  public Collection<Evaluation> getEvaluationBySubject(Long subjectId) throws DaoException {
+  public Collection<Evaluation> getEvaluationBySubject(final Long subjectId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(GET_EVALUATION_BY_SUBJECT)) {
         statement.setLong(1, subjectId);
@@ -115,7 +115,7 @@ public class EvaluationDaoMySql implements EvaluationDao {
   }
 
   @Override
-  public Evaluation save(Evaluation evaluation) throws DaoException {
+  public Evaluation save(final Evaluation evaluation) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
           .prepareStatement(CREATE_EVALUATION, Statement.RETURN_GENERATED_KEYS)) {
@@ -144,9 +144,9 @@ public class EvaluationDaoMySql implements EvaluationDao {
     return evaluation;
   }
 
-  private Collection<Evaluation> getEvaluationByStatement(PreparedStatement statement)
+  private Collection<Evaluation> getEvaluationByStatement(final PreparedStatement statement)
       throws DaoException {
-    Collection<Evaluation> result = new ArrayList<>();
+    final Collection<Evaluation> result = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
         Evaluation evaluation = new Evaluation();

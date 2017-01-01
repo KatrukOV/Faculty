@@ -1,6 +1,6 @@
 package com.katruk.entity;
 
-public class Student extends Model{
+public final class Student extends Model{
   private User user;
   private Form form;
   private Contract contract;

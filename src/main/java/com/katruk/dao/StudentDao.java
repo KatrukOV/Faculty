@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface StudentDao {
 
-  Optional<Student> getStudentById(Long studentId) throws DaoException;
+  Optional<Student> getStudentById(final Long studentId) throws DaoException;
 
-  Student save(Student student) throws DaoException;
+  Student save(final Student student) throws DaoException;
 }

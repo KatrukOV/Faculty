@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface EvaluationDao {
 
-  Optional<Evaluation> getEvaluationById(Long subjectId, Long studentId) throws DaoException;
+  Optional<Evaluation> getEvaluationById(final Long subjectId, Long studentId) throws DaoException;
 
-  Collection<Evaluation> getEvaluationByStudent(Long studentId) throws DaoException;
+  Collection<Evaluation> getEvaluationByStudent(final Long studentId) throws DaoException;
 
-  Collection<Evaluation> getEvaluationBySubject(Long subjectId) throws DaoException;
+  Collection<Evaluation> getEvaluationBySubject(final Long subjectId) throws DaoException;
 
-  Evaluation save(Evaluation evaluation) throws DaoException;
+  Evaluation save(final Evaluation evaluation) throws DaoException;
 }

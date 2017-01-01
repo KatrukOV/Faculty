@@ -1,6 +1,6 @@
 package com.katruk.entity.dto;
 
-public class UserDto {
+public final class UserDto {
 
   private String lastName;
   private String name;

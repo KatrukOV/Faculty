@@ -1,6 +1,6 @@
 package com.katruk.entity;
 
-public class Subject extends Model {
+public final class Subject extends Model {
 
   private String title;
   private Teacher teacher;

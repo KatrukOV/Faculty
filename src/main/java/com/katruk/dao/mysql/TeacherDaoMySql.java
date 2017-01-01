@@ -42,8 +42,8 @@ public class TeacherDaoMySql implements TeacherDao {
   }
 
   @Override
-  public Optional<Teacher> getTeacherById(Long teacherId) throws DaoException {
-    Optional<Teacher> result;
+  public Optional<Teacher> getTeacherById(final Long teacherId) throws DaoException {
+    final Optional<Teacher> result;
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(GET_TEACHER_BY_ID)) {
         statement.setLong(1, teacherId);
@@ -61,7 +61,7 @@ public class TeacherDaoMySql implements TeacherDao {
   }
 
   @Override
-  public Teacher save(Teacher teacher) throws DaoException {
+  public Teacher save(final Teacher teacher) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
           .prepareStatement(CREATE_TEACHER, Statement.RETURN_GENERATED_KEYS)) {
@@ -87,9 +87,9 @@ public class TeacherDaoMySql implements TeacherDao {
     return teacher;
   }
 
-  private Collection<Teacher> getTeacherByStatement(PreparedStatement statement)
+  private Collection<Teacher> getTeacherByStatement(final PreparedStatement statement)
       throws DaoException {
-    Collection<Teacher> result = new ArrayList<>();
+    final Collection<Teacher> result = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
         Teacher teacher = new Teacher();
