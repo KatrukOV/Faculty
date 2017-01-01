@@ -13,6 +13,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -39,10 +41,11 @@ public class UserDaoMySql implements UserDao {
 
   @Override
   public Optional<User> getUserByUsername(String username) throws DaoException {
+    Optional<User> result;
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(GET_USER_BY_USERNAME)) {
         statement.setString(1, username);
-        return Optional.of(getUserByStatement(statement));
+        result = getUserByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
         connection.rollback();
         logger.error("", e);
@@ -52,6 +55,7 @@ public class UserDaoMySql implements UserDao {
       logger.error("", e);
       throw new DaoException("", e);
     }
+    return result;
   }
 
   @Override
@@ -75,9 +79,10 @@ public class UserDaoMySql implements UserDao {
     return user;
   }
 
-  private User getUserByStatement(PreparedStatement statement) throws DaoException {
+  private Collection<User> getUserByStatement(PreparedStatement statement) throws DaoException {
+    Collection<User> result = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
-      if (resultSet.next()) {
+      while (resultSet.next()) {
         User user = new User();
         Person person = new Person();
         person.setId(resultSet.getLong("person_id"));
@@ -86,12 +91,12 @@ public class UserDaoMySql implements UserDao {
         user.setUsername(resultSet.getString("username"));
         user.setPassword(resultSet.getString("password"));
         user.setRole(User.Role.valueOf(resultSet.getString("role")));
-        return user;
+        result.add(user);
       }
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);
     }
-    throw new DaoException("User not exist", new NoSuchElementException());
+    return result;
   }
 }

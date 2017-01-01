@@ -14,6 +14,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 public class StudentDaoMySql implements StudentDao {
@@ -22,15 +24,10 @@ public class StudentDaoMySql implements StudentDao {
   private final Logger logger;
 
   private final String GET_STUDENT_BY_ID =
-      "SELECT "
-      + "p.id, p.last_name, p.name, p.patronymic, u.username, u.password, u.role, s.contract, s.form "
-      + "FROM user AS u "
-      + "INNER JOIN person AS p "
-      + "ON u.person_id = p.id "
-      + "INNER JOIN student AS s "
-      + "ON s.user_person_id = p.id "
+      "SELECT s.id, s.user_person_id, s.form, s.contract "
+      + "FROM student AS s "
       + "WHERE s.user_person_id = ? "
-      + "ORDER BY p.id DESC "
+      + "ORDER BY s.id DESC "
       + "LIMIT 1;";
 
   private final String CREATE_STUDENT =
@@ -43,10 +40,11 @@ public class StudentDaoMySql implements StudentDao {
 
   @Override
   public Optional<Student> getStudentById(Long studentId) throws DaoException {
+    Optional<Student> result;
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection.prepareStatement(GET_STUDENT_BY_ID)) {
         statement.setLong(1, studentId);
-        return getStudentByStatement(statement);
+        result = getStudentByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
         connection.rollback();
         logger.error("", e);
@@ -56,6 +54,7 @@ public class StudentDaoMySql implements StudentDao {
       logger.error("", e);
       throw new DaoException("", e);
     }
+    return result;
   }
 
   @Override
@@ -63,7 +62,7 @@ public class StudentDaoMySql implements StudentDao {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
           .prepareStatement(CREATE_STUDENT, Statement.RETURN_GENERATED_KEYS)) {
-        statement.setLong(1, student.getUser().getPerson().getId());
+        statement.setLong(1, student.getId());
         statement.setString(2, student.getForm().name());
         statement.setString(3, student.getContract().name());
         statement.execute();
@@ -86,24 +85,18 @@ public class StudentDaoMySql implements StudentDao {
     return student;
   }
 
-  private Optional<Student> getStudentByStatement(PreparedStatement statement) throws DaoException {
-    Optional<Student> result = Optional.empty();
+  private Collection<Student> getStudentByStatement(PreparedStatement statement)
+      throws DaoException {
+    Collection<Student> result = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
-      if (resultSet.next()) {
+      while (resultSet.next()) {
         Student student = new Student();
         User user = new User();
-        Person person = new Person();
-        person.setLastName(resultSet.getString("last_name"));
-        person.setName(resultSet.getString("name"));
-        person.setPatronymic(resultSet.getString("patronymic"));
-        user.setPerson(person);
-        user.setUsername(resultSet.getString("username"));
-        user.setPassword(resultSet.getString("password"));
-        user.setRole(User.Role.valueOf(resultSet.getString("role")));
+        user.setId(resultSet.getLong("user_person_id"));
         student.setUser(user);
         student.setContract(Student.Contract.valueOf(resultSet.getString("contract")));
         student.setForm(Student.Form.valueOf(resultSet.getString("contract")));
-        result = Optional.of(student);
+        result.add(student);
       }
     } catch (SQLException e) {
       logger.error("", e);

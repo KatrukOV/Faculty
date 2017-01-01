@@ -28,26 +28,26 @@ public class EvaluationDaoMySql implements EvaluationDao {
   private final Logger logger;
 
   private final String GET_EVALUATION_BY_ID =
-      "SELECT e.subject_id, e.student_user_person_id, e.status, e.rating, e.feedback "
+      "SELECT e.id, e.subject_id, e.student_user_person_id, e.status, e.rating, e.feedback "
       + "FROM evaluation AS e "
       + "WHERE e.subject_id = ? AND e.student_user_person_id = ? "
-      + "ORDER BY e.subject_id DESC "
+      + "ORDER BY e.id DESC "
       + "LIMIT 1;";
 
   private final String
       GET_EVALUATION_BY_STUDENT =
-      "SELECT e.subject_id, e.student_user_person_id, e.status, e.rating, e.feedback "
+      "SELECT e.id, e.subject_id, e.student_user_person_id, e.status, e.rating, e.feedback "
       + "FROM evaluation AS e "
       + "WHERE e.student_user_person_id = ? "
-      + "ORDER BY e.subject_id DESC "
+      + "ORDER BY e.id DESC "
       + "LIMIT 1;";
 
   private final String
       GET_EVALUATION_BY_SUBJECT =
-      "SELECT e.subject_id, e.student_user_person_id, e.status, e.rating, e.feedback "
+      "SELECT e.id, e.subject_id, e.student_user_person_id, e.status, e.rating, e.feedback "
       + "FROM evaluation AS e "
       + "WHERE e.subject_id = ? "
-      + "ORDER BY e.subject_id DESC "
+      + "ORDER BY e.id DESC "
       + "LIMIT 1;";
 
   private final String CREATE_EVALUATION =
@@ -154,6 +154,7 @@ public class EvaluationDaoMySql implements EvaluationDao {
         subject.setId(resultSet.getLong("subject_id"));
         Student student = new Student();
         student.setId(resultSet.getLong("student_user_person_id"));
+        evaluation.setId(resultSet.getLong("id"));
         evaluation.setSubject(subject);
         evaluation.setStudent(student);
         evaluation.setStatus(Evaluation.Status.valueOf(resultSet.getString("status")));
