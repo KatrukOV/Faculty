@@ -2,7 +2,6 @@ package com.katruk.util;
 
 import com.katruk.exception.DaoException;
 
-import org.apache.log4j.Logger;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 
@@ -12,13 +11,13 @@ import java.sql.SQLException;
 public final class ConnectionPool {
 
   //max amount of thread that are allowed to idle at the same time
-  private final int MAX_AMOUNT_OF_THREAD = 10;
+  private final static int MAX_AMOUNT_OF_THREAD = 10;
   //max wait amount until request timeout exception
-  private final int MAX_WAIT_AMOUNT = 100;
+  private final static int MAX_WAIT_AMOUNT = 100;
   //max amount of active threads in the POOL
-  private final int MAX_AMOUNT_OF_ACTIVE_THREADS = 10;
+  private final static int MAX_AMOUNT_OF_ACTIVE_THREADS = 10;
 
-  private final String ERROR_GET_CONNECTION = "Can't get connection";
+  private final static String ERROR_GET_CONNECTION = "Can't get connection";
 
   private final static ConnectionPool POOL = new ConnectionPool();
 

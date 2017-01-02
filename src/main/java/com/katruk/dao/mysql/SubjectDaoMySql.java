@@ -1,10 +1,8 @@
 package com.katruk.dao.mysql;
 
 import com.katruk.dao.SubjectDao;
-import com.katruk.entity.Person;
 import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
-import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
 
@@ -19,12 +17,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-public class SubjectDaoMySql implements SubjectDao {
+public final class SubjectDaoMySql implements SubjectDao {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
 
-  private final String
+  private final static String
       GET_SUBJECT_BY_ID =
       "SELECT s.id,  teacher_user_person_id, s.title "
       + "FROM subject AS s "
@@ -32,7 +30,7 @@ public class SubjectDaoMySql implements SubjectDao {
       + "ORDER BY s.id DESC "
       + "LIMIT 1;";
 
-  private final String
+  private final static String
       GET_SUBJECT_BY_TEACHER =
       "SELECT s.id, teacher_user_person_id, s.title "
       + "FROM subject AS s "
@@ -40,7 +38,7 @@ public class SubjectDaoMySql implements SubjectDao {
       + "ORDER BY s.id DESC "
       + "LIMIT 1;";
 
-  private final String CREATE_SUBJECT =
+  private final static String CREATE_SUBJECT =
       "INSERT INTO subject (teacher_user_person_id, title) VALUES (?, ?);";
 
   public SubjectDaoMySql() {
@@ -99,6 +97,7 @@ public class SubjectDaoMySql implements SubjectDao {
             throw new SQLException("Creating user failed, no ID obtained.");
           }
         }
+        connection.commit();
       } catch (SQLException e) {
         connection.rollback();
         logger.error("", e);
@@ -121,6 +120,7 @@ public class SubjectDaoMySql implements SubjectDao {
         teacher.setId(resultSet.getLong("teacher_user_person_id"));
         subject.setTeacher(teacher);
         subject.setTitle(resultSet.getString("title"));
+        subject.setId(resultSet.getLong("id"));
         result.add(subject);
       }
     } catch (SQLException e) {

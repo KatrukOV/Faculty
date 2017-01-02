@@ -6,7 +6,7 @@ import com.katruk.entity.dto.UserDto;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-public class Converter {
+public final class Converter {
 
   public User convertDto(UserDto userDto) {
     User user = new User();

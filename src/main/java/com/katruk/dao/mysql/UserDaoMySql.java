@@ -1,10 +1,9 @@
 package com.katruk.dao.mysql;
 
-import com.katruk.dao.PersonDao;
 import com.katruk.dao.UserDao;
-import com.katruk.exception.DaoException;
 import com.katruk.entity.Person;
 import com.katruk.entity.User;
+import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
 
 import org.apache.log4j.Logger;
@@ -15,10 +14,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public class UserDaoMySql implements UserDao {
+public final class UserDaoMySql implements UserDao {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
@@ -84,6 +82,7 @@ public class UserDaoMySql implements UserDao {
     return result;
   }
 
+
   @Override
   public User save(final User user) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
@@ -93,6 +92,7 @@ public class UserDaoMySql implements UserDao {
         statement.setString(3, user.getPassword());
         statement.setString(4, user.getRole().name());
         statement.execute();
+        connection.commit();
       } catch (SQLException e) {
         connection.rollback();
         logger.error("", e);
@@ -105,7 +105,8 @@ public class UserDaoMySql implements UserDao {
     return user;
   }
 
-  private Collection<User> getUserByStatement(final PreparedStatement statement) throws DaoException {
+  private Collection<User> getUserByStatement(final PreparedStatement statement)
+      throws DaoException {
     Collection<User> result = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {

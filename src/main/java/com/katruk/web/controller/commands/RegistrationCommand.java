@@ -2,7 +2,6 @@ package com.katruk.web.controller.commands;
 
 import com.katruk.entity.User;
 import com.katruk.entity.dto.UserDto;
-import com.katruk.exception.DaoException;
 import com.katruk.exception.ServiceException;
 import com.katruk.exception.ValidateException;
 import com.katruk.service.UserService;
@@ -18,12 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-public class RegistrationCommand implements ICommand, PageAttribute {
+public final class RegistrationCommand implements ICommand, PageAttribute {
 
   private final Logger logger;
   private final UserService userService;
   private final UserValidator userValidator;
-  private final String REGISTRATION_OK = "User successfully registered";
+  private final static String REGISTRATION_OK = "User successfully registered";
 
   public RegistrationCommand() {
     this.logger = Logger.getLogger(RegistrationCommand.class);
@@ -49,7 +48,8 @@ public class RegistrationCommand implements ICommand, PageAttribute {
       page = Config.getInstance().getValue(Config.REGISTRATION);
     }
     try {
-      this.userService.create(userDto);
+      User user =this.userService.create(userDto);
+      System.out.println(">>> user save="+user);
     } catch (ServiceException e) {
       request.setAttribute(ERROR, e.getMessage());
       logger.error(e);

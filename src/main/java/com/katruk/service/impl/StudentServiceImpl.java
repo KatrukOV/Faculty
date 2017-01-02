@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 
 import java.util.NoSuchElementException;
 
-public class StudentServiceImpl implements StudentService {
+public final class StudentServiceImpl implements StudentService {
 
   private final StudentDao studentDao;
   private final UserService userService;

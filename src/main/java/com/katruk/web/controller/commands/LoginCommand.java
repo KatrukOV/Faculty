@@ -23,11 +23,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class LoginCommand implements ICommand, PageAttribute {
+public final class LoginCommand implements ICommand, PageAttribute {
 
-  private final String ERROR_LOGIN_EMPTY = "Username or password is empty";
-  private final String ERROR_LOGIN_WRONG = "Wrong username or password";
-  private final int MaxInactiveInterval = 60 * 60 * 24;
+  private final static String ERROR_LOGIN_EMPTY = "Username or password is empty";
+  private final static String ERROR_LOGIN_WRONG = "Wrong username or password";
+  private final static int MaxInactiveInterval = 60 * 60 * 24;
   private final Logger logger;
   private final UserService userService;
   private final StudentService studentService;
@@ -83,7 +83,6 @@ public class LoginCommand implements ICommand, PageAttribute {
             default:
               System.out.println(" mull ? ");
           }
-
           page = Config.getInstance().getValue(Config.PROFILE);
         }
       } catch (ServiceException e) {

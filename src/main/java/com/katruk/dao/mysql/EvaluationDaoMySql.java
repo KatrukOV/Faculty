@@ -1,13 +1,9 @@
 package com.katruk.dao.mysql;
 
 import com.katruk.dao.EvaluationDao;
-import com.katruk.dao.SubjectDao;
 import com.katruk.entity.Evaluation;
-import com.katruk.entity.Person;
 import com.katruk.entity.Student;
 import com.katruk.entity.Subject;
-import com.katruk.entity.Teacher;
-import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
 
@@ -22,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-public class EvaluationDaoMySql implements EvaluationDao {
+public final class EvaluationDaoMySql implements EvaluationDao {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
@@ -120,7 +116,7 @@ public class EvaluationDaoMySql implements EvaluationDao {
       try (PreparedStatement statement = connection
           .prepareStatement(CREATE_EVALUATION, Statement.RETURN_GENERATED_KEYS)) {
         statement.setLong(1, evaluation.getSubject().getId());
-        statement.setLong(2, evaluation.getStudent().getUser().getPerson().getId());
+        statement.setLong(2, evaluation.getStudent().getId());
         statement.setString(3, evaluation.getStatus().name());
         statement.setString(4, evaluation.getRating().name());
         statement.setString(5, evaluation.getFeedback());
@@ -132,6 +128,7 @@ public class EvaluationDaoMySql implements EvaluationDao {
             throw new SQLException("Creating user failed, no ID obtained.");
           }
         }
+        connection.commit();
       } catch (SQLException e) {
         connection.rollback();
         logger.error("", e);

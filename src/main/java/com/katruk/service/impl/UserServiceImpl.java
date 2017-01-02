@@ -15,9 +15,8 @@ import com.katruk.util.Converter;
 import org.apache.log4j.Logger;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
-public class UserServiceImpl implements UserService {
+public final class UserServiceImpl implements UserService {
 
   private final Logger logger;
   private final PersonDao personDao;

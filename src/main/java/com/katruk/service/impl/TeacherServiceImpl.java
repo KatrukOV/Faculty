@@ -1,15 +1,11 @@
 package com.katruk.service.impl;
 
-import com.katruk.dao.StudentDao;
 import com.katruk.dao.TeacherDao;
-import com.katruk.dao.mysql.StudentDaoMySql;
 import com.katruk.dao.mysql.TeacherDaoMySql;
-import com.katruk.entity.Student;
 import com.katruk.entity.Teacher;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.exception.ServiceException;
-import com.katruk.service.StudentService;
 import com.katruk.service.TeacherService;
 import com.katruk.service.UserService;
 
@@ -17,7 +13,7 @@ import org.apache.log4j.Logger;
 
 import java.util.NoSuchElementException;
 
-public class TeacherServiceImpl implements TeacherService {
+public final class TeacherServiceImpl implements TeacherService {
 
   private final TeacherDao teacherDao;
   private final UserService userService;

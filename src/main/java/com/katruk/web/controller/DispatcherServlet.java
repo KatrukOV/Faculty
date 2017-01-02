@@ -12,11 +12,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class DispatcherServlet extends HttpServlet implements PageAttribute {
+public final class DispatcherServlet extends HttpServlet implements PageAttribute {
 
   private final DispatcherHelper helper;
-    private final Logger logger;
-  private final String DISPATCHER_ERROR = "dispatcher error";
+  private final Logger logger;
+  private final static String DISPATCHER_ERROR = "dispatcher error";
 
   public DispatcherServlet() {
     super();

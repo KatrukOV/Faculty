@@ -8,9 +8,9 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class UnknownCommand implements ICommand {
+public final class UnknownCommand implements ICommand {
 
-  private final String ERROR_LOGIN = "Unknown Command";
+  private final static String ERROR_LOGIN = "Unknown Command";
   private final Logger logger;
 
   public UnknownCommand() {

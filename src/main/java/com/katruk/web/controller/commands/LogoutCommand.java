@@ -9,10 +9,10 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class LogoutCommand implements ICommand, PageAttribute {
+public final class LogoutCommand implements ICommand, PageAttribute {
 
   private final Logger logger;
-  private final String LOGOUT = "User was logout";
+  private final static String LOGOUT = "User was logout";
 
   public LogoutCommand() {
     this.logger = Logger.getLogger(LogoutCommand.class);

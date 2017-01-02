@@ -1,7 +1,7 @@
 package com.katruk.dao;
 
-import com.katruk.exception.DaoException;
 import com.katruk.entity.User;
+import com.katruk.exception.DaoException;
 
 import java.util.Optional;
 

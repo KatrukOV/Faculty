@@ -16,19 +16,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-public class PersonDaoMySql implements PersonDao {
+public final class PersonDaoMySql implements PersonDao {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
 
-  private final String CREATE_PERSON =
+  private final static String CREATE_PERSON =
       "INSERT INTO person (last_name, name, patronymic) VALUES (?, ?, ?);";
 
-  private final String GET_PERSON_BY_ID =
-      "SELECT id, last_name, name, patronymic "
-      + "FROM person "
-      + "WHERE id = ? "
-      + "ORDER BY id DESC "
+  private final static String GET_PERSON_BY_ID =
+      "SELECT p.id, p.last_name, p.name, p.patronymic "
+      + "FROM person AS p "
+      + "WHERE p.id = ? "
+      + "ORDER BY p.id DESC "
       + "LIMIT 1;";
 
   public PersonDaoMySql() {
@@ -64,6 +64,7 @@ public class PersonDaoMySql implements PersonDao {
         statement.setString(2, person.getName());
         statement.setString(3, person.getPatronymic());
         statement.execute();
+        connection.commit();
         try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
           if (generatedKeys.next()) {
             person.setId(generatedKeys.getLong(1));

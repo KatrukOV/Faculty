@@ -9,12 +9,13 @@ import com.katruk.web.controller.commands.RegistrationCommand;
 import com.katruk.web.controller.commands.UnknownCommand;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 final class DispatcherHelper implements PageAttribute {
 
-  private HashMap<String, ICommand> commands;
+  private Map<String, ICommand> commands;
 
   DispatcherHelper() {
     commands = new HashMap<String, ICommand>();
