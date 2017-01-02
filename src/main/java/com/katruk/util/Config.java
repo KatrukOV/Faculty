@@ -6,6 +6,7 @@ public final class Config {
 
   private static Config instance = new Config();
   private static final String BUNDLE_NAME = "config";
+  private static final String BUNDLE_NAME_SQL = "sql";
   private ResourceBundle configFile;
 
   static final String DRIVER = "driver";
@@ -33,8 +34,7 @@ public final class Config {
   private Config() {
     configFile = ResourceBundle.getBundle(BUNDLE_NAME);
   }
-
-
+  // TODO: 02.01.2017 return config or sql
   public static Config getInstance() {
     return instance;
   }
