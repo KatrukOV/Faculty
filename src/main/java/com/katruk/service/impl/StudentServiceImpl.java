@@ -39,4 +39,25 @@ public final class StudentServiceImpl implements StudentService {
     student.setUser(user);
     return student;
   }
+
+  @Override
+  public Student create(Student student) throws ServiceException {
+    final User user;
+    System.out.println(">>> Student="+student);
+    try {
+      user = this.userService.create(student.getUser());
+    } catch (ServiceException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+    student.setUser(user);
+    try {
+      this.studentDao.save(student);
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+    System.out.println(">>> Student end ="+student);
+    return student;
+  }
 }

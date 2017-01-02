@@ -1,12 +1,16 @@
 package com.katruk.web.controller.commands;
 
+import com.katruk.entity.Student;
 import com.katruk.entity.User;
 import com.katruk.entity.dto.UserDto;
 import com.katruk.exception.ServiceException;
 import com.katruk.exception.ValidateException;
+import com.katruk.service.StudentService;
 import com.katruk.service.UserService;
+import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.service.impl.UserServiceImpl;
 import com.katruk.util.Config;
+import com.katruk.util.Converter;
 import com.katruk.util.UserValidator;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.ICommand;
@@ -20,13 +24,15 @@ import javax.servlet.http.HttpServletResponse;
 public final class RegistrationCommand implements ICommand, PageAttribute {
 
   private final Logger logger;
-  private final UserService userService;
+//  private final UserService userService;
+  private final StudentService studentService;
   private final UserValidator userValidator;
   private final static String REGISTRATION_OK = "User successfully registered";
 
   public RegistrationCommand() {
     this.logger = Logger.getLogger(RegistrationCommand.class);
-    this.userService = new UserServiceImpl();
+//    this.userService = new UserServiceImpl();
+    this.studentService = new StudentServiceImpl();
     this.userValidator = new UserValidator();
   }
 
@@ -48,8 +54,12 @@ public final class RegistrationCommand implements ICommand, PageAttribute {
       page = Config.getInstance().getValue(Config.REGISTRATION);
     }
     try {
-      User user =this.userService.create(userDto);
-      System.out.println(">>> user save="+user);
+      User user = new Converter().convertDto(userDto);
+      Student student = new Student();
+      System.out.println(">>> user save=" + user);
+      student.setUser(user);
+      this.studentService.create(student);
+
     } catch (ServiceException e) {
       request.setAttribute(ERROR, e.getMessage());
       logger.error(e);

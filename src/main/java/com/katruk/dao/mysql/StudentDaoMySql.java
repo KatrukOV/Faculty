@@ -23,10 +23,10 @@ public final class StudentDaoMySql implements StudentDao {
   private final Logger logger;
 
   private final static String GET_STUDENT_BY_ID =
-      "SELECT s.id, s.user_person_id, s.form, s.contract "
+      "SELECT s.user_person_id, s.form, s.contract "
       + "FROM student AS s "
       + "WHERE s.user_person_id = ? "
-      + "ORDER BY s.id DESC "
+      + "ORDER BY s.user_person_id DESC "
       + "LIMIT 1;";
 
   private final static String CREATE_STUDENT =

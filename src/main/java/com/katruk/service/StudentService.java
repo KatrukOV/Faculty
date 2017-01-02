@@ -7,4 +7,5 @@ public interface StudentService {
 
   Student getStudentById(final Long studentId) throws ServiceException;
 
+  Student create(final Student student) throws ServiceException;
 }

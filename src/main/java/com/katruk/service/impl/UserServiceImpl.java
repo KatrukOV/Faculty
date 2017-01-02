@@ -75,8 +75,7 @@ public final class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User create(final UserDto userDto) throws ServiceException {
-    final User user = this.converter.convertDto(userDto);
+  public User create(final User user) throws ServiceException {
     final Person person = user.getPerson();
     try {
       this.personDao.save(person);

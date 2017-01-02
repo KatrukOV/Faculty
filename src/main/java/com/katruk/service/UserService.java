@@ -10,5 +10,5 @@ public interface UserService {
 
   User getUserById(final Long userId) throws ServiceException;
 
-  User create(final UserDto userDto) throws ServiceException;
+  User create(final User user) throws ServiceException;
 }
