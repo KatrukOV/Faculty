@@ -4,6 +4,7 @@ import com.katruk.dao.PersonDao;
 import com.katruk.entity.Person;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
+import com.katruk.util.Sql;
 
 import org.apache.log4j.Logger;
 
@@ -21,16 +22,6 @@ public final class PersonDaoMySql implements PersonDao {
   private final ConnectionPool connectionPool;
   private final Logger logger;
 
-  private final static String CREATE_PERSON =
-      "INSERT INTO person (last_name, name, patronymic) VALUES (?, ?, ?);";
-
-  private final static String GET_PERSON_BY_ID =
-      "SELECT p.id, p.last_name, p.name, p.patronymic "
-      + "FROM person AS p "
-      + "WHERE p.id = ? "
-      + "ORDER BY p.id DESC "
-      + "LIMIT 1;";
-
   public PersonDaoMySql() {
     this.connectionPool = ConnectionPool.getInstance();
     this.logger = Logger.getLogger(PersonDaoMySql.class);
@@ -38,9 +29,10 @@ public final class PersonDaoMySql implements PersonDao {
 
   @Override
   public Optional<Person> getPersonById(final Long personId) throws DaoException {
-   final Optional<Person> result;
+    final Optional<Person> result;
     try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection.prepareStatement(GET_PERSON_BY_ID)) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_PERSON_BY_ID))) {
         statement.setLong(1, personId);
         result = getPersonByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
@@ -59,7 +51,8 @@ public final class PersonDaoMySql implements PersonDao {
   public Person save(final Person person) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
-          .prepareStatement(CREATE_PERSON, Statement.RETURN_GENERATED_KEYS)) {
+          .prepareStatement(Sql.getInstance().get(Sql.CREATE_PERSON),
+                            Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, person.getLastName());
         statement.setString(2, person.getName());
         statement.setString(3, person.getPatronymic());

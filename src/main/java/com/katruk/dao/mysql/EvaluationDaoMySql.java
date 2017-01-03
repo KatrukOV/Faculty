@@ -6,6 +6,7 @@ import com.katruk.entity.Student;
 import com.katruk.entity.Subject;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
+import com.katruk.util.Sql;
 
 import org.apache.log4j.Logger;
 
@@ -23,33 +24,6 @@ public final class EvaluationDaoMySql implements EvaluationDao {
   private final ConnectionPool connectionPool;
   private final Logger logger;
 
-  private final String GET_EVALUATION_BY_ID =
-      "SELECT e.id, e.subject_id, e.student_user_person_id, e.status, e.rating, e.feedback "
-      + "FROM evaluation AS e "
-      + "WHERE e.subject_id = ? AND e.student_user_person_id = ? "
-      + "ORDER BY e.id DESC "
-      + "LIMIT 1;";
-
-  private final String
-      GET_EVALUATION_BY_STUDENT =
-      "SELECT e.id, e.subject_id, e.student_user_person_id, e.status, e.rating, e.feedback "
-      + "FROM evaluation AS e "
-      + "WHERE e.student_user_person_id = ? "
-      + "ORDER BY e.id DESC "
-      + "LIMIT 1;";
-
-  private final String
-      GET_EVALUATION_BY_SUBJECT =
-      "SELECT e.id, e.subject_id, e.student_user_person_id, e.status, e.rating, e.feedback "
-      + "FROM evaluation AS e "
-      + "WHERE e.subject_id = ? "
-      + "ORDER BY e.id DESC "
-      + "LIMIT 1;";
-
-  private final String CREATE_EVALUATION =
-      "INSERT INTO evaluation (subject_id, student_user_person_id, status, rating, feedback) "
-      + "VALUES (?, ?, ? ,?, ?);";
-
   public EvaluationDaoMySql() {
     this.connectionPool = ConnectionPool.getInstance();
     this.logger = Logger.getLogger(EvaluationDaoMySql.class);
@@ -60,7 +34,8 @@ public final class EvaluationDaoMySql implements EvaluationDao {
       throws DaoException {
     final Optional<Evaluation> result;
     try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection.prepareStatement(GET_EVALUATION_BY_ID)) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_ID))) {
         statement.setLong(1, subjectId);
         statement.setLong(1, studentId);
         result = getEvaluationByStatement(statement).stream().findFirst();
@@ -79,7 +54,8 @@ public final class EvaluationDaoMySql implements EvaluationDao {
   @Override
   public Collection<Evaluation> getEvaluationByStudent(final Long studentId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection.prepareStatement(GET_EVALUATION_BY_STUDENT)) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_STUDENT))) {
         statement.setLong(1, studentId);
         return getEvaluationByStatement(statement);
       } catch (SQLException e) {
@@ -96,7 +72,8 @@ public final class EvaluationDaoMySql implements EvaluationDao {
   @Override
   public Collection<Evaluation> getEvaluationBySubject(final Long subjectId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection.prepareStatement(GET_EVALUATION_BY_SUBJECT)) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_SUBJECT))) {
         statement.setLong(1, subjectId);
         return getEvaluationByStatement(statement);
       } catch (SQLException e) {
@@ -114,7 +91,8 @@ public final class EvaluationDaoMySql implements EvaluationDao {
   public Evaluation save(final Evaluation evaluation) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
-          .prepareStatement(CREATE_EVALUATION, Statement.RETURN_GENERATED_KEYS)) {
+          .prepareStatement(Sql.getInstance().get(Sql.CREATE_EVALUATION),
+                            Statement.RETURN_GENERATED_KEYS)) {
         statement.setLong(1, evaluation.getSubject().getId());
         statement.setLong(2, evaluation.getStudent().getId());
         statement.setString(3, evaluation.getStatus().name());

@@ -4,19 +4,16 @@ import java.util.ResourceBundle;
 
 public final class Config {
 
-  private static Config instance = new Config();
+
   private static final String BUNDLE_NAME = "config";
-  private static final String BUNDLE_NAME_SQL = "sql";
   private ResourceBundle configFile;
+  private final static Config INSTANCE = new Config();
 
-  static final String DRIVER = "driver";
-  static final String URL = "url";
-
+  public static final String DRIVER = "driver";
+  public static final String URL = "url";
   public static final String INDEX = "index";
   public static final String REGISTRATION = "registration";
   public static final String PROFILE = "profile";
-
-
   public static final String ADMIN_PROFILE = "ADMIN_PROFILE";
   public static final String ALL_HUMANS = "ALL_HUMANS";
   public static final String ALL_STUDENTS = "ALL_STUDENTS";
@@ -34,9 +31,9 @@ public final class Config {
   private Config() {
     configFile = ResourceBundle.getBundle(BUNDLE_NAME);
   }
-  // TODO: 02.01.2017 return config or sql
+
   public static Config getInstance() {
-    return instance;
+    return INSTANCE;
   }
 
   public String getValue(String key) {

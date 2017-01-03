@@ -5,6 +5,7 @@ import com.katruk.entity.Teacher;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
+import com.katruk.util.Sql;
 
 import org.apache.log4j.Logger;
 
@@ -22,16 +23,6 @@ public final class TeacherDaoMySql implements TeacherDao {
   private final ConnectionPool connectionPool;
   private final Logger logger;
 
-  private final static String GET_TEACHER_BY_ID =
-      "SELECT t.user_person_id, t.position "
-      + "FROM teacher AS t "
-      + "WHERE t.user_person_id = ? "
-      + "ORDER BY t.id DESC "
-      + "LIMIT 1;";
-
-  private final static String CREATE_TEACHER =
-      "INSERT INTO teacher (user_person_id, position) VALUES (?, ?);";
-
   public TeacherDaoMySql() {
     this.connectionPool = ConnectionPool.getInstance();
     this.logger = Logger.getLogger(TeacherDaoMySql.class);
@@ -41,7 +32,8 @@ public final class TeacherDaoMySql implements TeacherDao {
   public Optional<Teacher> getTeacherById(final Long teacherId) throws DaoException {
     final Optional<Teacher> result;
     try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection.prepareStatement(GET_TEACHER_BY_ID)) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_TEACHER_BY_ID))) {
         statement.setLong(1, teacherId);
         result = getTeacherByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
@@ -60,7 +52,7 @@ public final class TeacherDaoMySql implements TeacherDao {
   public Teacher save(final Teacher teacher) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
-          .prepareStatement(CREATE_TEACHER)) {
+          .prepareStatement(Sql.getInstance().get(Sql.CREATE_TEACHER))) {
         statement.setLong(1, teacher.getId());
         statement.setString(2, teacher.getPosition().name());
         statement.execute();

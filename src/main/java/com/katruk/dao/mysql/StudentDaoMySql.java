@@ -5,6 +5,7 @@ import com.katruk.entity.Student;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
+import com.katruk.util.Sql;
 
 import org.apache.log4j.Logger;
 
@@ -22,16 +23,6 @@ public final class StudentDaoMySql implements StudentDao {
   private final ConnectionPool connectionPool;
   private final Logger logger;
 
-  private final static String GET_STUDENT_BY_ID =
-      "SELECT s.user_person_id, s.form, s.contract "
-      + "FROM student AS s "
-      + "WHERE s.user_person_id = ? "
-      + "ORDER BY s.user_person_id DESC "
-      + "LIMIT 1;";
-
-  private final static String CREATE_STUDENT =
-      "INSERT INTO student (user_person_id, form, contract) VALUES (?, ?, ?);";
-
   public StudentDaoMySql() {
     this.connectionPool = ConnectionPool.getInstance();
     this.logger = Logger.getLogger(StudentDaoMySql.class);
@@ -41,7 +32,8 @@ public final class StudentDaoMySql implements StudentDao {
   public Optional<Student> getStudentById(final Long studentId) throws DaoException {
     final Optional<Student> result;
     try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection.prepareStatement(GET_STUDENT_BY_ID)) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_STUDENT_BY_ID))) {
         statement.setLong(1, studentId);
         result = getStudentByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
@@ -60,7 +52,7 @@ public final class StudentDaoMySql implements StudentDao {
   public Student save(final Student student) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
-          .prepareStatement(CREATE_STUDENT)) {
+          .prepareStatement(Sql.getInstance().get(Sql.CREATE_STUDENT))) {
         statement.setLong(1, student.getId());
         statement.setString(2, student.getForm().name());
         statement.setString(3, student.getContract().name());

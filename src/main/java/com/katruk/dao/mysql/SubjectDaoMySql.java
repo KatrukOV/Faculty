@@ -5,6 +5,7 @@ import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
+import com.katruk.util.Sql;
 
 import org.apache.log4j.Logger;
 
@@ -22,25 +23,6 @@ public final class SubjectDaoMySql implements SubjectDao {
   private final ConnectionPool connectionPool;
   private final Logger logger;
 
-  private final static String
-      GET_SUBJECT_BY_ID =
-      "SELECT s.id,  teacher_user_person_id, s.title "
-      + "FROM subject AS s "
-      + "WHERE s.id = ? "
-      + "ORDER BY s.id DESC "
-      + "LIMIT 1;";
-
-  private final static String
-      GET_SUBJECT_BY_TEACHER =
-      "SELECT s.id, teacher_user_person_id, s.title "
-      + "FROM subject AS s "
-      + "WHERE s.teacher_user_person_id = ? "
-      + "ORDER BY s.id DESC "
-      + "LIMIT 1;";
-
-  private final static String CREATE_SUBJECT =
-      "INSERT INTO subject (teacher_user_person_id, title) VALUES (?, ?);";
-
   public SubjectDaoMySql() {
     this.connectionPool = ConnectionPool.getInstance();
     this.logger = Logger.getLogger(SubjectDaoMySql.class);
@@ -50,7 +32,8 @@ public final class SubjectDaoMySql implements SubjectDao {
   public Optional<Subject> getSubjectById(final Long subjectId) throws DaoException {
     final Optional<Subject> result;
     try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection.prepareStatement(GET_SUBJECT_BY_ID)) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_SUBJECT_BY_ID))) {
         statement.setLong(1, subjectId);
         result = getSubjectByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
@@ -68,7 +51,8 @@ public final class SubjectDaoMySql implements SubjectDao {
   @Override
   public Collection<Subject> getSubjectByTeacher(final Teacher teacher) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection.prepareStatement(GET_SUBJECT_BY_TEACHER)) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_SUBJECT_BY_TEACHER))) {
         statement.setLong(1, teacher.getId());
         return getSubjectByStatement(statement);
       } catch (SQLException e) {
@@ -86,7 +70,8 @@ public final class SubjectDaoMySql implements SubjectDao {
   public Subject save(final Subject subject) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
-          .prepareStatement(CREATE_SUBJECT, Statement.RETURN_GENERATED_KEYS)) {
+          .prepareStatement(Sql.getInstance().get(Sql.CREATE_SUBJECT),
+                            Statement.RETURN_GENERATED_KEYS)) {
         statement.setLong(1, subject.getTeacher().getId());
         statement.setString(2, subject.getTitle());
         statement.execute();
