@@ -8,7 +8,7 @@ public final class UserDto {
   private String username;
   private String password;
   private String confirmPassword;
-  private String role;
+
 
   public String getLastName() {
     return lastName;
@@ -58,14 +58,6 @@ public final class UserDto {
     this.confirmPassword = confirmPassword;
   }
 
-  public String getRole() {
-    return role;
-  }
-
-  public void setRole(String role) {
-    this.role = role;
-  }
-
   @Override
   public String toString() {
     return "UserDto{" +
@@ -75,7 +67,6 @@ public final class UserDto {
            ", username='" + username + '\'' +
            ", password='" + password + '\'' +
            ", confirmPassword='" + confirmPassword + '\'' +
-           ", role='" + role + '\'' +
            '}';
   }
 }

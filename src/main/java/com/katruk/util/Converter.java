@@ -17,7 +17,6 @@ public final class Converter {
     user.setPerson(person);
     user.setUsername(userDto.getUsername());
     user.setPassword(encodePassword(userDto.getPassword()));
-    user.setRole(User.Role.valueOf(userDto.getRole()));
     return user;
   }
 
@@ -28,7 +27,6 @@ public final class Converter {
     userDto.setPatronymic(user.getPerson().getPatronymic());
     userDto.setUsername(user.getUsername());
     userDto.setPassword(user.getPassword());
-    userDto.setRole(user.getRole().name());
     return userDto;
   }
 

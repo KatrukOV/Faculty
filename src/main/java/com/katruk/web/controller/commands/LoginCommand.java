@@ -1,6 +1,7 @@
 package com.katruk.web.controller.commands;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 import com.katruk.entity.Student;
 import com.katruk.entity.Teacher;
@@ -64,24 +65,26 @@ public final class LoginCommand implements ICommand, PageAttribute {
           session.setMaxInactiveInterval(MaxInactiveInterval);
           System.out.println(">>> user name="+user.getPerson().getName());
           System.out.println(">>> user role="+user.getRole());
-          switch (user.getRole()) {
-            case STUDENT: {
-              final Student student = this.studentService.getStudentById(user.getId());
-              session.setAttribute(CONTRACT, student.getContract());
-              session.setAttribute(FORM, student.getForm());
-              break;
+          if (nonNull(user.getRole())){
+            switch (user.getRole()) {
+              case STUDENT: {
+                final Student student = this.studentService.getStudentById(user.getId());
+                session.setAttribute(CONTRACT, student.getContract());
+                session.setAttribute(FORM, student.getForm());
+                break;
+              }
+              case TEACHER: {
+                final Teacher teacher = this.teacherService.getTeacherById(user.getId());
+                session.setAttribute(POSITION, teacher.getPosition());
+                break;
+              }
+              case ADMIN: {
+                System.out.println(">>> Admin");
+                break;
+              }
+              default:
+                System.out.println("!!!!! null ? ");
             }
-            case TEACHER: {
-              final Teacher teacher = this.teacherService.getTeacherById(user.getId());
-              session.setAttribute(POSITION, teacher.getPosition());
-              break;
-            }
-            case ADMIN: {
-              System.out.println("Admin");
-              break;
-            }
-            default:
-              System.out.println(" mull ? ");
           }
           page = Config.getInstance().getValue(Config.PROFILE);
         }

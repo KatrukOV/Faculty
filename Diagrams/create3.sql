@@ -18,7 +18,7 @@ CREATE  TABLE IF NOT EXISTS `faculty`.`person` (
   `patronymic` VARCHAR(40) NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 6
+AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = utf8
 COMMENT = 'person data';
 
@@ -32,7 +32,7 @@ CREATE  TABLE IF NOT EXISTS `faculty`.`user` (
   `person_id` BIGINT(20) NOT NULL ,
   `username` VARCHAR(45) NOT NULL ,
   `password` VARCHAR(100) NOT NULL ,
-  `role` ENUM('STUDENT','TEACHER','ADMIN') NULL DEFAULT NULL ,
+  `role` ENUM('STUDENT','TEACHER','ADMIN') NOT NULL ,
   PRIMARY KEY (`person_id`) ,
   UNIQUE INDEX `username_UNIQUE` (`username` ASC) ,
   INDEX `fk_user_person_idx` (`person_id` ASC) ,

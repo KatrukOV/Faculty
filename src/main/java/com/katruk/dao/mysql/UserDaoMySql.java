@@ -1,5 +1,7 @@
 package com.katruk.dao.mysql;
 
+import static java.util.Objects.nonNull;
+
 import com.katruk.dao.UserDao;
 import com.katruk.entity.Person;
 import com.katruk.entity.User;
@@ -67,7 +69,6 @@ public final class UserDaoMySql implements UserDao {
     return result;
   }
 
-
   @Override
   public User save(final User user) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
@@ -76,7 +77,7 @@ public final class UserDaoMySql implements UserDao {
         statement.setLong(1, user.getPerson().getId());
         statement.setString(2, user.getUsername());
         statement.setString(3, user.getPassword());
-        statement.setString(4, user.getRole().name());
+        statement.setString(4, user.getRole() != null ? user.getRole().name() : null);
         statement.execute();
         connection.commit();
       } catch (SQLException e) {
@@ -103,7 +104,9 @@ public final class UserDaoMySql implements UserDao {
         user.setId(person.getId());
         user.setUsername(resultSet.getString("username"));
         user.setPassword(resultSet.getString("password"));
-        user.setRole(User.Role.valueOf(resultSet.getString("role")));
+        if(nonNull(resultSet.getString("role"))){
+          user.setRole(User.Role.valueOf(resultSet.getString("role")));
+        }
         result.add(user);
       }
     } catch (SQLException e) {

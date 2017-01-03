@@ -37,7 +37,7 @@ public final class UserValidator {
   private void requiredField(UserDto userDto) throws ValidateException {
     if (isNull(userDto.getLastName()) || isNull(userDto.getName())
         || isNull(userDto.getPatronymic()) || isNull(userDto.getUsername())
-        || isNull(userDto.getPassword()) || isNull(userDto.getRole())) {
+        || isNull(userDto.getPassword())) {
       throw new ValidateException("Same field is empty");
     }
   }
@@ -79,7 +79,7 @@ public final class UserValidator {
       this.userService.getUserByUsername(userDto.getUsername());
     } catch (ServiceException e) {
       // TODO: 16.12.2016 log
-      System.out.println(" !!!!!!!!! e" + e);
+      System.out.println(" !!!!!!!!! e=" + e);
       return;
     }
     // TODO: 16.12.2016 log

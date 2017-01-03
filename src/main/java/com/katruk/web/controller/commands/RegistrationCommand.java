@@ -14,12 +14,9 @@ import com.katruk.util.Converter;
 import com.katruk.util.UserValidator;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.ICommand;
-
 import org.apache.log4j.Logger;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 
 public final class RegistrationCommand implements ICommand, PageAttribute {
 
@@ -55,12 +52,14 @@ public final class RegistrationCommand implements ICommand, PageAttribute {
     }
     try {
       User user = new Converter().convertDto(userDto);
-      user = this.userService.create(user);
-      Student student = new Student();
-      System.out.println(">>> user save=" + user);
-      student.setUser(user);
-      this.studentService.create(student);
-
+//      user.setRole(User.Role.STUDENT);
+      this.userService.create(user);
+//      Student student = new Student();
+//      System.out.println(">>> user save=" + user);
+//      student.setUser(user);
+//      student.setForm(Student.Form.FULL_TAME);
+//      student.setContract(Student.Contract.STATE_ORDER);
+//      this.studentService.create(student);
     } catch (ServiceException e) {
       request.setAttribute(ERROR, e.getMessage());
       logger.error(e);
@@ -79,7 +78,6 @@ public final class RegistrationCommand implements ICommand, PageAttribute {
     userDto.setUsername(request.getParameter(USERNAME));
     userDto.setPassword(request.getParameter(PASSWORD));
     userDto.setConfirmPassword(request.getParameter(CONFIRM_PASSWORD));
-    userDto.setRole(User.Role.STUDENT.name());
     return userDto;
   }
 }
