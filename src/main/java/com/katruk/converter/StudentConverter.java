@@ -3,9 +3,7 @@ package com.katruk.converter;
 import static java.util.stream.Collectors.toList;
 
 import com.katruk.entity.Student;
-import com.katruk.entity.Teacher;
 import com.katruk.entity.dto.StudentDto;
-import com.katruk.entity.dto.TeacherDto;
 
 import java.util.Collection;
 import java.util.List;

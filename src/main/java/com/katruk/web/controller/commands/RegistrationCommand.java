@@ -1,15 +1,13 @@
 package com.katruk.web.controller.commands;
 
+import com.katruk.converter.UserConverter;
 import com.katruk.entity.User;
 import com.katruk.entity.dto.UserDto;
 import com.katruk.exception.ServiceException;
 import com.katruk.exception.ValidateException;
-import com.katruk.service.StudentService;
 import com.katruk.service.UserService;
-import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.service.impl.UserServiceImpl;
 import com.katruk.util.Config;
-import com.katruk.converter.UserConverter;
 import com.katruk.util.UserValidator;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.ICommand;
@@ -23,19 +21,17 @@ public final class RegistrationCommand implements ICommand, PageAttribute {
 
   private final Logger logger;
   private final UserService userService;
-  private final StudentService studentService;
   private final UserValidator userValidator;
   private final static String REGISTRATION_OK = "User successfully registered";
 
   public RegistrationCommand() {
     this.logger = Logger.getLogger(RegistrationCommand.class);
     this.userService = new UserServiceImpl();
-    this.studentService = new StudentServiceImpl();
     this.userValidator = new UserValidator();
   }
 
   @Override
-  public String execute(HttpServletRequest request, HttpServletResponse response) {
+  public String execute(final HttpServletRequest request, final HttpServletResponse response) {
     System.out.println(">>> Begin reg");
     String page = Config.getInstance().getValue(Config.INDEX);
 //    UserDto userDto = (UserDto) request.getAttribute(USER_DTO);
@@ -50,8 +46,8 @@ public final class RegistrationCommand implements ICommand, PageAttribute {
       return Config.getInstance().getValue(Config.REGISTRATION);
     }
     try {
-      User user = new UserConverter().convertToDto(userDto);
-      this.userService.create(user);
+      User user = new UserConverter().convertToUser(userDto);
+      this.userService.save(user);
     } catch (ServiceException e) {
       request.setAttribute(ERROR, e.getMessage());
       logger.error(e);

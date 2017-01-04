@@ -12,7 +12,7 @@
             <label><b>${student.lastName}</b></label>
             <label><b>${student.name}</b></label>
             <label><b>${student.patronymic}</b></label>
-            <label><b> ${student.form}</b></label>
+            <label><b>${student.form}</b></label>
             <label> set form: </label>
             <select name="form">
                 <option value="FULL_TAME" ${teacher.contract.equals('FULL_TAME') ? 'selected="selected"' : ''}>
@@ -28,7 +28,6 @@
                     DISTANCE
                 </option>
             </select>
-
             <label><b> ${student.contract}</b></label>
             <label> set contract: </label>
             <select name="contract">
@@ -39,7 +38,7 @@
                     CONTRACT
                 </option>
             </select>
-                <%--<input type="hidden" name="login" value="${student.login}"/>--%>
+            <input type="hidden" name="studentId" value="${student.studentId}"/>
             <input type="hidden" name="command" value="setContract"/>
             <input type="submit" value="Submit"/>
         </form>

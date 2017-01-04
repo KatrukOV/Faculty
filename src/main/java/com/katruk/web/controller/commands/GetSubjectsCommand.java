@@ -16,7 +16,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class GetSubjectsCommand implements ICommand, PageAttribute {
+public final class GetSubjectsCommand implements ICommand, PageAttribute {
 
   private final Logger logger;
   private final SubjectService subjectService;
@@ -27,8 +27,8 @@ public class GetSubjectsCommand implements ICommand, PageAttribute {
   }
 
   @Override
-  public String execute(HttpServletRequest request, HttpServletResponse response) {
-    String page = request.getContextPath();
+  public String execute(final HttpServletRequest request, final HttpServletResponse response) {
+    String page = Config.getInstance().getValue(Config.ALL_SUBJECTS);
     try {
       Collection<Subject> subjects = this.subjectService.getAll();
       List<SubjectDto> subjectList = new SubjectConverter().convertToDto(subjects);

@@ -56,17 +56,17 @@ public final class LoginCommand implements ICommand, PageAttribute {
       System.out.println(">> else ");
       try {
         final User user = this.userService.getUserByUsername(username);
-        System.out.println(">>> user="+user);
+        System.out.println(">>> user=" + user);
         if (user.getPassword().equals(DigestUtils.sha1Hex(password))) {
           session.setAttribute(LAST_NAME, user.getPerson().getLastName());
           session.setAttribute(NAME, user.getPerson().getName());
           session.setAttribute(USERNAME, user.getUsername());
           session.setAttribute(ROLE, user.getRole());
           session.setMaxInactiveInterval(MaxInactiveInterval);
-          System.out.println(">>> user name="+user.getPerson().getName());
-          System.out.println(">>> user role="+user.getRole());
+          System.out.println(">>> user name=" + user.getPerson().getName());
+          System.out.println(">>> user role=" + user.getRole());
           page = Config.getInstance().getValue(Config.PROFILE);
-          if (nonNull(user.getRole())){
+          if (nonNull(user.getRole())) {
             switch (user.getRole()) {
               case STUDENT: {
                 final Student student = this.studentService.getStudentById(user.getId());

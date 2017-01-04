@@ -4,11 +4,20 @@ import com.katruk.entity.Student;
 
 public final class StudentDto {
 
+  private Long studentId;
   private String lastName;
   private String name;
   private String patronymic;
   private Student.Form form;
   private Student.Contract contract;
+
+  public Long getStudentId() {
+    return studentId;
+  }
+
+  public void setStudentId(Long studentId) {
+    this.studentId = studentId;
+  }
 
   public String getLastName() {
     return lastName;

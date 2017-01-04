@@ -19,7 +19,7 @@ public final class LogoutCommand implements ICommand, PageAttribute {
   }
 
   @Override
-  public String execute(HttpServletRequest request, HttpServletResponse response) {
+  public String execute(final HttpServletRequest request, final HttpServletResponse response) {
     request.getSession().removeAttribute(USERNAME);
     request.getSession().invalidate();
     request.setAttribute(INFO, LOGOUT);

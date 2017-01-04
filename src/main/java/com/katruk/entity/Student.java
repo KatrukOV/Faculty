@@ -1,18 +1,19 @@
 package com.katruk.entity;
 
-public final class Student extends Model{
+public final class Student extends Model {
+
   private User user;
   private Form form;
   private Contract contract;
 
-  public enum Form{
+  public enum Form {
     FULL_TAME,
     EXTRAMURAL,
     EVENING,
     DISTANCE
   }
 
-  public enum Contract{
+  public enum Contract {
     STATE_ORDER,
     CONTRACT
   }

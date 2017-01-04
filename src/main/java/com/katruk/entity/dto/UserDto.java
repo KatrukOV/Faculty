@@ -2,6 +2,7 @@ package com.katruk.entity.dto;
 
 public final class UserDto {
 
+  private Long userId;
   private String lastName;
   private String name;
   private String patronymic;
@@ -9,6 +10,13 @@ public final class UserDto {
   private String password;
   private String confirmPassword;
 
+  public Long getUserId() {
+    return userId;
+  }
+
+  public void setUserId(Long userId) {
+    this.userId = userId;
+  }
 
   public String getLastName() {
     return lastName;
@@ -56,17 +64,5 @@ public final class UserDto {
 
   public void setConfirmPassword(String confirmPassword) {
     this.confirmPassword = confirmPassword;
-  }
-
-  @Override
-  public String toString() {
-    return "UserDto{" +
-           "lastName='" + lastName + '\'' +
-           ", name='" + name + '\'' +
-           ", patronymic='" + patronymic + '\'' +
-           ", username='" + username + '\'' +
-           ", password='" + password + '\'' +
-           ", confirmPassword='" + confirmPassword + '\'' +
-           '}';
   }
 }

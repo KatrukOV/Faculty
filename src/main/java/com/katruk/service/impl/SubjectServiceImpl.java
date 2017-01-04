@@ -1,19 +1,14 @@
 package com.katruk.service.impl;
 
-import com.katruk.dao.StudentDao;
 import com.katruk.dao.SubjectDao;
-import com.katruk.dao.mysql.StudentDaoMySql;
 import com.katruk.dao.mysql.SubjectDaoMySql;
 import com.katruk.entity.Student;
 import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
-import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.exception.ServiceException;
-import com.katruk.service.StudentService;
 import com.katruk.service.SubjectService;
 import com.katruk.service.TeacherService;
-import com.katruk.service.UserService;
 
 import org.apache.log4j.Logger;
 
@@ -84,7 +79,7 @@ public final class SubjectServiceImpl implements SubjectService {
   }
 
   @Override
-  public Subject create(Subject subject) throws ServiceException {
+  public Subject save(Subject subject) throws ServiceException {
     try {
       this.subjectDao.save(subject);
     } catch (DaoException e) {

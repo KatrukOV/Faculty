@@ -3,9 +3,7 @@ package com.katruk.converter;
 import static java.util.stream.Collectors.toList;
 
 import com.katruk.entity.Subject;
-import com.katruk.entity.Teacher;
 import com.katruk.entity.dto.SubjectDto;
-import com.katruk.entity.dto.TeacherDto;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,6 +21,7 @@ public final class SubjectConverter {
 
   public SubjectDto convertToDto(Subject subject) {
     SubjectDto subjectDto = new SubjectDto();
+    subjectDto.setSubjectId(subject.getId());
     subjectDto.setLastName(subject.getTeacher().getUser().getPerson().getLastName());
     subjectDto.setName(subject.getTeacher().getUser().getPerson().getName());
     subjectDto.setPatronymic(subject.getTeacher().getUser().getPerson().getPatronymic());

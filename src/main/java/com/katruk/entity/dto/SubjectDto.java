@@ -4,11 +4,20 @@ import com.katruk.entity.Teacher;
 
 public final class SubjectDto {
 
+  private Long subjectId;
   private String lastName;
   private String name;
   private String patronymic;
   private Teacher.Position position;
   private String title;
+
+  public Long getSubjectId() {
+    return subjectId;
+  }
+
+  public void setSubjectId(Long subjectId) {
+    this.subjectId = subjectId;
+  }
 
   public String getLastName() {
     return lastName;

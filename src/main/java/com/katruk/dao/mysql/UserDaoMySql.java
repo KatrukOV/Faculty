@@ -30,6 +30,25 @@ public final class UserDaoMySql implements UserDao {
   }
 
   @Override
+  public Collection<User> getAllUser() throws DaoException {
+    final Collection<User> result;
+    try (Connection connection = this.connectionPool.getConnection()) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_USER))) {
+        result = getUserByStatement(statement);
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+    return result;
+  }
+
+  @Override
   public Optional<User> getUserByUsername(final String username) throws DaoException {
     final Optional<User> result;
     try (Connection connection = this.connectionPool.getConnection()) {
@@ -71,6 +90,39 @@ public final class UserDaoMySql implements UserDao {
 
   @Override
   public User save(final User user) throws DaoException {
+    User result;
+    if (nonNull(user.getId())) {
+      result = update(user);
+    } else {
+      result = create(user);
+    }
+    return result;
+  }
+
+  // TODO: 04.01.17
+  private User update(User user) throws DaoException{
+    try (Connection connection = this.connectionPool.getConnection()) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.UPDATE_USER))) {
+        statement.setLong(1, user.getPerson().getId());
+        statement.setString(2, user.getUsername());
+        statement.setString(3, user.getPassword());
+        statement.setString(4, user.getRole() != null ? user.getRole().name() : null);
+        statement.execute();
+        connection.commit();
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+    return user;
+  }
+
+  private User create(User user) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.CREATE_USER))) {
@@ -92,25 +144,6 @@ public final class UserDaoMySql implements UserDao {
     return user;
   }
 
-  @Override
-  public Collection<User> getAllUser() throws DaoException {
-    final Collection<User> result;
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_USER))) {
-        result = getUserByStatement(statement);
-      } catch (SQLException e) {
-        connection.rollback();
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
-    } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
-    }
-    return result;
-  }
-
   private Collection<User> getUserByStatement(final PreparedStatement statement)
       throws DaoException {
     Collection<User> result = new ArrayList<>();
@@ -123,7 +156,7 @@ public final class UserDaoMySql implements UserDao {
         user.setId(person.getId());
         user.setUsername(resultSet.getString("username"));
         user.setPassword(resultSet.getString("password"));
-        if(nonNull(resultSet.getString("role"))){
+        if (nonNull(resultSet.getString("role"))) {
           user.setRole(User.Role.valueOf(resultSet.getString("role")));
         }
         result.add(user);

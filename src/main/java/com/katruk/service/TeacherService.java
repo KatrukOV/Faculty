@@ -7,7 +7,9 @@ import java.util.Collection;
 
 public interface TeacherService {
 
+  Collection<Teacher> gatAll() throws ServiceException;
+
   Teacher getTeacherById(final Long teacherId) throws ServiceException;
 
-  Collection<Teacher> gatAll() throws ServiceException;
+  Teacher save(final Teacher teacher) throws ServiceException;
 }

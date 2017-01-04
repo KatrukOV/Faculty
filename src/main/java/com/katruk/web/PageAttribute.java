@@ -11,9 +11,9 @@ public interface PageAttribute {
   String ROLE = "role";
 
 //  String USER_DTO = "userDto";
-//  String USER = "user";
-//  String STUDENT = "student";
-//  String TEACHER = "teacher";
+  String USER_ID = "userId";
+  String STUDENT_ID = "studentId";
+  String TEACHER_ID = "teacherId";
 
   String CONTRACT = "contract";
   String FORM = "form";

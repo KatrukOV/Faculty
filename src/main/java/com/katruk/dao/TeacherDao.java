@@ -10,7 +10,7 @@ public interface TeacherDao {
 
   Optional<Teacher> getTeacherById(final Long teacherId) throws DaoException;
 
-  Teacher save(final Teacher teacher) throws DaoException;
-
   Collection<Teacher> getAllTeacher() throws DaoException;
+
+  Teacher save(final Teacher teacher) throws DaoException;
 }

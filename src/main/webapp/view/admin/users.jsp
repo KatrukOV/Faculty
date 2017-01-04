@@ -25,7 +25,7 @@
                     ADMIN
                 </option>
             </select>
-            <%--<input type="hidden" name="login" value="${user.login}"/>--%>
+            <input type="hidden" name="login" value="${user.userId}"/>
             <input type="hidden" name="command" value="setRole"/>
             <input type="submit" value="Submit"/>
         </form>

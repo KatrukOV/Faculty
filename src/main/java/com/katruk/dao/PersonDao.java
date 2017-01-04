@@ -10,5 +10,4 @@ public interface PersonDao {
   Optional<Person> getPersonById(final Long personId) throws DaoException;
 
   Person save(final Person person) throws DaoException;
-
 }

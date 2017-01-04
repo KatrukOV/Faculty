@@ -17,7 +17,7 @@ public final class UserConverter {
   private final Function<User, UserDto> toDto = this::convertToDto;
 
 
-  public List<UserDto> convertToDto(Collection<User> users){
+  public List<UserDto> convertToDto(Collection<User> users) {
     return users.stream()
         .map(toDto)
         .collect(toList());
@@ -37,6 +37,7 @@ public final class UserConverter {
 
   public UserDto convertToDto(User user) {
     UserDto userDto = new UserDto();
+    userDto.setUserId(user.getId());
     userDto.setLastName(user.getPerson().getLastName());
     userDto.setName(user.getPerson().getName());
     userDto.setPatronymic(user.getPerson().getPatronymic());
@@ -49,5 +50,4 @@ public final class UserConverter {
   private String encodePassword(String password) {
     return DigestUtils.sha1Hex(password);
   }
-
 }

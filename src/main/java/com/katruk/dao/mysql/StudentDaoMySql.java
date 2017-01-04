@@ -13,7 +13,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -26,6 +25,25 @@ public final class StudentDaoMySql implements StudentDao {
   public StudentDaoMySql() {
     this.connectionPool = ConnectionPool.getInstance();
     this.logger = Logger.getLogger(StudentDaoMySql.class);
+  }
+
+  @Override
+  public Collection<Student> getAllStudent() throws DaoException {
+    final Collection<Student> result;
+    try (Connection connection = this.connectionPool.getConnection()) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_STUDENT))) {
+        result = getStudentByStatement(statement);
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+    return result;
   }
 
   @Override

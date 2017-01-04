@@ -1,7 +1,6 @@
 package com.katruk.dao.mysql;
 
 import com.katruk.dao.SubjectDao;
-import com.katruk.entity.Student;
 import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
 import com.katruk.exception.DaoException;

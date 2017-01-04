@@ -1,12 +1,13 @@
 package com.katruk.entity;
 
 public final class User extends Model {
+
   private Person person;
   private String username;
   private String password;
   private Role role;
 
-  public enum Role{
+  public enum Role {
     STUDENT,
     TEACHER,
     ADMIN

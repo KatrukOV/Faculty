@@ -39,7 +39,7 @@ public final class StudentServiceImpl implements StudentService {
     // TODO: 04.01.17 add to students real user (use stream())
     for (User user : users) {
       for (Student student : students) {
-        if (user.getId() == student.getId()){
+        if (user.getId() == student.getId()) {
           student.setUser(user);
         }
       }
@@ -63,7 +63,7 @@ public final class StudentServiceImpl implements StudentService {
   }
 
   @Override
-  public Student create(final Student student) throws ServiceException {
+  public Student save(final Student student) throws ServiceException {
     try {
       this.studentDao.save(student);
     } catch (DaoException e) {

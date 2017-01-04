@@ -16,7 +16,6 @@
             <label><b>${teacher.name}</b></label>
             <label><b>${teacher.patronymic}</b></label>
             <label><b> position now ${teacher.position}</b></label>
-
             <label> set position: </label>
             <select name="position">
                 <option value="ASSISTANT_PROFESSOR" ${teacher.position.equals('ASSISTANT_PROFESSOR')
@@ -29,8 +28,7 @@
                         ? 'selected="selected"' : ''}>PROFESSOR
                 </option>
             </select>
-
-            <%--<input type="hidden" name="login" value="${teacher.login}"/>--%>
+            <input type="hidden" name="login" value="${teacher.teacherId}"/>
             <input type="hidden" name="command" value="setPosition"/>
             <input type="submit" value="Submit"/>
         </form>

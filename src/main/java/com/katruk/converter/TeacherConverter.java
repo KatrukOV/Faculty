@@ -2,13 +2,8 @@ package com.katruk.converter;
 
 import static java.util.stream.Collectors.toList;
 
-import com.katruk.entity.Person;
 import com.katruk.entity.Teacher;
-import com.katruk.entity.User;
 import com.katruk.entity.dto.TeacherDto;
-import com.katruk.entity.dto.UserDto;
-
-import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,6 +21,7 @@ public final class TeacherConverter {
 
   public TeacherDto convertToDto(Teacher teacher) {
     TeacherDto teacherDto = new TeacherDto();
+    teacherDto.setTeacherId(teacher.getId());
     teacherDto.setLastName(teacher.getUser().getPerson().getLastName());
     teacherDto.setName(teacher.getUser().getPerson().getName());
     teacherDto.setPatronymic(teacher.getUser().getPerson().getPatronymic());
