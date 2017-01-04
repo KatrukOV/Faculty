@@ -15,12 +15,14 @@ public final class Sql {
   public static final String CREATE_USER = "CREATE_USER";
   public static final String GET_USER_BY_USERNAME = "GET_USER_BY_USERNAME";
   public static final String GET_USER_BY_ID = "GET_USER_BY_ID";
+  public static final String GET_ALL_USER = "GET_ALL_USER";
 
   public static final String CREATE_STUDENT = "CREATE_STUDENT";
   public static final String GET_STUDENT_BY_ID = "GET_STUDENT_BY_ID";
 
   public static final String CREATE_TEACHER = "CREATE_TEACHER";
   public static final String GET_TEACHER_BY_ID = "GET_TEACHER_BY_ID";
+  public static final String GET_ALL_TEACHER = "GET_ALL_TEACHER";
 
   public static final String CREATE_SUBJECT = "CREATE_SUBJECT";
   public static final String GET_SUBJECT_BY_ID = "GET_SUBJECT_BY_ID";

@@ -36,7 +36,9 @@ public interface PageAttribute {
   String DISCIPLINE_LIST = "disciplineList";
   String EVALUATION_LIST = "evaluationList";
   String STUDENT_LIST = "studentList";
-  String HUMAN_LIST = "humanList";
+
+  String USER_LIST = "userList";
+
   String TEACHER_LIST = "teacherList";
   String STUDENT_MARK_LIST = "studentMarkList";
 }

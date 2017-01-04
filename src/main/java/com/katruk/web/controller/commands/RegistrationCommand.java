@@ -1,6 +1,5 @@
 package com.katruk.web.controller.commands;
 
-import com.katruk.entity.Student;
 import com.katruk.entity.User;
 import com.katruk.entity.dto.UserDto;
 import com.katruk.exception.ServiceException;
@@ -10,11 +9,13 @@ import com.katruk.service.UserService;
 import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.service.impl.UserServiceImpl;
 import com.katruk.util.Config;
-import com.katruk.util.Converter;
+import com.katruk.converter.UserConverter;
 import com.katruk.util.UserValidator;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.ICommand;
+
 import org.apache.log4j.Logger;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,31 +40,22 @@ public final class RegistrationCommand implements ICommand, PageAttribute {
     String page = Config.getInstance().getValue(Config.INDEX);
 //    UserDto userDto = (UserDto) request.getAttribute(USER_DTO);
     UserDto userDto = getUserDtoFromRequest(request);
-
     System.out.println(">>> userDto=" + userDto);
-
     try {
       this.userValidator.validate(userDto);
       System.out.println(">>> no valid err");
     } catch (ValidateException e) {
       request.setAttribute(ERROR, e.getMessage());
       logger.error(e);
-      page = Config.getInstance().getValue(Config.REGISTRATION);
+      return Config.getInstance().getValue(Config.REGISTRATION);
     }
     try {
-      User user = new Converter().convertDto(userDto);
-//      user.setRole(User.Role.STUDENT);
+      User user = new UserConverter().convertToDto(userDto);
       this.userService.create(user);
-//      Student student = new Student();
-//      System.out.println(">>> user save=" + user);
-//      student.setUser(user);
-//      student.setForm(Student.Form.FULL_TAME);
-//      student.setContract(Student.Contract.STATE_ORDER);
-//      this.studentService.create(student);
     } catch (ServiceException e) {
       request.setAttribute(ERROR, e.getMessage());
       logger.error(e);
-      page = Config.getInstance().getValue(Config.ERROR_PAGE);
+      return Config.getInstance().getValue(Config.ERROR_PAGE);
     }
     request.setAttribute(INFO, REGISTRATION_OK);
     logger.info(REGISTRATION_OK);

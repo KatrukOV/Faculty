@@ -3,6 +3,7 @@ package com.katruk.dao;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public interface UserDao {
@@ -13,4 +14,5 @@ public interface UserDao {
 
   User save(final User user) throws DaoException;
 
+  Collection<User> getAllUser() throws DaoException;
 }

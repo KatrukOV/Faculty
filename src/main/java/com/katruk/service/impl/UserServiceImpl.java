@@ -6,14 +6,13 @@ import com.katruk.dao.mysql.PersonDaoMySql;
 import com.katruk.dao.mysql.UserDaoMySql;
 import com.katruk.entity.Person;
 import com.katruk.entity.User;
-import com.katruk.entity.dto.UserDto;
 import com.katruk.exception.DaoException;
 import com.katruk.exception.ServiceException;
 import com.katruk.service.UserService;
-import com.katruk.util.Converter;
 
 import org.apache.log4j.Logger;
 
+import java.util.Collection;
 import java.util.NoSuchElementException;
 
 public final class UserServiceImpl implements UserService {
@@ -21,13 +20,11 @@ public final class UserServiceImpl implements UserService {
   private final Logger logger;
   private final PersonDao personDao;
   private final UserDao userDao;
-  private final Converter converter;
 
   public UserServiceImpl() {
     this.logger = Logger.getLogger(UserServiceImpl.class);
     this.userDao = new UserDaoMySql();
     this.personDao = new PersonDaoMySql();
-    this.converter = new Converter();
   }
 
   @Override
@@ -91,5 +88,17 @@ public final class UserServiceImpl implements UserService {
       throw new ServiceException("err", e);
     }
     return user;
+  }
+
+  @Override
+  public Collection<User> getAll() throws ServiceException {
+    Collection<User> result;
+    try {
+      result = this.userDao.getAllUser();
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+    return result;
   }
 }

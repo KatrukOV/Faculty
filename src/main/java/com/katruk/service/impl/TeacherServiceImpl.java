@@ -11,6 +11,7 @@ import com.katruk.service.UserService;
 
 import org.apache.log4j.Logger;
 
+import java.util.Collection;
 import java.util.NoSuchElementException;
 
 public final class TeacherServiceImpl implements TeacherService {
@@ -38,5 +39,17 @@ public final class TeacherServiceImpl implements TeacherService {
     final User user = this.userService.getUserById(teacher.getUser().getId());
     teacher.setUser(user);
     return teacher;
+  }
+
+  @Override
+  public Collection<Teacher> gatAll() throws ServiceException {
+    Collection<Teacher> result;
+    try {
+      result = this.teacherDao.getAllTeacher();
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+    return result;
   }
 }

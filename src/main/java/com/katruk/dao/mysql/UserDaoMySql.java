@@ -92,6 +92,25 @@ public final class UserDaoMySql implements UserDao {
     return user;
   }
 
+  @Override
+  public Collection<User> getAllUser() throws DaoException {
+    final Collection<User> result;
+    try (Connection connection = this.connectionPool.getConnection()) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_USER))) {
+        result = getUserByStatement(statement);
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+    return result;
+  }
+
   private Collection<User> getUserByStatement(final PreparedStatement statement)
       throws DaoException {
     Collection<User> result = new ArrayList<>();

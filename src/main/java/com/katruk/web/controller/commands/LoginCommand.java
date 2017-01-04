@@ -65,6 +65,7 @@ public final class LoginCommand implements ICommand, PageAttribute {
           session.setMaxInactiveInterval(MaxInactiveInterval);
           System.out.println(">>> user name="+user.getPerson().getName());
           System.out.println(">>> user role="+user.getRole());
+          page = Config.getInstance().getValue(Config.PROFILE);
           if (nonNull(user.getRole())){
             switch (user.getRole()) {
               case STUDENT: {
@@ -79,6 +80,7 @@ public final class LoginCommand implements ICommand, PageAttribute {
                 break;
               }
               case ADMIN: {
+                page = Config.getInstance().getValue(Config.ADMIN_PROFILE);
                 System.out.println(">>> Admin");
                 break;
               }
@@ -86,7 +88,6 @@ public final class LoginCommand implements ICommand, PageAttribute {
                 System.out.println("!!!!! null ? ");
             }
           }
-          page = Config.getInstance().getValue(Config.PROFILE);
         }
       } catch (ServiceException e) {
         request.getSession().setAttribute(ERROR, ERROR_LOGIN_WRONG);

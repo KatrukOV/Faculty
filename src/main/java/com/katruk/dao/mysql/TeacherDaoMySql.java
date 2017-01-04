@@ -69,6 +69,25 @@ public final class TeacherDaoMySql implements TeacherDao {
     return teacher;
   }
 
+  @Override
+  public Collection<Teacher> getAllTeacher() throws DaoException {
+    final Collection<Teacher> result;
+    try (Connection connection = this.connectionPool.getConnection()) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_TEACHER))) {
+        result = getTeacherByStatement(statement);
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+    return result;
+  }
+
   private Collection<Teacher> getTeacherByStatement(final PreparedStatement statement)
       throws DaoException {
     final Collection<Teacher> result = new ArrayList<>();
