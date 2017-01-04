@@ -7,9 +7,9 @@ import java.util.Collection;
 
 public interface StudentService {
 
+  Collection<Student> getAll() throws ServiceException;
+
   Student getStudentById(final Long studentId) throws ServiceException;
 
   Student create(final Student student) throws ServiceException;
-
-  Collection<Student> getAll() throws ServiceException;
 }

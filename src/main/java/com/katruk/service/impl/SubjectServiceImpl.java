@@ -35,12 +35,17 @@ public final class SubjectServiceImpl implements SubjectService {
   @Override
   public Collection<Subject> getAll() throws ServiceException {
     Collection<Subject> result;
-    result = this.subjectDao.
+    try {
+      result = this.subjectDao.getAllSubject();
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
     return result;
   }
 
   @Override
-  public Subject getSubjectById(Long subjectId) throws ServiceException {
+  public Subject getSubjectById(final Long subjectId) throws ServiceException {
     final Subject subject;
     try {
       subject = this.subjectDao.getSubjectById(subjectId)
@@ -55,13 +60,27 @@ public final class SubjectServiceImpl implements SubjectService {
   }
 
   @Override
-  public Collection<Subject> getSubjectByTeacher(Teacher teacher) throws ServiceException {
-    return null;
+  public Collection<Subject> getSubjectByTeacher(final Teacher teacher) throws ServiceException {
+    Collection<Subject> result;
+    try {
+      result = this.subjectDao.getSubjectByTeacher(teacher.getId());
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+    return result;
   }
 
   @Override
-  public Collection<Subject> getSubjectsByStudent(Student student) throws ServiceException {
-    return null;
+  public Collection<Subject> getSubjectsByStudent(final Student student) throws ServiceException {
+    Collection<Subject> result;
+    try {
+      result = this.subjectDao.getSubjectsByStudent(student.getId());
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+    return result;
   }
 
   @Override

@@ -28,6 +28,18 @@ public final class UserServiceImpl implements UserService {
   }
 
   @Override
+  public Collection<User> getAll() throws ServiceException {
+    Collection<User> result;
+    try {
+      result = this.userDao.getAllUser();
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+    return result;
+  }
+
+  @Override
   public User getUserByUsername(final String username) throws ServiceException {
     final User user;
     try {
@@ -88,17 +100,5 @@ public final class UserServiceImpl implements UserService {
       throw new ServiceException("err", e);
     }
     return user;
-  }
-
-  @Override
-  public Collection<User> getAll() throws ServiceException {
-    Collection<User> result;
-    try {
-      result = this.userDao.getAllUser();
-    } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
-    }
-    return result;
   }
 }

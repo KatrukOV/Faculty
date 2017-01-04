@@ -27,6 +27,20 @@ public final class TeacherServiceImpl implements TeacherService {
   }
 
   @Override
+  public Collection<Teacher> gatAll() throws ServiceException {
+    Collection<Teacher> result;
+    try {
+      result = this.teacherDao.getAllTeacher();
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+    //todo  add to teacher real user (use stream())
+    //  Collection<User> users = this.userService.getAll();
+    return result;
+  }
+
+  @Override
   public Teacher getTeacherById(final Long teacherId) throws ServiceException {
     final Teacher teacher;
     try {
@@ -39,17 +53,5 @@ public final class TeacherServiceImpl implements TeacherService {
     final User user = this.userService.getUserById(teacher.getUser().getId());
     teacher.setUser(user);
     return teacher;
-  }
-
-  @Override
-  public Collection<Teacher> gatAll() throws ServiceException {
-    Collection<Teacher> result;
-    try {
-      result = this.teacherDao.getAllTeacher();
-    } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
-    }
-    return result;
   }
 }

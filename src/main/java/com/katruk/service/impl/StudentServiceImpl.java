@@ -11,6 +11,7 @@ import com.katruk.service.UserService;
 
 import org.apache.log4j.Logger;
 
+import java.util.Collection;
 import java.util.NoSuchElementException;
 
 public final class StudentServiceImpl implements StudentService {
@@ -23,6 +24,27 @@ public final class StudentServiceImpl implements StudentService {
     this.studentDao = new StudentDaoMySql();
     this.userService = new UserServiceImpl();
     this.logger = Logger.getLogger(StudentServiceImpl.class);
+  }
+
+  @Override
+  public Collection<Student> getAll() throws ServiceException {
+    final Collection<Student> students;
+    try {
+      students = this.studentDao.getAllStudent();
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+    Collection<User> users = this.userService.getAll();
+    // TODO: 04.01.17 add to students real user (use stream())
+    for (User user : users) {
+      for (Student student : students) {
+        if (user.getId() == student.getId()){
+          student.setUser(user);
+        }
+      }
+    }
+    return students;
   }
 
   @Override
@@ -41,14 +63,14 @@ public final class StudentServiceImpl implements StudentService {
   }
 
   @Override
-  public Student create(Student student) throws ServiceException {
+  public Student create(final Student student) throws ServiceException {
     try {
       this.studentDao.save(student);
     } catch (DaoException e) {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
-    System.out.println(">>> Student end ="+student);
+    System.out.println(">>> Student end =" + student);
     return student;
   }
 }

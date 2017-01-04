@@ -1,6 +1,7 @@
 package com.katruk.dao.mysql;
 
 import com.katruk.dao.SubjectDao;
+import com.katruk.entity.Student;
 import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
 import com.katruk.exception.DaoException;
@@ -29,6 +30,23 @@ public final class SubjectDaoMySql implements SubjectDao {
   }
 
   @Override
+  public Collection<Subject> getAllSubject() throws DaoException {
+    try (Connection connection = this.connectionPool.getConnection()) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_SUBJECT))) {
+        return getSubjectByStatement(statement);
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+  }
+
+  @Override
   public Optional<Subject> getSubjectById(final Long subjectId) throws DaoException {
     final Optional<Subject> result;
     try (Connection connection = this.connectionPool.getConnection()) {
@@ -49,11 +67,29 @@ public final class SubjectDaoMySql implements SubjectDao {
   }
 
   @Override
-  public Collection<Subject> getSubjectByTeacher(final Teacher teacher) throws DaoException {
+  public Collection<Subject> getSubjectByTeacher(final Long teacherId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.GET_SUBJECT_BY_TEACHER))) {
-        statement.setLong(1, teacher.getId());
+        statement.setLong(1, teacherId);
+        return getSubjectByStatement(statement);
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+  }
+
+  @Override
+  public Collection<Subject> getSubjectsByStudent(final Long studentId) throws DaoException {
+    try (Connection connection = this.connectionPool.getConnection()) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_SUBJECT_BY_STUDENT))) {
+        statement.setLong(1, studentId);
         return getSubjectByStatement(statement);
       } catch (SQLException e) {
         connection.rollback();

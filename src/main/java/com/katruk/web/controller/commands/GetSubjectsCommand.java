@@ -1,10 +1,18 @@
 package com.katruk.web.controller.commands;
 
+import com.katruk.converter.SubjectConverter;
+import com.katruk.entity.Subject;
+import com.katruk.entity.dto.SubjectDto;
 import com.katruk.service.SubjectService;
+import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.ICommand;
 
 import org.apache.log4j.Logger;
+
+import java.util.Collection;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,12 +28,12 @@ public class GetSubjectsCommand implements ICommand, PageAttribute {
 
   @Override
   public String execute(HttpServletRequest request, HttpServletResponse response) {
-    String page;
+    String page = request.getContextPath();
     try {
-      List<Discipline> disciplineList = daoFactory.getDisciplineDAO().getAll();
-      request.setAttribute(DISCIPLINE_LIST, disciplineList);
-      page = Config.getInstance().getValue(Config.DISCIPLINES);
-      logger.info(String.format("get all disciplines = %d", disciplineList.size()));
+      Collection<Subject> subjects = this.subjectService.getAll();
+      List<SubjectDto> subjectList = new SubjectConverter().convertToDto(subjects);
+      request.setAttribute(SUBJECT_LIST, subjectList);
+      logger.info(String.format("get all subjects = %d", subjectList.size()));
     } catch (Exception e) {
       page = Config.getInstance().getValue(Config.ERROR_PAGE);
       logger.error("Unable get all disciplines", e);
