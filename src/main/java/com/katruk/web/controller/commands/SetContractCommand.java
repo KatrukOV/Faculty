@@ -34,7 +34,7 @@ public class SetContractCommand implements ICommand, PageAttribute {
       Student student = this.studentService.getStudentById(studentId);
       System.out.println(">>>>>>>>>>>> student= " + student);
       student.setContract(contract);
-      this.studentService.update(student);
+      this.studentService.save(student);
       Collection<Student> students = this.studentService.getAll();
       List<StudentDto> studentList = new StudentConverter().convertToDto(students);
       request.setAttribute(STUDENT_LIST, studentList);

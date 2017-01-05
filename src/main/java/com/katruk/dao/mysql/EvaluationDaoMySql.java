@@ -1,5 +1,7 @@
 package com.katruk.dao.mysql;
 
+import static java.util.Objects.isNull;
+
 import com.katruk.dao.EvaluationDao;
 import com.katruk.entity.Evaluation;
 import com.katruk.entity.Student;
@@ -89,7 +91,18 @@ public final class EvaluationDaoMySql implements EvaluationDao {
 
   @Override
   public Evaluation save(final Evaluation evaluation) throws DaoException {
+    Evaluation result;
+    if (isNull(evaluation.getId())) {
+      result = insert(evaluation);
+    } else {
+      result = update(evaluation);
+    }
+    return result;
+  }
+
+  private Evaluation insert(Evaluation evaluation) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
+      connection.setAutoCommit(false);
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.CREATE_EVALUATION),
                             Statement.RETURN_GENERATED_KEYS)) {
@@ -98,12 +111,16 @@ public final class EvaluationDaoMySql implements EvaluationDao {
         statement.setString(3, evaluation.getStatus().name());
         statement.setString(4, evaluation.getRating().name());
         statement.setString(5, evaluation.getFeedback());
-        statement.execute();
+        int affectedRows = statement.executeUpdate();
+        connection.commit();
+        if (affectedRows == 0) {
+          throw new SQLException("Creating evaluation failed, no rows affected.");
+        }
         try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
           if (generatedKeys.next()) {
             evaluation.setId(generatedKeys.getLong(1));
           } else {
-            throw new SQLException("Creating user failed, no ID obtained.");
+            throw new SQLException("Creating evaluation failed, no ID obtained.");
           }
         }
         connection.commit();
@@ -112,6 +129,36 @@ public final class EvaluationDaoMySql implements EvaluationDao {
         logger.error("", e);
         throw new DaoException("", e);
       }
+      connection.setAutoCommit(true);
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+    return evaluation;
+  }
+
+  private Evaluation update(Evaluation evaluation) throws DaoException {
+    try (Connection connection = this.connectionPool.getConnection()) {
+      connection.setAutoCommit(false);
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.UPDATE_EVALUATION))) {
+        statement.setLong(1, evaluation.getSubject().getId());
+        statement.setLong(2, evaluation.getStudent().getId());
+        statement.setString(3, evaluation.getStatus().name());
+        statement.setString(4, evaluation.getRating().name());
+        statement.setString(5, evaluation.getFeedback());
+        statement.setLong(1, evaluation.getId());
+        int affectedRows = statement.executeUpdate();
+        if (affectedRows == 0) {
+          throw new SQLException("Updating evaluation failed, no rows affected.");
+        }
+        connection.commit();
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+      connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);

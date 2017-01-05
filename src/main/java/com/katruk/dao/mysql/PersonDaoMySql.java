@@ -1,5 +1,7 @@
 package com.katruk.dao.mysql;
 
+import static java.util.Objects.isNull;
+
 import com.katruk.dao.PersonDao;
 import com.katruk.entity.Person;
 import com.katruk.exception.DaoException;
@@ -49,15 +51,29 @@ public final class PersonDaoMySql implements PersonDao {
 
   @Override
   public Person save(final Person person) throws DaoException {
+    Person result;
+    if (isNull(person.getId())) {
+      result = insert(person);
+    } else {
+      result = update(person);
+    }
+    return result;
+  }
+
+  private Person insert(Person person) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
+      connection.setAutoCommit(false);
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.CREATE_PERSON),
                             Statement.RETURN_GENERATED_KEYS)) {
         statement.setString(1, person.getLastName());
         statement.setString(2, person.getName());
         statement.setString(3, person.getPatronymic());
-        statement.execute();
+        int affectedRows = statement.executeUpdate();
         connection.commit();
+        if (affectedRows == 0) {
+          throw new SQLException("Creating person failed, no rows affected.");
+        }
         try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
           if (generatedKeys.next()) {
             person.setId(generatedKeys.getLong(1));
@@ -70,6 +86,34 @@ public final class PersonDaoMySql implements PersonDao {
         logger.error("", e);
         throw new DaoException("", e);
       }
+      connection.setAutoCommit(true);
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+    return person;
+  }
+
+  private Person update(Person person) throws DaoException {
+    try (Connection connection = this.connectionPool.getConnection()) {
+      connection.setAutoCommit(false);
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.UPDATE_PERSON))) {
+        statement.setString(1, person.getLastName());
+        statement.setString(2, person.getName());
+        statement.setString(3, person.getPatronymic());
+        statement.setLong(4, person.getId());
+        int affectedRows = statement.executeUpdate();
+        if (affectedRows == 0) {
+          throw new SQLException("Updating person failed, no rows affected.");
+        }
+        connection.commit();
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+      connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);

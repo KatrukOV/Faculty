@@ -69,18 +69,20 @@ public final class StudentDaoMySql implements StudentDao {
   @Override
   public Student save(final Student student) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
+      connection.setAutoCommit(false);
       try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.CREATE_STUDENT))) {
+          .prepareStatement(Sql.getInstance().get(Sql.REPLACE_STUDENT))) {
         statement.setLong(1, student.getId());
         statement.setString(2, student.getForm().name());
         statement.setString(3, student.getContract().name());
-        statement.execute();
+        statement.executeUpdate();
         connection.commit();
       } catch (SQLException e) {
         connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
+      connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);

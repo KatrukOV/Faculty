@@ -1,5 +1,6 @@
 package com.katruk.dao.mysql;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import com.katruk.dao.UserDao;
@@ -90,53 +91,25 @@ public final class UserDaoMySql implements UserDao {
 
   @Override
   public User save(final User user) throws DaoException {
-    User result;
-    if (nonNull(user.getId())) {
-      result = update(user);
-    } else {
-      result = create(user);
-    }
-    return result;
-  }
-
-  // TODO: 04.01.17
-  private User update(User user) throws DaoException{
     try (Connection connection = this.connectionPool.getConnection()) {
+      connection.setAutoCommit(false);
       try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.UPDATE_USER))) {
+          .prepareStatement(Sql.getInstance().get(Sql.REPLACE_USER))) {
         statement.setLong(1, user.getPerson().getId());
         statement.setString(2, user.getUsername());
         statement.setString(3, user.getPassword());
         statement.setString(4, user.getRole() != null ? user.getRole().name() : null);
-        statement.execute();
+        int affectedRows = statement.executeUpdate();
         connection.commit();
+        if (affectedRows == 0) {
+          throw new SQLException("Replace user failed, no rows affected.");
+        }
       } catch (SQLException e) {
         connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
-    } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
-    }
-    return user;
-  }
-
-  private User create(User user) throws DaoException {
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.CREATE_USER))) {
-        statement.setLong(1, user.getPerson().getId());
-        statement.setString(2, user.getUsername());
-        statement.setString(3, user.getPassword());
-        statement.setString(4, user.getRole() != null ? user.getRole().name() : null);
-        statement.execute();
-        connection.commit();
-      } catch (SQLException e) {
-        connection.rollback();
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+      connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);

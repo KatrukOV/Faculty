@@ -79,6 +79,7 @@ public final class UserServiceImpl implements UserService {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
+    user.setId(person.getId());
     user.setPerson(person);
     return user;
   }
@@ -93,6 +94,7 @@ public final class UserServiceImpl implements UserService {
       throw new ServiceException("err", e);
     }
     user.setPerson(person);
+    user.setId(person.getId());
     try {
       this.userDao.save(user);
     } catch (DaoException e) {

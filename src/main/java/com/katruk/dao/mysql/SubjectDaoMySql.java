@@ -1,6 +1,9 @@
 package com.katruk.dao.mysql;
 
+import static java.util.Objects.isNull;
+
 import com.katruk.dao.SubjectDao;
+import com.katruk.entity.Person;
 import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
 import com.katruk.exception.DaoException;
@@ -103,19 +106,59 @@ public final class SubjectDaoMySql implements SubjectDao {
 
   @Override
   public Subject save(final Subject subject) throws DaoException {
+    Subject result;
+    if (isNull(subject.getId())) {
+      result = insert(subject);
+    } else {
+      result = update(subject);
+    }
+    return result;
+  }
+
+  private Subject insert(Subject subject) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
+      connection.setAutoCommit(false);
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.CREATE_SUBJECT),
                             Statement.RETURN_GENERATED_KEYS)) {
         statement.setLong(1, subject.getTeacher().getId());
         statement.setString(2, subject.getTitle());
-        statement.execute();
+        int affectedRows = statement.executeUpdate();
+        connection.commit();
+        if (affectedRows == 0) {
+          throw new SQLException("Creating subject failed, no rows affected.");
+        }
         try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
           if (generatedKeys.next()) {
             subject.setId(generatedKeys.getLong(1));
           } else {
-            throw new SQLException("Creating user failed, no ID obtained.");
+            throw new SQLException("Creating subject failed, no ID obtained.");
           }
+        }
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+      connection.setAutoCommit(true);
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+    return subject;
+  }
+
+  private Subject update(Subject subject) throws DaoException {
+    try (Connection connection = this.connectionPool.getConnection()) {
+      connection.setAutoCommit(false);
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.UPDATE_SUBJECT))) {
+        statement.setLong(1, subject.getTeacher().getId());
+        statement.setString(2, subject.getTitle());
+        statement.setLong(3, subject.getId());
+        int affectedRows = statement.executeUpdate();
+        if (affectedRows == 0) {
+          throw new SQLException("Updating subject failed, no rows affected.");
         }
         connection.commit();
       } catch (SQLException e) {
@@ -123,6 +166,7 @@ public final class SubjectDaoMySql implements SubjectDao {
         logger.error("", e);
         throw new DaoException("", e);
       }
+      connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);

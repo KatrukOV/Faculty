@@ -50,17 +50,19 @@ public final class TeacherDaoMySql implements TeacherDao {
   @Override
   public Teacher save(final Teacher teacher) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
+      connection.setAutoCommit(false);
       try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.CREATE_TEACHER))) {
+          .prepareStatement(Sql.getInstance().get(Sql.REPLACE_TEACHER))) {
         statement.setLong(1, teacher.getId());
         statement.setString(2, teacher.getPosition().name());
-        statement.execute();
+        statement.executeUpdate();
         connection.commit();
       } catch (SQLException e) {
         connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
+      connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);
