@@ -1,5 +1,7 @@
 package com.katruk.entity.dto;
 
+import com.katruk.entity.User;
+
 public final class UserDto {
 
   private Long userId;
@@ -9,6 +11,7 @@ public final class UserDto {
   private String username;
   private String password;
   private String confirmPassword;
+  private User.Role role;
 
   public Long getUserId() {
     return userId;
@@ -64,5 +67,28 @@ public final class UserDto {
 
   public void setConfirmPassword(String confirmPassword) {
     this.confirmPassword = confirmPassword;
+  }
+
+  public User.Role getRole() {
+    return role;
+  }
+
+  public void setRole(User.Role role) {
+    this.role = role;
+  }
+
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("UserDto{");
+    sb.append("userId=").append(userId);
+    sb.append(", lastName='").append(lastName).append('\'');
+    sb.append(", name='").append(name).append('\'');
+    sb.append(", patronymic='").append(patronymic).append('\'');
+    sb.append(", username='").append(username).append('\'');
+    sb.append(", password='").append(password).append('\'');
+    sb.append(", confirmPassword='").append(confirmPassword).append('\'');
+    sb.append(", role=").append(role);
+    sb.append('}');
+    return sb.toString();
   }
 }

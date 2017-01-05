@@ -42,7 +42,8 @@ public final class UserConverter {
     userDto.setName(user.getPerson().getName());
     userDto.setPatronymic(user.getPerson().getPatronymic());
     userDto.setUsername(user.getUsername());
-    userDto.setPassword(user.getPassword());
+//    userDto.setPassword(user.getPassword());
+    userDto.setRole(user.getRole());
     return userDto;
   }
 

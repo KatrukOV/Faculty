@@ -3,6 +3,7 @@ package com.katruk.web.controller.commands;
 import com.katruk.converter.UserConverter;
 import com.katruk.entity.User;
 import com.katruk.entity.dto.UserDto;
+import com.katruk.exception.ServiceException;
 import com.katruk.service.UserService;
 import com.katruk.service.impl.UserServiceImpl;
 import com.katruk.util.Config;
@@ -34,6 +35,7 @@ public class SetRoleCommand implements ICommand, PageAttribute {
       User.Role role = User.Role.valueOf(request.getParameter(ROLE));
       System.out.println(">>>>>>>>>>>> role= " + role);
       Long userId = Long.parseLong(request.getParameter(USER_ID));
+      System.out.println(">>>>>>>>>>>> user id= " + userId);
       User user = this.userService.getUserById(userId);
       System.out.println(">>>>>>>>>>>> user= " + user);
       user.setRole(role);
@@ -42,9 +44,9 @@ public class SetRoleCommand implements ICommand, PageAttribute {
       List<UserDto> userList = new UserConverter().convertToDto(users);
       request.setAttribute(USER_LIST, userList);
       logger.info(String.format("set role=%s for user= %s", role, user));
-    } catch (Exception e) {
+    } catch (ServiceException e) {
       page = Config.getInstance().getValue(Config.ERROR_PAGE);
-      logger.error("Unable set role for human", e);
+      logger.error("Unable set role for user", e);
     }
     return page;
   }

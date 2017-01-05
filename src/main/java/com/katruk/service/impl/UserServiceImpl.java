@@ -36,6 +36,17 @@ public final class UserServiceImpl implements UserService {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
+    for (User user : result) {
+      final Person person;
+      try {
+        person = this.personDao.getPersonById(user.getPerson().getId())
+            .orElseThrow(() -> new DaoException("Person not found", new NoSuchElementException()));
+      } catch (DaoException e) {
+        logger.error("err", e);
+        throw new ServiceException("err", e);
+      }
+      user.setPerson(person);
+    }
     return result;
   }
 

@@ -54,4 +54,16 @@ public final class TeacherServiceImpl implements TeacherService {
     teacher.setUser(user);
     return teacher;
   }
+
+  @Override
+  public Teacher save(Teacher teacher) throws ServiceException {
+    try {
+      this.teacherDao.save(teacher);
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+    System.out.println(">>> Teacher end =" + teacher);
+    return teacher;
+  }
 }
