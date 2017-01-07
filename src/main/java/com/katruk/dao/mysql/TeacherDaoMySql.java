@@ -53,10 +53,14 @@ public final class TeacherDaoMySql implements TeacherDao {
       connection.setAutoCommit(false);
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.REPLACE_TEACHER))) {
-        statement.setLong(1, teacher.getId());
-        statement.setString(2, teacher.getPosition().name());
-        statement.executeUpdate();
+        statement.setLong(1, teacher.getUser().getId());
+        // TODO: 06.01.17 do simple
+        statement.setString(2, teacher.getPosition() != null ? teacher.getPosition().name() : null);
+        int affectedRows = statement.executeUpdate();
         connection.commit();
+        if (affectedRows == 0) {
+          throw new SQLException("Replace teacher failed, no rows affected.");
+        }
       } catch (SQLException e) {
         connection.rollback();
         logger.error("", e);
@@ -68,6 +72,30 @@ public final class TeacherDaoMySql implements TeacherDao {
       throw new DaoException("", e);
     }
     return teacher;
+  }
+
+  @Override
+  public void delete(Long teacherId) throws DaoException {
+    try (Connection connection = this.connectionPool.getConnection()) {
+      connection.setAutoCommit(false);
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.DELETE_TEACHER))) {
+        statement.setLong(1, teacherId);
+        int affectedRows = statement.executeUpdate();
+        connection.commit();
+        if (affectedRows == 0) {
+          throw new SQLException("Delete teacher failed, no rows affected.");
+        }
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+      connection.setAutoCommit(true);
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
   }
 
   @Override

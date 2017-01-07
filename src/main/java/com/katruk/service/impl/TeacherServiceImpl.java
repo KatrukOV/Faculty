@@ -66,4 +66,14 @@ public final class TeacherServiceImpl implements TeacherService {
     System.out.println(">>> Teacher end =" + teacher);
     return teacher;
   }
+
+  @Override
+  public void remove(Long teacherId) throws ServiceException {
+    try {
+      this.teacherDao.delete(teacherId);
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+  }
 }

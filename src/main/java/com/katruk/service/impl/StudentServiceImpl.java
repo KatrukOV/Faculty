@@ -73,4 +73,14 @@ public final class StudentServiceImpl implements StudentService {
     System.out.println(">>> Student end =" + student);
     return student;
   }
+
+  @Override
+  public void remove(Long studentId) throws ServiceException {
+    try {
+      this.studentDao.delete(studentId);
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+  }
 }

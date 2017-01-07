@@ -48,6 +48,7 @@ public final class User extends Model {
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder("User{");
+    sb.append("id=").append(getId());
     sb.append("person=").append(person);
     sb.append(", username='").append(username).append('\'');
     sb.append(", password='").append(password).append('\'');

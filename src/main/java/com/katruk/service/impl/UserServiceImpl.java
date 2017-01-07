@@ -90,7 +90,7 @@ public final class UserServiceImpl implements UserService {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
-    user.setId(person.getId());
+//    user.setId(person.getId());
     user.setPerson(person);
     return user;
   }

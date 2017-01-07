@@ -12,4 +12,6 @@ public interface StudentService {
   Student getStudentById(final Long studentId) throws ServiceException;
 
   Student save(final Student student) throws ServiceException;
+
+  void remove(final Long studentId) throws ServiceException;
 }

@@ -13,4 +13,6 @@ public interface TeacherDao {
   Collection<Teacher> getAllTeacher() throws DaoException;
 
   Teacher save(final Teacher teacher) throws DaoException;
+
+  void delete(final Long teacherId) throws DaoException;
 }

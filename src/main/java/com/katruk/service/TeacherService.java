@@ -12,4 +12,6 @@ public interface TeacherService {
   Teacher getTeacherById(final Long teacherId) throws ServiceException;
 
   Teacher save(final Teacher teacher) throws ServiceException;
+
+  void remove(final Long teacherId) throws ServiceException;
 }

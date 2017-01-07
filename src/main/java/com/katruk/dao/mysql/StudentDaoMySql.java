@@ -72,9 +72,13 @@ public final class StudentDaoMySql implements StudentDao {
       connection.setAutoCommit(false);
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.REPLACE_STUDENT))) {
-        statement.setLong(1, student.getId());
-        statement.setString(2, student.getForm().name());
-        statement.setString(3, student.getContract().name());
+        statement.setLong(1, student.getUser().getId());
+        // TODO: 06.01.17 do simple
+        statement.setString(2, student.getForm() != null ? student.getForm().name() : null);
+        statement.setString(3, student.getContract() != null ? student.getContract().name() : null);
+//        statement.setString(4, student.getForm() != null ? student.getForm().name() : null);
+//        statement.setString(5, student.getContract() != null ? student.getContract().name() : null);
+        System.out.println(">>> SQL= " + statement);
         statement.executeUpdate();
         connection.commit();
       } catch (SQLException e) {
@@ -88,6 +92,30 @@ public final class StudentDaoMySql implements StudentDao {
       throw new DaoException("", e);
     }
     return student;
+  }
+
+  @Override
+  public void delete(Long studentId) throws DaoException {
+    try (Connection connection = this.connectionPool.getConnection()) {
+      connection.setAutoCommit(false);
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.DELETE_STUDENT))) {
+        statement.setLong(1, studentId);
+        int affectedRows = statement.executeUpdate();
+        connection.commit();
+        if (affectedRows == 0) {
+          throw new SQLException("Delete student failed, no rows affected.");
+        }
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+      connection.setAutoCommit(true);
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
   }
 
   private Collection<Student> getStudentByStatement(final PreparedStatement statement)

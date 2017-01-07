@@ -22,11 +22,14 @@ public final class Sql {
 
   public static final String CREATE_STUDENT = "CREATE_STUDENT";
   public static final String REPLACE_STUDENT = "REPLACE_STUDENT";
+  public static final String INSERT_STUDENT = "INSERT_STUDENT";
+  public static final String DELETE_STUDENT = "DELETE_STUDENT";
   public static final String GET_STUDENT_BY_ID = "GET_STUDENT_BY_ID";
   public static final String GET_ALL_STUDENT = "GET_ALL_STUDENT";
 
   public static final String CREATE_TEACHER = "CREATE_TEACHER";
   public static final String REPLACE_TEACHER = "REPLACE_TEACHER";
+  public static final String DELETE_TEACHER = "DELETE_TEACHER";
   public static final String GET_TEACHER_BY_ID = "GET_TEACHER_BY_ID";
   public static final String GET_ALL_TEACHER = "GET_ALL_TEACHER";
 

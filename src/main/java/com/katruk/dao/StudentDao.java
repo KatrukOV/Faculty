@@ -13,4 +13,6 @@ public interface StudentDao {
   Optional<Student> getStudentById(final Long studentId) throws DaoException;
 
   Student save(final Student student) throws DaoException;
+
+  void delete(final Long studentId) throws DaoException;
 }

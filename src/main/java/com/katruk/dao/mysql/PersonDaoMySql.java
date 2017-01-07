@@ -127,6 +127,7 @@ public final class PersonDaoMySql implements PersonDao {
     try (ResultSet resultSet = statement.executeQuery()) {
       if (resultSet.next()) {
         Person person = new Person();
+        person.setId(resultSet.getLong("id"));
         person.setLastName(resultSet.getString("last_name"));
         person.setName(resultSet.getString("name"));
         person.setPatronymic(resultSet.getString("patronymic"));
