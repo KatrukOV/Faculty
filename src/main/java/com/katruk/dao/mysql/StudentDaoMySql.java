@@ -130,19 +130,16 @@ public final class StudentDaoMySql implements StudentDao {
         user.setId(resultSet.getLong("user_person_id"));
         student.setUser(user);
         student.setId(user.getId());
-        String c = resultSet.getString("contract");
-        System.out.println(">>> contract="+c);
-        if(nonNull(c)){
-          student.setContract(Student.Contract.valueOf(resultSet.getString("contract")));
-        }
         String f = resultSet.getString("form");
-        System.out.println(">>> form="+f);
-        if(nonNull(f)){
+        if (nonNull(f)) {
           student.setForm(Student.Form.valueOf(f));
         }
-//        student.setForm(Student.Form.valueOf(resultSet.getString("form")));
+        String c = resultSet.getString("contract");
+        if (nonNull(c)) {
+          student.setContract(Student.Contract.valueOf(c));
+        }
         result.add(student);
-        System.out.println(">>> stud="+student);
+        System.out.println(">>> stud=" + student);
       }
     } catch (SQLException e) {
       logger.error("", e);

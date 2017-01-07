@@ -34,6 +34,8 @@ public class SetPositionCommand implements ICommand, PageAttribute {
   public String execute(HttpServletRequest request, HttpServletResponse response) {
     String page = Config.getInstance().getValue(Config.ALL_TEACHERS);
     try {
+      System.out.println("ff="+POSITION);
+      System.out.println("ff11="+request.getParameter(POSITION));
       Teacher.Position position = Teacher.Position.valueOf(request.getParameter(POSITION));
       System.out.println(">>>>>>>>>>>> position= " + position);
       Long teacherId = Long.parseLong(request.getParameter(TEACHER_ID));

@@ -1,5 +1,7 @@
 package com.katruk.dao.mysql;
 
+import static java.util.Objects.nonNull;
+
 import com.katruk.dao.TeacherDao;
 import com.katruk.entity.Teacher;
 import com.katruk.entity.User;
@@ -127,7 +129,10 @@ public final class TeacherDaoMySql implements TeacherDao {
         user.setId(resultSet.getLong("user_person_id"));
         teacher.setId(user.getId());
         teacher.setUser(user);
-        teacher.setPosition(Teacher.Position.valueOf(resultSet.getString("position")));
+        String position = resultSet.getString("position");
+        if (nonNull(position)) {
+          teacher.setPosition(Teacher.Position.valueOf(position));
+        }
         result.add(teacher);
       }
     } catch (SQLException e) {
