@@ -39,12 +39,14 @@ public class SetPositionCommand implements ICommand, PageAttribute {
       Long teacherId = Long.parseLong(request.getParameter(TEACHER_ID));
       Teacher teacher = this.teacherService.getTeacherById(teacherId);
       System.out.println(">>>>>>>>>>>> teacher = " + teacher);
-      teacher.setPosition(position);
-      this.teacherService.save(teacher);
+      if (!position.equals(teacher.getPosition())) {
+        teacher.setPosition(position);
+        this.teacherService.save(teacher);
+        logger.info(String.format("set position=%s for teacher= %s", position, teacher));
+      }
       Collection<Teacher> teachers = this.teacherService.gatAll();
       List<TeacherDto> teacherList = new TeacherConverter().convertToDto(teachers);
       request.setAttribute(TEACHER_LIST, teacherList);
-      logger.info(String.format("set position=%s for teacher= %s", position, teacher));
     } catch (Exception e) {
       page = Config.getInstance().getValue(Config.ERROR_PAGE);
       logger.error("Unable set position for teacher", e);

@@ -1,5 +1,7 @@
 package com.katruk.dao.mysql;
 
+import static java.util.Objects.nonNull;
+
 import com.katruk.dao.StudentDao;
 import com.katruk.entity.Student;
 import com.katruk.entity.User;
@@ -35,7 +37,7 @@ public final class StudentDaoMySql implements StudentDao {
           .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_STUDENT))) {
         result = getStudentByStatement(statement);
       } catch (SQLException e) {
-        connection.rollback();
+//        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
@@ -127,9 +129,20 @@ public final class StudentDaoMySql implements StudentDao {
         User user = new User();
         user.setId(resultSet.getLong("user_person_id"));
         student.setUser(user);
-        student.setContract(Student.Contract.valueOf(resultSet.getString("contract")));
-        student.setForm(Student.Form.valueOf(resultSet.getString("form")));
+        student.setId(user.getId());
+        String c = resultSet.getString("contract");
+        System.out.println(">>> contract="+c);
+        if(nonNull(c)){
+          student.setContract(Student.Contract.valueOf(resultSet.getString("contract")));
+        }
+        String f = resultSet.getString("form");
+        System.out.println(">>> form="+f);
+        if(nonNull(f)){
+          student.setForm(Student.Form.valueOf(f));
+        }
+//        student.setForm(Student.Form.valueOf(resultSet.getString("form")));
         result.add(student);
+        System.out.println(">>> stud="+student);
       }
     } catch (SQLException e) {
       logger.error("", e);

@@ -32,6 +32,7 @@ public final class GetStudentsCommand implements ICommand, PageAttribute {
     String page = Config.getInstance().getValue(Config.ALL_STUDENTS);
     try {
       Collection<Student> students = this.studentService.getAll();
+
       List<StudentDto> studentList = new StudentConverter().convertToDto(students);
       request.setAttribute(STUDENT_LIST, studentList);
       logger.info(String.format("get all students = %d", studentList.size()));

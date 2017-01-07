@@ -4,8 +4,8 @@
 </head>
 <body style="text-align:center;">
 
-<jsp:include page="/view/logout.jsp"/>
-<jsp:include page="/view/welcome.jsp"/>
+<jsp:include page="/view/all/logout.jsp"/>
+<jsp:include page="/view/all/welcome.jsp"/>
 
 <br>
 <h2> You can: </h2>

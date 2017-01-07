@@ -35,12 +35,15 @@ public final class StudentServiceImpl implements StudentService {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
+    System.out.println("<< stu=" + students.size() + " stu=" + students);
     Collection<User> users = this.userService.getAll();
+    System.out.println("<< us=" + users.size() + " us=" + users);
     // TODO: 04.01.17 add to students real user (use stream())
     for (User user : users) {
       for (Student student : students) {
-        if (user.getId() == student.getId()) {
+        if (user.getId() == student.getUser().getId()) {
           student.setUser(user);
+          System.out.println(">,, st=" + student);
         }
       }
     }
@@ -59,6 +62,7 @@ public final class StudentServiceImpl implements StudentService {
     }
     final User user = this.userService.getUserById(student.getUser().getId());
     student.setUser(user);
+    System.out.println(">.. student=" + student);
     return student;
   }
 

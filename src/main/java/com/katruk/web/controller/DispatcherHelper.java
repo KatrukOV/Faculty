@@ -14,6 +14,7 @@ import com.katruk.web.controller.commands.SetContractCommand;
 import com.katruk.web.controller.commands.SetFormCommand;
 import com.katruk.web.controller.commands.SetPositionCommand;
 import com.katruk.web.controller.commands.SetRoleCommand;
+import com.katruk.web.controller.commands.ToProfileCommand;
 import com.katruk.web.controller.commands.UnknownCommand;
 
 import java.util.HashMap;
@@ -32,7 +33,7 @@ final class DispatcherHelper implements PageAttribute {
     commands.put("registration", new RegistrationCommand());
     commands.put("logout", new LogoutCommand());
 
-//    commands.put("redirectToProfile", new RedirectToProfileCommand());
+    commands.put("toProfile", new ToProfileCommand());
 
     commands.put("getUsers", new GetUsersCommand());
     commands.put("getStudents", new GetStudentsCommand());

@@ -4,6 +4,7 @@
     <title>Users</title>
 </head>
 <body style="text-align:center;">
+<jsp:include page="/view/all/logout.jsp"/>
 <h3>ALL USERS</h3>
 <div>
     <c:forEach var="user" items="${userList}">
@@ -12,7 +13,6 @@
             <label><b>${user.name}</b></label>
             <label><b> ${user.patronymic}</b></label>
             <label><b> role now: ${user.role}</b></label>
-            <br>
             <label> set Role: </label>
             <select name="role">
                 <option value="STUDENT" ${user.role.equals('STUDENT') ? 'selected="selected"' : ''}>
@@ -31,5 +31,6 @@
         </form>
     </c:forEach>
 </div>
+<jsp:include page="/view/all/toProfile.jsp"/>
 </body>
 </html>

@@ -6,9 +6,8 @@
 </head>
 
 <body style="text-align:center;">
-
+<jsp:include page="/view/all/logout.jsp"/>
 <h3>ALL TEACHERS</h3>
-
 <div>
     <c:forEach var="teacher" items="${teacherList}">
         <form action="/dispatcher" method="post">
@@ -34,5 +33,6 @@
         </form>
     </c:forEach>
 </div>
+<jsp:include page="/view/all/toProfile.jsp"/>
 </body>
 </html>

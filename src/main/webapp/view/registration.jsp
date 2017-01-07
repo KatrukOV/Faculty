@@ -9,7 +9,7 @@
 
 <%--<c:param name="userDto" value="${userDto}">--%>
 
-    <%--value="${userDto.name}"--%>
+<%--value="${userDto.name}"--%>
 <%--</c:param>--%>
 <form action="/dispatcher" method="POST">
     <label>Last name: </label>

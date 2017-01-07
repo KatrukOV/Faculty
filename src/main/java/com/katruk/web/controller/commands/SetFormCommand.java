@@ -33,15 +33,20 @@ public class SetFormCommand implements ICommand, PageAttribute {
     try {
       Student.Form form = Student.Form.valueOf(request.getParameter(FORM));
       System.out.println(">>>>>>>>>>>> form= " + form);
+      System.out.println("MM="+STUDENT_ID);
+      System.out.println("MM11="+request.getParameter(STUDENT_ID));
       Long studentId = Long.parseLong(request.getParameter(STUDENT_ID));
+      System.out.println(">> studentId="+studentId);
       Student student = this.studentService.getStudentById(studentId);
       System.out.println(">>>>>>>>>>>> student= " + student);
-      student.setForm(form);
-      this.studentService.save(student);
+      if (!form.equals(student.getForm())) {
+        student.setForm(form);
+        this.studentService.save(student);
+        logger.info(String.format("set form=%s for student= %s", form, student));
+      }
       Collection<Student> students = this.studentService.getAll();
       List<StudentDto> studentList = new StudentConverter().convertToDto(students);
       request.setAttribute(STUDENT_LIST, studentList);
-      logger.info(String.format("set form=%s for student= %s", form, student));
     } catch (Exception e) {
       page = Config.getInstance().getValue(Config.ERROR_PAGE);
       logger.error("Unable set contract for student", e);
