@@ -8,16 +8,13 @@
 
 <jsp:include page="/view/all/logout.jsp"/>
 <jsp:include page="/view/all/welcome.jsp"/>
-
+<jsp:include page="/view/all/message.jsp"/>
 <h1> You can: </h1>
 <form action="/dispatcher" method="get">
     <input type="hidden" name="command" value="getSubjects">
     <input type="submit" value="get All Subjects"/>
 </form>
 <br>
-
-
-
 
 </body>
 </html>

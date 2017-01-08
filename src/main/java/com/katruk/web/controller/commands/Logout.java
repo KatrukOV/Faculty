@@ -2,20 +2,20 @@ package com.katruk.web.controller.commands;
 
 import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
-import com.katruk.web.controller.ICommand;
+import com.katruk.web.controller.Command;
 
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public final class LogoutCommand implements ICommand, PageAttribute {
+public final class Logout implements Command, PageAttribute {
 
   private final Logger logger;
   private final static String LOGOUT = "User was logout";
 
-  public LogoutCommand() {
-    this.logger = Logger.getLogger(LogoutCommand.class);
+  public Logout() {
+    this.logger = Logger.getLogger(Logout.class);
   }
 
   @Override

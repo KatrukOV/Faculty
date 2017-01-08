@@ -10,22 +10,22 @@ import com.katruk.service.impl.UserServiceImpl;
 import com.katruk.util.Config;
 import com.katruk.util.UserValidator;
 import com.katruk.web.PageAttribute;
-import com.katruk.web.controller.ICommand;
+import com.katruk.web.controller.Command;
 
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public final class RegistrationCommand implements ICommand, PageAttribute {
+public final class Registration implements Command, PageAttribute {
 
   private final Logger logger;
   private final UserService userService;
   private final UserValidator userValidator;
   private final static String REGISTRATION_OK = "User successfully registered";
 
-  public RegistrationCommand() {
-    this.logger = Logger.getLogger(RegistrationCommand.class);
+  public Registration() {
+    this.logger = Logger.getLogger(Registration.class);
     this.userService = new UserServiceImpl();
     this.userValidator = new UserValidator();
   }

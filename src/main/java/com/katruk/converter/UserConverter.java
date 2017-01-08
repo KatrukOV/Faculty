@@ -32,6 +32,7 @@ public final class UserConverter {
     user.setPerson(person);
     user.setUsername(userDto.getUsername());
     user.setPassword(encodePassword(userDto.getPassword()));
+    System.out.println(" convertToUser user="+user);
     return user;
   }
 

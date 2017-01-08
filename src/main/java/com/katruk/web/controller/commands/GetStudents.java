@@ -2,28 +2,28 @@ package com.katruk.web.controller.commands;
 
 import com.katruk.converter.StudentConverter;
 import com.katruk.entity.Student;
-import com.katruk.entity.dto.StudentDto;
 import com.katruk.service.StudentService;
 import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
-import com.katruk.web.controller.ICommand;
+import com.katruk.web.controller.Command;
 
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public final class GetStudentsCommand implements ICommand, PageAttribute {
+public final class GetStudents implements Command, PageAttribute {
 
   private final Logger logger;
   private final StudentService studentService;
 
-  public GetStudentsCommand() {
-    this.logger = Logger.getLogger(GetStudentsCommand.class);
+  public GetStudents() {
+    this.logger = Logger.getLogger(GetStudents.class);
     this.studentService = new StudentServiceImpl();
   }
 
@@ -32,7 +32,10 @@ public final class GetStudentsCommand implements ICommand, PageAttribute {
     String page = Config.getInstance().getValue(Config.ALL_STUDENTS);
     try {
       Collection<Student> students = this.studentService.getAll();
-      List<StudentDto> studentList = new StudentConverter().convertToDto(students);
+      List studentList = Collections.EMPTY_LIST;
+      if (!students.isEmpty()) {
+        studentList = new StudentConverter().convertToDto(students);
+      }
       request.setAttribute(STUDENT_LIST, studentList);
       logger.info(String.format("get all students = %d", studentList.size()));
     } catch (Exception e) {

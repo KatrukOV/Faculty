@@ -14,10 +14,10 @@ public final class UserValidator {
 
   private final UserService userService;
   private final Logger logger;
-  private final static int MIN_SIZE_LAST_NAME = 5;
+  private final static int MIN_SIZE_LAST_NAME = 4;
   private final static int MIN_SIZE_NAME = 3;
-  private final static int MIN_SIZE_PATRONYMIC = 6;
-  private final static int MIN_SIZE_USERNAME = 4;
+  private final static int MIN_SIZE_PATRONYMIC = 5;
+  private final static int MIN_SIZE_USERNAME = 3;
   private final static int MIN_SIZE_PASSWORD = 4;
 
 

@@ -15,7 +15,7 @@ import com.katruk.service.impl.TeacherServiceImpl;
 import com.katruk.service.impl.UserServiceImpl;
 import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
-import com.katruk.web.controller.ICommand;
+import com.katruk.web.controller.Command;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public final class LoginCommand implements ICommand, PageAttribute {
+public final class Login implements Command, PageAttribute {
 
   private final static String ERROR_LOGIN_EMPTY = "Username or password is empty";
   private final static String ERROR_LOGIN_WRONG = "Wrong username or password";
@@ -34,11 +34,11 @@ public final class LoginCommand implements ICommand, PageAttribute {
   private final StudentService studentService;
   private final TeacherService teacherService;
 
-  public LoginCommand() {
+  public Login() {
     this.userService = new UserServiceImpl();
     this.studentService = new StudentServiceImpl();
     this.teacherService = new TeacherServiceImpl();
-    this.logger = Logger.getLogger(LoginCommand.class);
+    this.logger = Logger.getLogger(Login.class);
   }
 
   @Override

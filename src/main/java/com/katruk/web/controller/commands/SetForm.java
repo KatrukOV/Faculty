@@ -7,7 +7,7 @@ import com.katruk.service.StudentService;
 import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
-import com.katruk.web.controller.ICommand;
+import com.katruk.web.controller.Command;
 
 import org.apache.log4j.Logger;
 
@@ -17,13 +17,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class SetFormCommand implements ICommand, PageAttribute {
+public final class SetForm implements Command, PageAttribute {
 
   private final Logger logger;
   private final StudentService studentService;
 
-  public SetFormCommand() {
-    this.logger = Logger.getLogger(SetFormCommand.class);
+  public SetForm() {
+    this.logger = Logger.getLogger(SetForm.class);
     this.studentService = new StudentServiceImpl();
   }
 

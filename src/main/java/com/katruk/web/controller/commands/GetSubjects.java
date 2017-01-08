@@ -2,28 +2,29 @@ package com.katruk.web.controller.commands;
 
 import com.katruk.converter.SubjectConverter;
 import com.katruk.entity.Subject;
-import com.katruk.entity.dto.SubjectDto;
 import com.katruk.service.SubjectService;
+import com.katruk.service.impl.SubjectServiceImpl;
 import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
-import com.katruk.web.controller.ICommand;
+import com.katruk.web.controller.Command;
 
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public final class GetSubjectsCommand implements ICommand, PageAttribute {
+public final class GetSubjects implements Command, PageAttribute {
 
   private final Logger logger;
   private final SubjectService subjectService;
 
-  public GetSubjectsCommand() {
-    this.logger = Logger.getLogger(GetSubjectsCommand.class);
-    this.subjectService = null;
+  public GetSubjects() {
+    this.logger = Logger.getLogger(GetSubjects.class);
+    this.subjectService = new SubjectServiceImpl();
   }
 
   @Override
@@ -31,7 +32,10 @@ public final class GetSubjectsCommand implements ICommand, PageAttribute {
     String page = Config.getInstance().getValue(Config.ALL_SUBJECTS);
     try {
       Collection<Subject> subjects = this.subjectService.getAll();
-      List<SubjectDto> subjectList = new SubjectConverter().convertToDto(subjects);
+      List subjectList = Collections.EMPTY_LIST;
+      if (!subjects.isEmpty()) {
+        subjectList = new SubjectConverter().convertToDto(subjects);
+      }
       request.setAttribute(SUBJECT_LIST, subjectList);
       logger.info(String.format("get all subjects = %d", subjectList.size()));
     } catch (Exception e) {

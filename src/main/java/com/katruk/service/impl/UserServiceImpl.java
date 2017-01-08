@@ -97,6 +97,7 @@ public final class UserServiceImpl implements UserService {
 
   @Override
   public User save(final User user) throws ServiceException {
+    System.out.println("?? user="+user);
     final Person person = user.getPerson();
     try {
       this.personDao.save(person);

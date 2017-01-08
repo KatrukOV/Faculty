@@ -6,7 +6,7 @@
 
 <jsp:include page="/view/all/logout.jsp"/>
 <jsp:include page="/view/all/welcome.jsp"/>
-
+<jsp:include page="/view/all/message.jsp"/>
 <br>
 <h2> You can: </h2>
 <form action="/dispatcher" method="get">

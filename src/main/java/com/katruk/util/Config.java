@@ -4,10 +4,9 @@ import java.util.ResourceBundle;
 
 public final class Config {
 
-
-  private static final String BUNDLE_NAME = "config";
   private ResourceBundle configFile;
-  private final static Config INSTANCE = new Config();
+  private static final String BUNDLE_NAME = "config";
+  private static final Config INSTANCE = new Config();
 
   public static final String DRIVER = "driver";
   public static final String URL = "url";
@@ -19,6 +18,7 @@ public final class Config {
   public static final String ALL_STUDENTS = "students";
   public static final String ALL_TEACHERS = "teachers";
   public static final String ALL_SUBJECTS = "subjects";
+  public static final String ADD_SUBJECT = "addSubject";
 
 
   public static final String TEACHER_PROFILE = "TEACHER_PROFILE";

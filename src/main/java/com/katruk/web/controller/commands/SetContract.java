@@ -2,13 +2,12 @@ package com.katruk.web.controller.commands;
 
 import com.katruk.converter.StudentConverter;
 import com.katruk.entity.Student;
-import com.katruk.entity.User;
 import com.katruk.entity.dto.StudentDto;
 import com.katruk.service.StudentService;
 import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
-import com.katruk.web.controller.ICommand;
+import com.katruk.web.controller.Command;
 
 import org.apache.log4j.Logger;
 
@@ -18,13 +17,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class SetContractCommand implements ICommand, PageAttribute {
+public final class SetContract implements Command, PageAttribute {
 
   private final Logger logger;
   private final StudentService studentService;
 
-  public SetContractCommand() {
-    this.logger = Logger.getLogger(SetContractCommand.class);
+  public SetContract() {
+    this.logger = Logger.getLogger(SetContract.class);
     this.studentService = new StudentServiceImpl();
   }
 

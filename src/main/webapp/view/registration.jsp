@@ -6,11 +6,12 @@
 <body style="text-align:center;">
 <h3>Create your login</h3>
 <hr/>
+<jsp:include page="/view/all/message.jsp"/>
 
 <%--<c:param name="userDto" value="${userDto}">--%>
-
 <%--value="${userDto.name}"--%>
 <%--</c:param>--%>
+
 <form action="/dispatcher" method="POST">
     <label>Last name: </label>
     <input type="text" name="lastName" placeholder="Last Name"/>

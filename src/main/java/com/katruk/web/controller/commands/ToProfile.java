@@ -3,7 +3,7 @@ package com.katruk.web.controller.commands;
 import com.katruk.entity.User;
 import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
-import com.katruk.web.controller.ICommand;
+import com.katruk.web.controller.Command;
 
 import org.apache.log4j.Logger;
 
@@ -11,12 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-public class ToProfileCommand implements ICommand, PageAttribute {
+public final class ToProfile implements Command, PageAttribute {
 
   private final Logger logger;
 
-  public ToProfileCommand() {
-    this.logger = Logger.getLogger(ToProfileCommand.class);
+  public ToProfile() {
+    this.logger = Logger.getLogger(ToProfile.class);
   }
 
   @Override

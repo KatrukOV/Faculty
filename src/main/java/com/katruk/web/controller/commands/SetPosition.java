@@ -1,16 +1,13 @@
 package com.katruk.web.controller.commands;
 
 import com.katruk.converter.TeacherConverter;
-import com.katruk.converter.UserConverter;
 import com.katruk.entity.Teacher;
-import com.katruk.entity.User;
 import com.katruk.entity.dto.TeacherDto;
-import com.katruk.entity.dto.UserDto;
 import com.katruk.service.TeacherService;
 import com.katruk.service.impl.TeacherServiceImpl;
 import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
-import com.katruk.web.controller.ICommand;
+import com.katruk.web.controller.Command;
 
 import org.apache.log4j.Logger;
 
@@ -20,13 +17,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class SetPositionCommand implements ICommand, PageAttribute {
+public final class SetPosition implements Command, PageAttribute {
 
   private final Logger logger;
   private final TeacherService teacherService;
 
-  public SetPositionCommand() {
-    this.logger = Logger.getLogger(SetPositionCommand.class);
+  public SetPosition() {
+    this.logger = Logger.getLogger(SetPosition.class);
     this.teacherService = new TeacherServiceImpl();
   }
 

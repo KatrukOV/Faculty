@@ -37,23 +37,14 @@ public final class DispatcherServlet extends HttpServlet implements PageAttribut
   }
 
   private void processRequest(HttpServletRequest request, HttpServletResponse response) {
-    System.out.println(">>> helper=" + helper);
-    ICommand command = this.helper.getCommand(request);
+    Command command = this.helper.getCommand(request);
     System.out.println(">>> command=" + command);
-
     String page = command.execute(request, response);
-
-    // TODO: 16.12.2016  dell
-    System.out.println(">>>>>>>>>>>> servlet page=" + page);
-
     RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
-    System.out.println(">>> dispatcher=" + dispatcher);
-
     try {
       dispatcher.forward(request, response);
     } catch (ServletException | IOException e) {
       logger.error(DISPATCHER_ERROR, e);
     }
-
   }
 }

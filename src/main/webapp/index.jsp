@@ -25,9 +25,7 @@
 </form>
 <hr/>
 
-<c:if test="${not empty info}">
-<p>Info :<c:out value="${info}"/><p>
-    </c:if>
+<jsp:include page="/view/all/message.jsp"/>
 
 <hr/>
 <form action="/dispatcher" method="POST">

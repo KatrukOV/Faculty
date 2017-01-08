@@ -7,28 +7,28 @@
 <body style="text-align:center;">
 <jsp:include page="/view/all/logout.jsp"/>
 <h3>ALL students</h3>
-
+<jsp:include page="/view/all/message.jsp"/>
 <div align="center">
     <table border="1">
         <thead>
         <tr>
-            <th>Full Name</th>
-            <th>Form</th>
-            <th>Set Form</th>
-            <th>Contract</th>
-            <th>Set Contract</th>
+            <th><b>Full Name</b></th>
+            <th><b>Form</b></th>
+            <th><b>Set Form</b></th>
+            <th><b>Contract</b></th>
+            <th><b>Set Contract</b></th>
         </tr>
         </thead>
         <tbody>
         <c:forEach var="student" items="${studentList}">
             <tr>
                 <td>
-                    <label><b>${student.lastName}</b></label>
-                    <label><b>${student.name}</b></label>
-                    <label><b>${student.patronymic}</b></label>
+                    <label> ${student.lastName}</label>
+                    <label> ${student.name}</label>
+                    <label> ${student.patronymic} </label>
                 </td>
                 <td>
-                    <label><b>form now: ${student.form}</b></label>
+                    <label> ${student.form} </label>
                 </td>
                 <td>
                     <form action="/dispatcher" method="post">

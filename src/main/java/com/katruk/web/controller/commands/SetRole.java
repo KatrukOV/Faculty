@@ -16,7 +16,7 @@ import com.katruk.service.impl.TeacherServiceImpl;
 import com.katruk.service.impl.UserServiceImpl;
 import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
-import com.katruk.web.controller.ICommand;
+import com.katruk.web.controller.Command;
 
 import org.apache.log4j.Logger;
 
@@ -26,15 +26,15 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class SetRoleCommand implements ICommand, PageAttribute {
+public final class SetRole implements Command, PageAttribute {
 
   private final Logger logger;
   private final UserService userService;
   private final StudentService studentService;
   private final TeacherService teacherService;
 
-  public SetRoleCommand() {
-    this.logger = Logger.getLogger(SetRoleCommand.class);
+  public SetRole() {
+    this.logger = Logger.getLogger(SetRole.class);
     this.userService = new UserServiceImpl();
     this.studentService = new StudentServiceImpl();
     this.teacherService = new TeacherServiceImpl();
