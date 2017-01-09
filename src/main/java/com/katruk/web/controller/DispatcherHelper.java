@@ -12,6 +12,7 @@ import com.katruk.web.controller.commands.GetUsers;
 import com.katruk.web.controller.commands.Login;
 import com.katruk.web.controller.commands.Logout;
 import com.katruk.web.controller.commands.Registration;
+import com.katruk.web.controller.commands.RemoveSubject;
 import com.katruk.web.controller.commands.SetContract;
 import com.katruk.web.controller.commands.SetForm;
 import com.katruk.web.controller.commands.SetPosition;
@@ -49,6 +50,7 @@ final class DispatcherHelper implements PageAttribute {
 
     commands.put("addSubject", new AddSubject());
     commands.put("createSubject", new CreateSubject());
+    commands.put("removeSubject", new RemoveSubject());
 
 //    commands.put("redirectToTeacherDisciplines", new RedirectToTeacherDisciplinesCommand());
 //    commands.put("redirectToConfirmed", new RedirectToConfirmedCommand());

@@ -18,4 +18,6 @@ public interface SubjectService {
   Collection<Subject> getSubjectsByStudent(final Student student) throws ServiceException;
 
   Subject save(final Subject subject) throws ServiceException;
+
+  void remove(final Long subjectId) throws ServiceException;
 }

@@ -88,4 +88,14 @@ public final class SubjectServiceImpl implements SubjectService {
     }
     return subject;
   }
+
+  @Override
+  public void remove(Long subjectId) throws ServiceException {
+    try {
+      this.subjectDao.delete(subjectId);
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+  }
 }

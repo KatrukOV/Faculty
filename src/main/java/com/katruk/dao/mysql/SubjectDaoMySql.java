@@ -115,6 +115,23 @@ public final class SubjectDaoMySql implements SubjectDao {
     return result;
   }
 
+  @Override
+  public void delete(Long subjectId) throws DaoException {
+    try (Connection connection = this.connectionPool.getConnection()) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.DELETE_SUBJECT))) {
+        statement.setLong(1, subjectId);
+        statement.executeUpdate();
+      } catch (SQLException e) {
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+  }
+
   private Subject insert(Subject subject) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);

@@ -17,4 +17,6 @@ public interface SubjectDao {
   Collection<Subject> getSubjectsByStudent(final Long studentId) throws DaoException;
 
   Subject save(final Subject subject) throws DaoException;
+
+  void delete(Long subjectId) throws DaoException;
 }

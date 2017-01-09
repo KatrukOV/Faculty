@@ -14,6 +14,7 @@ public interface PageAttribute {
   String USER_ID = "userId";
   String STUDENT_ID = "studentId";
   String TEACHER_ID = "teacherId";
+  String SUBJECT_ID = "subjectId";
 
   String CONTRACT = "contract";
   String FORM = "form";

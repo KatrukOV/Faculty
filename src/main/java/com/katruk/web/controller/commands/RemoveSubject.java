@@ -1,5 +1,6 @@
 package com.katruk.web.controller.commands;
 
+import com.katruk.converter.SubjectConverter;
 import com.katruk.converter.TeacherConverter;
 import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
@@ -16,6 +17,7 @@ import org.apache.log4j.Logger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,28 +36,24 @@ public final class RemoveSubject implements Command, PageAttribute {
 
   @Override
   public String execute(HttpServletRequest request, HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.ADD_SUBJECT);
+    String page = Config.getInstance().getValue(Config.ALL_SUBJECTS);
     try {
-      String title = request.getParameter(TITLE);
-      System.out.println(">>>> title=" + title);
-      Long teacherId = Long.parseLong(request.getParameter(TEACHER_ID));
-      System.out.println(">>>> teacher id=" + teacherId);
-      Teacher teacher = this.teacherService.getTeacherById(teacherId);
-      System.out.println(">>>> teacher=" + teacher);
-      Subject subject = new Subject();
-      subject.setTitle(title);
-      subject.setTeacher(teacher);
-      System.out.println(">>>> subject=" + subject);
-      this.subjectService.save(subject);
-      System.out.println(">>>> subject id=" + subject.getId());
-
-      Collection<Teacher> teachers = this.teacherService.gatAll();
-      List teacherList = Collections.EMPTY_LIST;
-      if (!teachers.isEmpty()) {
-        teacherList = new TeacherConverter().convertToDto(teachers);
+      Long subjectId = Long.parseLong(request.getParameter(SUBJECT_ID));
+      this.subjectService.remove(subjectId);
+      Collection<Subject> subjects = this.subjectService.getAll();
+      List subjectList = Collections.EMPTY_LIST;
+      if (!subjects.isEmpty()) {
+        Collection<Teacher> teachers = this.teacherService.gatAll();
+        for (Subject subject : subjects) {
+          for (Teacher teacher : teachers) {
+            if (Objects.equals(teacher.getId(), subject.getTeacher().getId())) {
+              subject.setTeacher(teacher);
+            }
+          }
+        }
+        subjectList = new SubjectConverter().convertToDto(subjects);
       }
-      request.setAttribute(TEACHER_LIST, teacherList);
-//      logger.info(String.format("s"));
+      request.setAttribute(SUBJECT_LIST, subjectList);
     } catch (Exception e) {
       page = Config.getInstance().getValue(Config.ERROR_PAGE);
       logger.error("Unable to create a subject", e);
