@@ -7,11 +7,6 @@
 <h3>Create your login</h3>
 <hr/>
 <jsp:include page="/view/all/message.jsp"/>
-
-<%--<c:param name="userDto" value="${userDto}">--%>
-<%--value="${userDto.name}"--%>
-<%--</c:param>--%>
-
 <form action="/dispatcher" method="POST">
     <label>Last name: </label>
     <input type="text" name="lastName" placeholder="Last Name"/>
@@ -32,9 +27,6 @@
     <input type="password" name="confirmPassword" placeholder="Confirm Password"/>
     <br>
     <input type="hidden" name="command" value="registration"/>
-
-    <%--<input type="hidden" name="userDto" value="${userDto}"/>--%>
-
     <input type="submit" value="Sign up"/>
 </form>
 <hr/>

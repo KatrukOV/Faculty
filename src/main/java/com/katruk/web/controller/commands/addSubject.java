@@ -1,12 +1,9 @@
 package com.katruk.web.controller.commands;
 
 import com.katruk.converter.TeacherConverter;
-import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
-import com.katruk.entity.dto.TeacherDto;
-import com.katruk.service.SubjectService;
+import com.katruk.exception.ServiceException;
 import com.katruk.service.TeacherService;
-import com.katruk.service.impl.SubjectServiceImpl;
 import com.katruk.service.impl.TeacherServiceImpl;
 import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
@@ -21,15 +18,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public final class CreateSubject implements Command, PageAttribute {
+
+public final class AddSubject implements Command, PageAttribute {
 
   private final Logger logger;
-  private final SubjectService subjectService;
   private final TeacherService teacherService;
 
-  public CreateSubject() {
-    this.logger = Logger.getLogger(CreateSubject.class);
-    this.subjectService = new SubjectServiceImpl();
+  public AddSubject() {
+    this.logger = Logger.getLogger(AddSubject.class);
     this.teacherService = new TeacherServiceImpl();
   }
 
@@ -37,29 +33,16 @@ public final class CreateSubject implements Command, PageAttribute {
   public String execute(HttpServletRequest request, HttpServletResponse response) {
     String page = Config.getInstance().getValue(Config.ADD_SUBJECT);
     try {
-      String title = request.getParameter(TITLE);
-      System.out.println(">>>> title=" + title);
-      Long teacherId = Long.parseLong(request.getParameter(TEACHER_ID));
-      System.out.println(">>>> teacher id=" + teacherId);
-      Teacher teacher = this.teacherService.getTeacherById(teacherId);
-      System.out.println(">>>> teacher=" + teacher);
-      Subject subject = new Subject();
-      subject.setTitle(title);
-      subject.setTeacher(teacher);
-      System.out.println(">>>> subject=" + subject);
-      this.subjectService.save(subject);
-      System.out.println(">>>> subject id=" + subject.getId());
-
       Collection<Teacher> teachers = this.teacherService.gatAll();
       List teacherList = Collections.EMPTY_LIST;
       if (!teachers.isEmpty()) {
         teacherList = new TeacherConverter().convertToDto(teachers);
       }
       request.setAttribute(TEACHER_LIST, teacherList);
-//      logger.info(String.format("s"));
-    } catch (Exception e) {
+      logger.info(String.format("get all teachers = %d", teacherList.size()));
+    } catch (ServiceException e) {
       page = Config.getInstance().getValue(Config.ERROR_PAGE);
-      logger.error("Unable to create a subject", e);
+      logger.error("Unable get all teachers", e);
     }
     return page;
   }

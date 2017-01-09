@@ -65,12 +65,6 @@
     </form>
 </c:if>
 <br/>
-<c:if test="${role == 'ADMIN'}">
-    <a href="admin/addSubject.jsp">
-        <input type="button" value="addSubject"/>
-    </a>
-</c:if>
-<br/>
 <jsp:include page="/view/all/toProfile.jsp"/>
 </body>
 </html>
