@@ -34,24 +34,24 @@
                     <br/>
                     <label> ${subject.position} </label>
                 </td>
-                <td>
-                    <c:if test="${role == 'STUDENT'}">
+                <c:if test="${role == 'STUDENT'}">
+                    <td>
                         <form action="/dispatcher" method="POST">
                             <input type="hidden" name="subjectId" value="${subject.subjectId}"/>
                             <input type="hidden" name="command" value="declared"/>
                             <input type="submit" value="Declared"/>
                         </form>
-                    </c:if>
-                </td>
-                <td>
-                    <c:if test="${role == 'ADMIN'}">
+                    </td>
+                </c:if>
+                <c:if test="${role == 'ADMIN'}">
+                    <td>
                         <form action="/dispatcher" method="POST">
                             <input type="hidden" name="subjectId" value="${subject.subjectId}"/>
                             <input type="hidden" name="command" value="removeSubject"/>
                             <input type="submit" value="Remove"/>
                         </form>
-                    </c:if>
-                </td>
+                    </td>
+                </c:if>
             </tr>
         </c:forEach>
         </tbody>

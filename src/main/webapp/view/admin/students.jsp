@@ -28,21 +28,21 @@
                     <label> ${student.patronymic} </label>
                 </td>
                 <td>
-                    <label> ${student.form} </label>
+                    <label>${student.form}</label>
                 </td>
                 <td>
                     <form action="/dispatcher" method="post">
                         <select name="form">
-                            <option value="FULL_TAME" ${teacher.contract.equals('FULL_TAME') ? 'selected="selected"' : ''}>
+                            <option value="FULL_TAME" ${student.contract.equals('FULL_TAME') ? 'selected="selected"' : ''}>
                                 FULL_TAME
                             </option>
-                            <option value="EXTRAMURAL" ${teacher.contract.equals('EXTRAMURAL') ? 'selected="selected"' : ''}>
+                            <option value="EXTRAMURAL" ${student.contract.equals('EXTRAMURAL') ? 'selected="selected"' : ''}>
                                 EXTRAMURAL
                             </option>
-                            <option value="EVENING" ${teacher.contract.equals('EVENING') ? 'selected="selected"' : ''}>
+                            <option value="EVENING" ${student.contract.equals('EVENING') ? 'selected="selected"' : ''}>
                                 EVENING
                             </option>
-                            <option value="DISTANCE" ${teacher.contract.equals('DISTANCE') ? 'selected="selected"' : ''}>
+                            <option value="DISTANCE" ${student.contract.equals('DISTANCE') ? 'selected="selected"' : ''}>
                                 DISTANCE
                             </option>
                         </select>
@@ -52,15 +52,15 @@
                     </form>
                 </td>
                 <td>
-                    <label><b>contract now: ${student.contract}</b></label>
+                    <label><b>${student.contract}</b></label>
                 </td>
                 <td>
                     <form action="/dispatcher" method="post">
                         <select name="contract">
-                            <option value="STATE_ORDER" ${teacher.contract.equals('STATE_ORDER') ? 'selected="selected"' : ''}>
+                            <option value="STATE_ORDER" ${student.contract.equals('STATE_ORDER') ? 'selected="selected"' : ''}>
                                 STATE_ORDER
                             </option>
-                            <option value="CONTRACT" ${teacher.contract.equals('CONTRACT') ? 'selected="selected"' : ''}>
+                            <option value="CONTRACT" ${student.contract.equals('CONTRACT') ? 'selected="selected"' : ''}>
                                 CONTRACT
                             </option>
                         </select>

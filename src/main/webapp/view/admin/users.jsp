@@ -42,7 +42,7 @@
                         </select>
                         <input type="hidden" name="userId" value="${user.userId}"/>
                         <input type="hidden" name="command" value="setRole"/>
-                        <input type="submit" value="Submit"/>
+                        <input type="submit" value="Confirm"/>
                     </form>
                 </td>
             </tr>
