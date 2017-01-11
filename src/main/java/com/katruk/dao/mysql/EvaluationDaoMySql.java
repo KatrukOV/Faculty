@@ -109,7 +109,8 @@ public final class EvaluationDaoMySql implements EvaluationDao {
         statement.setLong(1, evaluation.getSubject().getId());
         statement.setLong(2, evaluation.getStudent().getId());
         statement.setString(3, evaluation.getStatus().name());
-        statement.setString(4, evaluation.getRating().name());
+        statement
+            .setString(4, evaluation.getRating() != null ? evaluation.getRating().name() : null);
         statement.setString(5, evaluation.getFeedback());
         int affectedRows = statement.executeUpdate();
         connection.commit();

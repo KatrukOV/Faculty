@@ -52,7 +52,7 @@ public final class PersonDaoMySql implements PersonDao {
   @Override
   public Person save(final Person person) throws DaoException {
     Person result;
-    System.out.println("?? per="+person);
+    System.out.println("?? per=" + person);
     if (isNull(person.getId())) {
       result = insert(person);
     } else {

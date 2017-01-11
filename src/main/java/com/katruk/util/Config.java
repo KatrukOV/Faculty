@@ -8,16 +8,16 @@ public final class Config {
   private static final String BUNDLE_NAME = "config";
   private static final Config INSTANCE = new Config();
 
-  public static final String DRIVER = "driver";
-  public static final String URL = "url";
+  static final String DRIVER = "driver";
+  static final String URL = "url";
   public static final String INDEX = "index";
   public static final String REGISTRATION = "registration";
   public static final String PROFILE = "profile";
   public static final String ADMIN_PROFILE = "admin.profile";
-  public static final String ALL_USERS = "users";
-  public static final String ALL_STUDENTS = "students";
-  public static final String ALL_TEACHERS = "teachers";
-  public static final String ALL_SUBJECTS = "subjects";
+  public static final String USERS = "users";
+  public static final String STUDENTS = "students";
+  public static final String TEACHERS = "teachers";
+  public static final String SUBJECTS = "subjects";
   public static final String ADD_SUBJECT = "addSubject";
 
 

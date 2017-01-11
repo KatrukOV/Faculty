@@ -42,7 +42,7 @@ public final class SetRole implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.ALL_USERS);
+    String page = Config.getInstance().getValue(Config.USERS);
     try {
       User.Role role = User.Role.valueOf(request.getParameter(ROLE));
       System.out.println(">>>>>>>>>>>> role= " + role);

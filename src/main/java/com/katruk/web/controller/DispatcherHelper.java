@@ -5,6 +5,8 @@ import static java.util.Objects.isNull;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.commands.AddSubject;
 import com.katruk.web.controller.commands.CreateSubject;
+import com.katruk.web.controller.commands.SetConfirm;
+import com.katruk.web.controller.commands.SetDeclare;
 import com.katruk.web.controller.commands.GetStudents;
 import com.katruk.web.controller.commands.GetSubjects;
 import com.katruk.web.controller.commands.GetTeachers;
@@ -61,9 +63,9 @@ final class DispatcherHelper implements PageAttribute {
 //    commands.put("redirectToMarks", new RedirectToMarksCommand());
 //    commands.put("redirectToDeclaredDisciplines", new RedirectToDeclaredDisciplinesCommand());
 //
-//    commands.put("declared", new DeclaredCommand());
+    commands.put("declare", new SetDeclare());
 //    commands.put("revoked", new RevokedCommand());
-//    commands.put("confirmed", new ConfirmedCommand());
+    commands.put("confirm", new SetConfirm());
 //    commands.put("deleted", new DeletedCommand());
   }
 

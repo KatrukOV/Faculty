@@ -1,27 +1,24 @@
 package com.katruk.web.controller.commands;
 
-import com.katruk.entity.Evaluation;
 import com.katruk.service.EvaluationService;
+import com.katruk.service.impl.EvaluationServiceImpl;
 import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class Confirmed implements Command, PageAttribute {
+public final class SetConfirm implements Command, PageAttribute {
 
   private final Logger logger;
   private final EvaluationService evaluationService;
 
-  public Confirmed() {
-    this.logger = Logger.getLogger(Confirmed.class);
-    this.evaluationService = null;
+  public SetConfirm() {
+    this.logger = Logger.getLogger(SetConfirm.class);
+    this.evaluationService = new EvaluationServiceImpl();
   }
 
   @Override

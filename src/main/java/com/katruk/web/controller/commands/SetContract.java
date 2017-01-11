@@ -29,7 +29,7 @@ public final class SetContract implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.ALL_STUDENTS);
+    String page = Config.getInstance().getValue(Config.STUDENTS);
     try {
       Student.Contract contract = Student.Contract.valueOf(request.getParameter(CONTRACT));
       System.out.println(">>>>>>>>>>>> contract= " + contract);

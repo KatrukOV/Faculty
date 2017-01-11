@@ -29,7 +29,7 @@ public final class SetPosition implements Command, PageAttribute {
 
   @Override
   public String execute(HttpServletRequest request, HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.ALL_TEACHERS);
+    String page = Config.getInstance().getValue(Config.TEACHERS);
     try {
       System.out.println("ff="+POSITION);
       System.out.println("ff11="+request.getParameter(POSITION));

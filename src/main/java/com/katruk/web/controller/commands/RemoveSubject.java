@@ -1,7 +1,6 @@
 package com.katruk.web.controller.commands;
 
 import com.katruk.converter.SubjectConverter;
-import com.katruk.converter.TeacherConverter;
 import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
 import com.katruk.service.SubjectService;
@@ -36,7 +35,7 @@ public final class RemoveSubject implements Command, PageAttribute {
 
   @Override
   public String execute(HttpServletRequest request, HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.ALL_SUBJECTS);
+    String page = Config.getInstance().getValue(Config.SUBJECTS);
     try {
       Long subjectId = Long.parseLong(request.getParameter(SUBJECT_ID));
       this.subjectService.remove(subjectId);

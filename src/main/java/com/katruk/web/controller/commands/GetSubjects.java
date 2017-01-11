@@ -35,7 +35,7 @@ public final class GetSubjects implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.ALL_SUBJECTS);
+    String page = Config.getInstance().getValue(Config.SUBJECTS);
     try {
       Collection<Subject> subjects = this.subjectService.getAll();
 

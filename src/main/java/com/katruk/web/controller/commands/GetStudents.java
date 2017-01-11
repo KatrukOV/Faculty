@@ -29,7 +29,7 @@ public final class GetStudents implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.ALL_STUDENTS);
+    String page = Config.getInstance().getValue(Config.STUDENTS);
     try {
       Collection<Student> students = this.studentService.getAll();
       List studentList = Collections.EMPTY_LIST;

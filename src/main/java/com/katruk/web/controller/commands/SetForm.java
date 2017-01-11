@@ -29,7 +29,7 @@ public final class SetForm implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.ALL_STUDENTS);
+    String page = Config.getInstance().getValue(Config.STUDENTS);
     try {
       Student.Form form = Student.Form.valueOf(request.getParameter(FORM));
       System.out.println(">>>>>>>>>>>> form= " + form);

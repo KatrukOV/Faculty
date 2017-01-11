@@ -30,7 +30,7 @@ public final class GetUsers implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.ALL_USERS);
+    String page = Config.getInstance().getValue(Config.USERS);
     try {
       Collection<User> users = this.userService.getAll();
       System.out.println(">>> Coll users=" + users);
