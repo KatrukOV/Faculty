@@ -32,7 +32,7 @@ public final class GetTeachers implements Command, PageAttribute {
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
     String page = Config.getInstance().getValue(Config.TEACHERS);
     try {
-      Collection<Teacher> teachers = this.teacherService.gatAll();
+      Collection<Teacher> teachers = this.teacherService.getAll();
       List teacherList = Collections.EMPTY_LIST;
       if (!teachers.isEmpty()) {
         teacherList = new TeacherConverter().convertToDto(teachers);

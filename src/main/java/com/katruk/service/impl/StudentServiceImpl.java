@@ -79,7 +79,7 @@ public final class StudentServiceImpl implements StudentService {
   }
 
   @Override
-  public void remove(Long studentId) throws ServiceException {
+  public void remove(final Long studentId) throws ServiceException {
     try {
       this.studentDao.delete(studentId);
     } catch (DaoException e) {

@@ -27,7 +27,7 @@ public final class TeacherServiceImpl implements TeacherService {
   }
 
   @Override
-  public Collection<Teacher> gatAll() throws ServiceException {
+  public Collection<Teacher> getAll() throws ServiceException {
     Collection<Teacher> teachers;
     try {
       teachers = this.teacherDao.getAllTeacher();
@@ -63,7 +63,7 @@ public final class TeacherServiceImpl implements TeacherService {
   }
 
   @Override
-  public Teacher save(Teacher teacher) throws ServiceException {
+  public Teacher save(final Teacher teacher) throws ServiceException {
     try {
       this.teacherDao.save(teacher);
     } catch (DaoException e) {
@@ -75,7 +75,7 @@ public final class TeacherServiceImpl implements TeacherService {
   }
 
   @Override
-  public void remove(Long teacherId) throws ServiceException {
+  public void remove(final Long teacherId) throws ServiceException {
     try {
       this.teacherDao.delete(teacherId);
     } catch (DaoException e) {

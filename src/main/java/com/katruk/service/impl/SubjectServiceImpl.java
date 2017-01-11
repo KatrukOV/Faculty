@@ -79,7 +79,7 @@ public final class SubjectServiceImpl implements SubjectService {
   }
 
   @Override
-  public Subject save(Subject subject) throws ServiceException {
+  public Subject save(final Subject subject) throws ServiceException {
     try {
       this.subjectDao.save(subject);
     } catch (DaoException e) {
@@ -90,7 +90,7 @@ public final class SubjectServiceImpl implements SubjectService {
   }
 
   @Override
-  public void remove(Long subjectId) throws ServiceException {
+  public void remove(final Long subjectId) throws ServiceException {
     try {
       this.subjectDao.delete(subjectId);
     } catch (DaoException e) {

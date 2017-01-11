@@ -8,7 +8,6 @@ public final class Evaluation extends Model {
   private Rating rating;
   private String feedback;
 
-
   public enum Status {
     DECLARED,
     CONFIRMED,

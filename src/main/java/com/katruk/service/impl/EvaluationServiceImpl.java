@@ -31,21 +31,33 @@ public final class EvaluationServiceImpl implements EvaluationService {
   }
 
   @Override
-  public Collection<Evaluation> getEvaluationByTeacherAndSubjects(Teacher teacher,
-                                                                  Subject subject)
+  public Collection<Evaluation> getEvaluationBySubjects(final Long subjectId)
       throws ServiceException {
-    return null;
+    Collection<Evaluation> result;
+    try {
+      result = this.evaluationDao.getEvaluationBySubject(subjectId);
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+    return result;
   }
 
   @Override
-  public Collection<Evaluation> getEvaluationByStudentAndSubjects(Student student,
-                                                                  Subject subject)
+  public Collection<Evaluation> getEvaluationByStudent(final Long studentId)
       throws ServiceException {
-    return null;
+    Collection<Evaluation> result;
+    try {
+      result = this.evaluationDao.getEvaluationByStudent(studentId);
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+    return result;
   }
 
   @Override
-  public Evaluation save(Evaluation evaluation) throws ServiceException {
+  public Evaluation save(final Evaluation evaluation) throws ServiceException {
     try {
       this.evaluationDao.save(evaluation);
     } catch (DaoException e) {
@@ -55,78 +67,3 @@ public final class EvaluationServiceImpl implements EvaluationService {
     return evaluation;
   }
 }
-
-/*
-
-  @Override
-  public Collection<Subject> getAll() throws ServiceException {
-    Collection<Subject> result;
-    try {
-      result = this.subjectDao.getAllSubject();
-    } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
-    }
-    return result;
-  }
-
-  @Override
-  public Subject getSubjectById(final Long subjectId) throws ServiceException {
-    final Subject subject;
-    try {
-      subject = this.subjectDao.getSubjectById(subjectId)
-          .orElseThrow(() -> new DaoException("Subject not found", new NoSuchElementException()));
-    } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
-    }
-    final Teacher teacher = this.teacherService.getTeacherById(subject.getTeacher().getId());
-    subject.setTeacher(teacher);
-    return subject;
-  }
-
-  @Override
-  public Collection<Subject> getSubjectByTeacher(final Teacher teacher) throws ServiceException {
-    Collection<Subject> result;
-    try {
-      result = this.subjectDao.getSubjectByTeacher(teacher.getId());
-    } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
-    }
-    return result;
-  }
-
-  @Override
-  public Collection<Subject> getSubjectsByStudent(final Student student) throws ServiceException {
-    Collection<Subject> result;
-    try {
-      result = this.subjectDao.getSubjectsByStudent(student.getId());
-    } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
-    }
-    return result;
-  }
-
-  @Override
-  public Subject save(Subject subject) throws ServiceException {
-    try {
-      this.subjectDao.save(subject);
-    } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
-    }
-    return subject;
-  }
-
-  @Override
-  public void remove(Long subjectId) throws ServiceException {
-    try {
-      this.subjectDao.delete(subjectId);
-    } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
-    }
-  }
- */

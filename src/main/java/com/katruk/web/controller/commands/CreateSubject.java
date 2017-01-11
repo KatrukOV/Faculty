@@ -3,7 +3,6 @@ package com.katruk.web.controller.commands;
 import com.katruk.converter.TeacherConverter;
 import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
-import com.katruk.entity.dto.TeacherDto;
 import com.katruk.service.SubjectService;
 import com.katruk.service.TeacherService;
 import com.katruk.service.impl.SubjectServiceImpl;
@@ -50,7 +49,7 @@ public final class CreateSubject implements Command, PageAttribute {
       this.subjectService.save(subject);
       System.out.println(">>>> subject id=" + subject.getId());
 
-      Collection<Teacher> teachers = this.teacherService.gatAll();
+      Collection<Teacher> teachers = this.teacherService.getAll();
       List teacherList = Collections.EMPTY_LIST;
       if (!teachers.isEmpty()) {
         teacherList = new TeacherConverter().convertToDto(teachers);

@@ -33,7 +33,7 @@ public final class AddSubject implements Command, PageAttribute {
   public String execute(HttpServletRequest request, HttpServletResponse response) {
     String page = Config.getInstance().getValue(Config.ADD_SUBJECT);
     try {
-      Collection<Teacher> teachers = this.teacherService.gatAll();
+      Collection<Teacher> teachers = this.teacherService.getAll();
       List teacherList = Collections.EMPTY_LIST;
       if (!teachers.isEmpty()) {
         teacherList = new TeacherConverter().convertToDto(teachers);

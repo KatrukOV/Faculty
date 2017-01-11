@@ -57,6 +57,13 @@
     </table>
 </div>
 <br/>
+<c:if test="${role == 'TEACHER'}">
+    <form action="/dispatcher" method="GET">
+        <input type="hidden" name="command" value="getTeacherSubjects"/>
+        <input type="submit" value="My Subjects"/>
+    </form>
+</c:if>
+<br/>
 <c:if test="${role == 'ADMIN'}">
     <form action="/dispatcher" method="GET">
         <input type="hidden" name="command" value="addSubject"/>

@@ -43,7 +43,7 @@ public final class SetPosition implements Command, PageAttribute {
         this.teacherService.save(teacher);
         logger.info(String.format("set position=%s for teacher= %s", position, teacher));
       }
-      Collection<Teacher> teachers = this.teacherService.gatAll();
+      Collection<Teacher> teachers = this.teacherService.getAll();
       List<TeacherDto> teacherList = new TeacherConverter().convertToDto(teachers);
       request.setAttribute(TEACHER_LIST, teacherList);
     } catch (Exception e) {

@@ -1,6 +1,7 @@
 package com.katruk.dao.mysql;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 import com.katruk.dao.EvaluationDao;
 import com.katruk.entity.Evaluation;
@@ -91,7 +92,12 @@ public final class EvaluationDaoMySql implements EvaluationDao {
 
   @Override
   public Evaluation save(final Evaluation evaluation) throws DaoException {
-    Evaluation result;
+    Evaluation result = getEvaluationById(evaluation.getSubject().getId(),
+                                          evaluation.getStudent().getId()).orElse(null);
+    if (nonNull(result)){
+      evaluation.setId(result.getId());
+    }
+
     if (isNull(evaluation.getId())) {
       result = insert(evaluation);
     } else {

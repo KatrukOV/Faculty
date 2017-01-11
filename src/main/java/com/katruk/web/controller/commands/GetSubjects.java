@@ -41,7 +41,7 @@ public final class GetSubjects implements Command, PageAttribute {
 
       List subjectList = Collections.EMPTY_LIST;
       if (!subjects.isEmpty()) {
-        Collection<Teacher> teachers = this.teacherService.gatAll();
+        Collection<Teacher> teachers = this.teacherService.getAll();
         for (Subject subject : subjects) {
           for (Teacher teacher : teachers) {
             if (Objects.equals(teacher.getId(), subject.getTeacher().getId())) {

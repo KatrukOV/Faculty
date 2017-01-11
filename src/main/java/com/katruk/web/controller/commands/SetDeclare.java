@@ -9,10 +9,12 @@ import com.katruk.entity.User;
 import com.katruk.service.EvaluationService;
 import com.katruk.service.StudentService;
 import com.katruk.service.SubjectService;
+import com.katruk.service.TeacherService;
 import com.katruk.service.UserService;
 import com.katruk.service.impl.EvaluationServiceImpl;
 import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.service.impl.SubjectServiceImpl;
+import com.katruk.service.impl.TeacherServiceImpl;
 import com.katruk.service.impl.UserServiceImpl;
 import com.katruk.util.Config;
 import com.katruk.web.PageAttribute;
@@ -27,13 +29,13 @@ import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 public final class SetDeclare implements Command, PageAttribute {
 
   private final Logger logger;
   private final UserService userService;
   private final StudentService studentService;
+  private final TeacherService teacherService;
   private final SubjectService subjectService;
   private final EvaluationService evaluationService;
 
@@ -41,6 +43,7 @@ public final class SetDeclare implements Command, PageAttribute {
     this.logger = Logger.getLogger(SetDeclare.class);
     this.userService = new UserServiceImpl();
     this.studentService = new StudentServiceImpl();
+    this.teacherService = new TeacherServiceImpl();
     this.subjectService = new SubjectServiceImpl();
     this.evaluationService = new EvaluationServiceImpl();
   }
@@ -64,6 +67,22 @@ public final class SetDeclare implements Command, PageAttribute {
       evaluation.setStatus(Evaluation.Status.DECLARED);
       this.evaluationService.save(evaluation);
 
+      Collection<Subject> subjects = this.subjectService.getAll();
+
+      List subjectList = Collections.EMPTY_LIST;
+      if (!subjects.isEmpty()) {
+        Collection<Teacher> teachers = this.teacherService.getAll();
+        for (Subject subj : subjects) {
+          for (Teacher teacher : teachers) {
+            if (Objects.equals(teacher.getId(), subj.getTeacher().getId())) {
+              subj.setTeacher(teacher);
+            }
+          }
+        }
+        subjectList = new SubjectConverter().convertToDto(subjects);
+      }
+      request.setAttribute(SUBJECT_LIST, subjectList);
+      logger.info(String.format("get all subjects = %d", subjectList.size()));
     } catch (Exception e) {
       page = Config.getInstance().getValue(Config.ERROR_PAGE);
       logger.error("SetDeclare ", e);
