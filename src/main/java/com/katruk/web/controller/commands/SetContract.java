@@ -2,7 +2,6 @@ package com.katruk.web.controller.commands;
 
 import com.katruk.converter.StudentConverter;
 import com.katruk.entity.Student;
-import com.katruk.entity.dto.StudentDto;
 import com.katruk.service.StudentService;
 import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.util.Config;
@@ -12,6 +11,7 @@ import com.katruk.web.controller.Command;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +42,10 @@ public final class SetContract implements Command, PageAttribute {
         logger.info(String.format("set contract=%s for student= %s", contract, student));
       }
       Collection<Student> students = this.studentService.getAll();
-      List<StudentDto> studentList = new StudentConverter().convertToDto(students);
+      List studentList = Collections.EMPTY_LIST;
+      if (!students.isEmpty()) {
+        studentList = new StudentConverter().convertToDto(students);
+      }
       request.setAttribute(STUDENT_LIST, studentList);
     } catch (Exception e) {
       page = Config.getInstance().getValue(Config.ERROR_PAGE);

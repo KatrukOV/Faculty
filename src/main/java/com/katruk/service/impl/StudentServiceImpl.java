@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public final class StudentServiceImpl implements StudentService {
 
@@ -38,14 +39,12 @@ public final class StudentServiceImpl implements StudentService {
     System.out.println("<< stu=" + students.size() + " stu=" + students);
     Collection<User> users = this.userService.getAll();
     System.out.println("<< us=" + users.size() + " us=" + users);
-    // TODO: 04.01.17 add to students real user (use stream())
     for (User user : users) {
-      for (Student student : students) {
-        if (user.getId() == student.getUser().getId()) {
-          student.setUser(user);
-          System.out.println(">,, st=" + student);
-        }
-      }
+      students.stream().filter(student -> Objects.equals(user.getId(), student.getUser().getId()))
+          .forEach(student -> {
+            student.setUser(user);
+            System.out.println(">,, st=" + student);
+          });
     }
     return students;
   }

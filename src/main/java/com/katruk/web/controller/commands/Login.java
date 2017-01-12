@@ -48,23 +48,18 @@ public final class Login implements Command, PageAttribute {
     final String password = request.getParameter(PASSWORD);
     final HttpSession session = request.getSession();
     String page = Config.getInstance().getValue(Config.INDEX);
-
     if (isNull(username) || isNull(password)) {
       request.setAttribute(ERROR, ERROR_LOGIN_EMPTY);
       this.logger.error(ERROR_LOGIN_EMPTY);
     } else {
-      System.out.println(">> else ");
       try {
         final User user = this.userService.getUserByUsername(username);
-        System.out.println(">>> user=" + user);
         if (user.getPassword().equals(DigestUtils.sha1Hex(password))) {
           session.setAttribute(LAST_NAME, user.getPerson().getLastName());
           session.setAttribute(NAME, user.getPerson().getName());
           session.setAttribute(USERNAME, user.getUsername());
           session.setAttribute(ROLE, user.getRole());
-          session.setMaxInactiveInterval(MaxInactiveInterval);
-          System.out.println(">>> user name=" + user.getPerson().getName());
-          System.out.println(">>> user role=" + user.getRole());
+          session.setMaxInactiveInterval(MaxInactiveInterval);;
           page = Config.getInstance().getValue(Config.PROFILE);
           if (nonNull(user.getRole())) {
             switch (user.getRole()) {
@@ -81,7 +76,6 @@ public final class Login implements Command, PageAttribute {
               }
               case ADMIN: {
                 page = Config.getInstance().getValue(Config.ADMIN_PROFILE);
-                System.out.println(">>> Admin");
                 break;
               }
               default:

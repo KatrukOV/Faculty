@@ -2,7 +2,6 @@ package com.katruk.web.controller.commands;
 
 import com.katruk.converter.TeacherConverter;
 import com.katruk.entity.Teacher;
-import com.katruk.entity.dto.TeacherDto;
 import com.katruk.service.TeacherService;
 import com.katruk.service.impl.TeacherServiceImpl;
 import com.katruk.util.Config;
@@ -12,6 +11,7 @@ import com.katruk.web.controller.Command;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,8 +31,8 @@ public final class SetPosition implements Command, PageAttribute {
   public String execute(HttpServletRequest request, HttpServletResponse response) {
     String page = Config.getInstance().getValue(Config.TEACHERS);
     try {
-      System.out.println("ff="+POSITION);
-      System.out.println("ff11="+request.getParameter(POSITION));
+      System.out.println("ff=" + POSITION);
+      System.out.println("ff11=" + request.getParameter(POSITION));
       Teacher.Position position = Teacher.Position.valueOf(request.getParameter(POSITION));
       System.out.println(">>>>>>>>>>>> position= " + position);
       Long teacherId = Long.parseLong(request.getParameter(TEACHER_ID));
@@ -44,7 +44,10 @@ public final class SetPosition implements Command, PageAttribute {
         logger.info(String.format("set position=%s for teacher= %s", position, teacher));
       }
       Collection<Teacher> teachers = this.teacherService.getAll();
-      List<TeacherDto> teacherList = new TeacherConverter().convertToDto(teachers);
+      List teacherList = Collections.EMPTY_LIST;
+      if (!teachers.isEmpty()) {
+        teacherList = new TeacherConverter().convertToDto(teachers);
+      }
       request.setAttribute(TEACHER_LIST, teacherList);
     } catch (Exception e) {
       page = Config.getInstance().getValue(Config.ERROR_PAGE);

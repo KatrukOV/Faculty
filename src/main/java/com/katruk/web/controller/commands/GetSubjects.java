@@ -2,7 +2,6 @@ package com.katruk.web.controller.commands;
 
 import com.katruk.converter.SubjectConverter;
 import com.katruk.entity.Subject;
-import com.katruk.entity.Teacher;
 import com.katruk.service.SubjectService;
 import com.katruk.service.TeacherService;
 import com.katruk.service.impl.SubjectServiceImpl;
@@ -16,7 +15,6 @@ import org.apache.log4j.Logger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,17 +36,8 @@ public final class GetSubjects implements Command, PageAttribute {
     String page = Config.getInstance().getValue(Config.SUBJECTS);
     try {
       Collection<Subject> subjects = this.subjectService.getAll();
-
       List subjectList = Collections.EMPTY_LIST;
       if (!subjects.isEmpty()) {
-        Collection<Teacher> teachers = this.teacherService.getAll();
-        for (Subject subject : subjects) {
-          for (Teacher teacher : teachers) {
-            if (Objects.equals(teacher.getId(), subject.getTeacher().getId())) {
-              subject.setTeacher(teacher);
-            }
-          }
-        }
         subjectList = new SubjectConverter().convertToDto(subjects);
       }
       request.setAttribute(SUBJECT_LIST, subjectList);

@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public final class SetConfirm implements Command, PageAttribute {
+public class SetConfirm implements Command, PageAttribute {
 
   private final Logger logger;
   private final EvaluationService evaluationService;
@@ -26,25 +26,18 @@ public final class SetConfirm implements Command, PageAttribute {
     String page;
     try {
       System.out.println("conf begin");
-
-      String title = (String) request.getParameter(TITLE);
+      String title = request.getParameter(TITLE);
       System.out.println("title=" + title);
-//      Discipline discipline = daoFactory.getDisciplineDAO().get(title);
-//            List<Human> humanList = evaluationDAO.getStudentOfTeacher(teacher, Evaluation.StatusInDiscipline.DECLARED);
-//      System.out.println("dis===" + discipline);
-
-//      List<Evaluation> evaluationList = daoFactory.getEvaluationDAO().getByDisciplineAndStatus(
-//          discipline, Evaluation.StatusInDiscipline.DECLARED);
-//
-//      List<Human> humanList = new ArrayList<>();
-//      if (evaluationList != null) {
-//        for (Evaluation evaluation : evaluationList) {
-//          humanList.add(evaluation.getStudent());
-//        }
-//      }
       request.setAttribute(TITLE, title);
-//      request.setAttribute(HUMAN_LIST, humanList);
       System.out.println(" conf ok");
+
+
+
+
+
+
+
+
       logger.info(String.format("show students which DECLARED discipline"));
       page = Config.getInstance().getValue(Config.TEACHER_CONFIRMED);
 

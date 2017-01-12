@@ -4,7 +4,6 @@ import com.katruk.converter.SubjectConverter;
 import com.katruk.entity.Evaluation;
 import com.katruk.entity.Student;
 import com.katruk.entity.Subject;
-import com.katruk.entity.Teacher;
 import com.katruk.entity.User;
 import com.katruk.service.EvaluationService;
 import com.katruk.service.StudentService;
@@ -25,7 +24,6 @@ import org.apache.log4j.Logger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,32 +51,22 @@ public final class SetDeclare implements Command, PageAttribute {
     String page = Config.getInstance().getValue(Config.SUBJECTS);
     try {
       String username = (String) request.getSession().getAttribute(USERNAME);
-      System.out.println("username= "+username);
+      System.out.println("username= " + username);
       User user = this.userService.getUserByUsername(username);
-      System.out.println("user= "+user);
+      System.out.println("user= " + user);
       Student student = this.studentService.getStudentById(user.getId());
-      System.out.println("student= "+student);
+      System.out.println("student= " + student);
       Long subjectId = Long.parseLong(request.getParameter(SUBJECT_ID));
       Subject subject = this.subjectService.getSubjectById(subjectId);
-      System.out.println("subject= "+subject);
+      System.out.println("subject= " + subject);
       Evaluation evaluation = new Evaluation();
       evaluation.setStudent(student);
       evaluation.setSubject(subject);
       evaluation.setStatus(Evaluation.Status.DECLARED);
       this.evaluationService.save(evaluation);
-
       Collection<Subject> subjects = this.subjectService.getAll();
-
       List subjectList = Collections.EMPTY_LIST;
       if (!subjects.isEmpty()) {
-        Collection<Teacher> teachers = this.teacherService.getAll();
-        for (Subject subj : subjects) {
-          for (Teacher teacher : teachers) {
-            if (Objects.equals(teacher.getId(), subj.getTeacher().getId())) {
-              subj.setTeacher(teacher);
-            }
-          }
-        }
         subjectList = new SubjectConverter().convertToDto(subjects);
       }
       request.setAttribute(SUBJECT_LIST, subjectList);

@@ -32,14 +32,10 @@ public final class Registration implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    System.out.println(">>> Begin reg");
     String page = Config.getInstance().getValue(Config.INDEX);
-//    UserDto userDto = (UserDto) request.getAttribute(USER_DTO);
     UserDto userDto = getUserDtoFromRequest(request);
-    System.out.println(">>> userDto=" + userDto);
     try {
       this.userValidator.validate(userDto);
-      System.out.println(">>> no valid err");
     } catch (ValidateException e) {
       request.setAttribute(ERROR, e.getMessage());
       logger.error(e);

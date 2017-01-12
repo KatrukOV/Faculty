@@ -21,6 +21,7 @@ import com.katruk.web.controller.Command;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -79,7 +80,10 @@ public final class SetRole implements Command, PageAttribute {
         }
       }
       Collection<User> users = this.userService.getAll();
-      List<UserDto> userList = new UserConverter().convertToDto(users);
+      List userList = Collections.EMPTY_LIST;
+      if (!users.isEmpty()) {
+        userList = new UserConverter().convertToDto(users);
+      }
       request.setAttribute(USER_LIST, userList);
       logger.info(String.format("set role=%s for user= %s", role, user));
     } catch (ServiceException e) {

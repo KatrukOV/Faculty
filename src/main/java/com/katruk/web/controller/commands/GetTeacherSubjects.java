@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,14 +47,6 @@ public final class GetTeacherSubjects implements Command, PageAttribute {
       Collection<Subject> subjects = this.subjectService.getSubjectByTeacher(teacher);
       List subjectList = Collections.EMPTY_LIST;
       if (!subjects.isEmpty()) {
-        Collection<Teacher> teachers = this.teacherService.getAll();
-        for (Subject subject : subjects) {
-          for (Teacher teach : teachers) {
-            if (Objects.equals(teach.getId(), subject.getTeacher().getId())) {
-              subject.setTeacher(teach);
-            }
-          }
-        }
         subjectList = new SubjectConverter().convertToDto(subjects);
       }
       request.setAttribute(SUBJECT_LIST, subjectList);

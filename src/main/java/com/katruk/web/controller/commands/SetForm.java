@@ -12,6 +12,7 @@ import com.katruk.web.controller.Command;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +46,10 @@ public final class SetForm implements Command, PageAttribute {
         logger.info(String.format("set form=%s for student= %s", form, student));
       }
       Collection<Student> students = this.studentService.getAll();
-      List<StudentDto> studentList = new StudentConverter().convertToDto(students);
+      List studentList = Collections.EMPTY_LIST;
+      if (!students.isEmpty()) {
+        studentList = new StudentConverter().convertToDto(students);
+      }
       request.setAttribute(STUDENT_LIST, studentList);
     } catch (Exception e) {
       page = Config.getInstance().getValue(Config.ERROR_PAGE);

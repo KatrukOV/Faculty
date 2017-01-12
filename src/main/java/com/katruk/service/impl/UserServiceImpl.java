@@ -38,11 +38,8 @@ public final class UserServiceImpl implements UserService {
     }
     Collection<Person> persons = this.personService.getAll();
     for (User user : users) {
-      for (Person person : persons) {
-        if (Objects.equals(user.getId(), person.getId())) {
-          user.setPerson(person);
-        }
-      }
+      persons.stream().filter(person -> Objects.equals(user.getId(), person.getId()))
+          .forEach(user::setPerson);
     }
     return users;
   }
