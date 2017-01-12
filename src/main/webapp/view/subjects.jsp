@@ -13,7 +13,7 @@
             <th><b>Title Subjects</b></th>
             <th><b>Teacher</b></th>
             <c:if test="${role == 'STUDENT'}">
-                <th><b>Declared</b></th>
+                <th><b>Declare</b></th>
             </c:if>
             <c:if test="${role == 'ADMIN'}">
                 <th><b>Remove</b></th>

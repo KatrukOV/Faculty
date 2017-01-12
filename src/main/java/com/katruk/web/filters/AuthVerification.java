@@ -12,7 +12,7 @@ public final class AuthVerification extends BaseFilter {
 //  private static final Logger logger = Logger.getLogger(AuthVerification.class);
 
   @Override
-  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+  public final void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
     System.out.println(">>> AuthVerification Filter");
 

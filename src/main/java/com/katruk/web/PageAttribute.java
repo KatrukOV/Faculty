@@ -21,7 +21,7 @@ public interface PageAttribute {
   String POSITION = "position";
 
   String TITLE = "title";
-  String TEACHER = "teacher";
+//  String TEACHER = "teacher";
 
   String MARK = "mark";
   String FEEDBACK = "feedback";

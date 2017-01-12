@@ -12,6 +12,7 @@ public final class Sql {
   public static final String CREATE_PERSON = "CREATE_PERSON";
   public static final String UPDATE_PERSON = "UPDATE_PERSON";
   public static final String GET_PERSON_BY_ID = "GET_PERSON_BY_ID";
+  public static final String GET_ALL_PERSON = "GET_ALL_PERSON";
 
   public static final String CREATE_USER = "CREATE_USER";
   public static final String UPDATE_USER = "UPDATE_USER";

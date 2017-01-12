@@ -50,6 +50,24 @@ public final class PersonDaoMySql implements PersonDao {
   }
 
   @Override
+  public Collection<Person> getAllPerson() throws DaoException {
+    final Collection<Person> result;
+    try (Connection connection = this.connectionPool.getConnection()) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_PERSON))) {
+        result = getPersonByStatement(statement);
+      } catch (SQLException e) {
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+    return result;
+  }
+
+  @Override
   public Person save(final Person person) throws DaoException {
     Person result;
     System.out.println("?? per=" + person);

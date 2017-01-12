@@ -18,7 +18,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 public final class AddSubject implements Command, PageAttribute {
 
   private final Logger logger;
