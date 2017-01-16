@@ -33,13 +33,11 @@ public final class GetUsers implements Command, PageAttribute {
     String page = Config.getInstance().getValue(Config.USERS);
     try {
       Collection<User> users = this.userService.getAll();
-      System.out.println(">>> Coll users=" + users);
       List userList = Collections.EMPTY_LIST;
       if (!users.isEmpty()) {
         userList = new UserConverter().convertToDto(users);
       }
       request.setAttribute(USER_LIST, userList);
-      System.out.println(">>> UsersDto=" + userList);
       logger.info(String.format("get all users = %d", userList.size()));
     } catch (ServiceException e) {
       page = Config.getInstance().getValue(Config.ERROR_PAGE);

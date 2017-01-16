@@ -4,11 +4,20 @@ import com.katruk.entity.Evaluation;
 
 public final class EvaluationDto {
 
+  private String title;
   private String lastName;
   private String name;
   private String patronymic;
   private Evaluation.Rating rating;
   private String feedback;
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
   public String getLastName() {
     return lastName;

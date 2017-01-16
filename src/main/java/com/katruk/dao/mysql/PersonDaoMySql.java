@@ -97,7 +97,7 @@ public final class PersonDaoMySql implements PersonDao {
           if (generatedKeys.next()) {
             person.setId(generatedKeys.getLong(1));
           } else {
-            throw new SQLException("Creating user failed, no ID obtained.");
+            throw new SQLException("Creating person failed, no ID obtained.");
           }
         }
       } catch (SQLException e) {
@@ -142,7 +142,7 @@ public final class PersonDaoMySql implements PersonDao {
 
   private Collection<Person> getPersonByStatement(final PreparedStatement statement)
       throws DaoException {
-    final Collection<Person> result = new ArrayList<>();
+    final Collection<Person> persons = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
         Person person = new Person();
@@ -150,12 +150,12 @@ public final class PersonDaoMySql implements PersonDao {
         person.setLastName(resultSet.getString("last_name"));
         person.setName(resultSet.getString("name"));
         person.setPatronymic(resultSet.getString("patronymic"));
-        result.add(person);
+        persons.add(person);
       }
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);
     }
-    return result;
+    return persons;
   }
 }

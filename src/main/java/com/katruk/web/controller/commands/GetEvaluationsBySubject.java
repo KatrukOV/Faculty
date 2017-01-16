@@ -2,6 +2,7 @@ package com.katruk.web.controller.commands;
 
 import com.katruk.converter.EvaluationConverter;
 import com.katruk.entity.Evaluation;
+import com.katruk.entity.dto.EvaluationDto;
 import com.katruk.service.EvaluationService;
 import com.katruk.service.StudentService;
 import com.katruk.service.SubjectService;
@@ -40,12 +41,18 @@ public final class GetEvaluationsBySubject implements Command, PageAttribute {
     String page = Config.getInstance().getValue(Config.TEACHER_EVALUATIONS);
     try {
       Long subjectId = Long.parseLong(request.getParameter(SUBJECT_ID));
+      System.out.println("subjectId" + subjectId);
       Collection<Evaluation> evaluations =
           this.evaluationService.getEvaluationBySubjects(subjectId);
+      System.out.println("evaluations by SUBJECT_ID" + evaluations);
       List evaluationList = Collections.EMPTY_LIST;
       if (!evaluations.isEmpty()) {
         evaluationList = new EvaluationConverter().convertToDto(evaluations);
       }
+
+      String title = ((EvaluationDto) evaluationList.get(0)).getTitle();
+
+      request.setAttribute(TITLE, title);
       request.setAttribute(EVALUATION_LIST, evaluationList);
       logger.info(String.format("get all evaluations = %d", evaluationList.size()));
     } catch (Exception e) {

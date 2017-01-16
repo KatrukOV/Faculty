@@ -9,6 +9,11 @@ public final class Sql {
 
   private static final Sql INSTANCE = new Sql();
 
+  public static final String GET_PERIOD_BY_ID = "GET_PERIOD_BY_ID";
+  public static final String GET_LAST_PERIOD = "GET_LAST_PERIOD";
+  public static final String INSERT_PERIOD = "INSERT_PERIOD";
+
+
   public static final String CREATE_PERSON = "CREATE_PERSON";
   public static final String UPDATE_PERSON = "UPDATE_PERSON";
   public static final String GET_PERSON_BY_ID = "GET_PERSON_BY_ID";
