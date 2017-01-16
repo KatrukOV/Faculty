@@ -37,9 +37,11 @@ public final class UserServiceImpl implements UserService {
       throw new ServiceException("err", e);
     }
     Collection<Person> persons = this.personService.getAll();
+    System.out.println("::: persons="+persons);
     for (User user : users) {
       persons.stream().filter(person -> Objects.equals(user.getId(), person.getId()))
           .forEach(user::setPerson);
+      System.out.println("> user in stream="+user);
     }
     return users;
   }

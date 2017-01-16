@@ -14,20 +14,22 @@ public final class Config {
   public static final String REGISTRATION = "registration";
   public static final String PROFILE = "profile";
   public static final String ADMIN_PROFILE = "admin.profile";
-  public static final String USERS = "users";
-  public static final String STUDENTS = "students";
-  public static final String TEACHERS = "teachers";
+  public static final String USERS = "admin.users";
+  public static final String STUDENTS = "admin.students";
+  public static final String TEACHERS = "admin.teachers";
   public static final String SUBJECTS = "subjects";
-  public static final String ADD_SUBJECT = "addSubject";
+  public static final String ADD_SUBJECT = "admin.addSubject";
 
   public static final String TEACHER_SUBJECTS = "teacher.subjects";
 
-  public static final String TEACHER_PROFILE = "TEACHER_PROFILE";
+//  public static final String TEACHER_PROFILE = "TEACHER_PROFILE";
+
   public static final String TEACHER_EVALUATIONS = "teacher.evaluations";
   public static final String TEACHER_CONFIRMED = "TEACHER_CONFIRMED";
-  public static final String STUDENT_PROFILE = "STUDENT_PROFILE";
-  public static final String STUDENT_MARKS = "STUDENT_MARKS";
-  public static final String STUDENT_DECLARED_DISCIPLINES = "STUDENT_DECLARED_DISCIPLINES";
+
+//  public static final String STUDENT_PROFILE = "STUDENT_PROFILE";
+//  public static final String STUDENT_MARKS = "STUDENT_MARKS";
+//  public static final String STUDENT_DECLARED_DISCIPLINES = "STUDENT_DECLARED_DISCIPLINES";
 
   public static final String ERROR_PAGE = "error.page";
 

@@ -144,7 +144,7 @@ public final class PersonDaoMySql implements PersonDao {
       throws DaoException {
     final Collection<Person> result = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
-      if (resultSet.next()) {
+      while (resultSet.next()) {
         Person person = new Person();
         person.setId(resultSet.getLong("id"));
         person.setLastName(resultSet.getString("last_name"));

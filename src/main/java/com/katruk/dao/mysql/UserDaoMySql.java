@@ -126,8 +126,8 @@ public final class UserDaoMySql implements UserDao {
         User user = new User();
         Person person = new Person();
         person.setId(resultSet.getLong("person_id"));
-        user.setPerson(person);
         user.setId(person.getId());
+        user.setPerson(person);
         user.setUsername(resultSet.getString("username"));
         user.setPassword(resultSet.getString("password"));
         if (nonNull(resultSet.getString("role"))) {
