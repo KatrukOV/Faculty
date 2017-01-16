@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class SetDistribution implements Command, PageAttribute {
+public final class SetDistribution implements Command, PageAttribute {
 
   private final Logger logger;
   private final PeriodService periodService;
@@ -56,7 +56,7 @@ public class SetDistribution implements Command, PageAttribute {
       */
     } catch (Exception e) {
       page = Config.getInstance().getValue(Config.ERROR_PAGE);
-      logger.error("Unable set contract for student", e);
+      logger.error("Unable set period DISTRIBUTION", e);
     }
     return page;
   }
