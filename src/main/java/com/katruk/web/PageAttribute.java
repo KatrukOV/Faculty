@@ -39,4 +39,9 @@ public interface PageAttribute {
   String SUBJECT_LIST = "subjectList";
   String EVALUATION_LIST = "evaluationList";
   String STUDENT_MARK_LIST = "studentMarkList";
+
+
+  String PERIOD_STATUS = "periodSatus";
+  String PERIOD_DATE = "periodDate";
+
 }

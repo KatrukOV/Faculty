@@ -30,8 +30,8 @@
 </form>
 
 <h3>
-    Period: ${pSatus}
-    Last date: ${pDate}
+    Period: ${periodSatus}
+    Last date: ${periodDate}
 </h3>
 
 <form action="/dispatcher" method="POST">
@@ -42,7 +42,6 @@
     <input type="hidden" name="command" value="setLearning">
     <input type="submit" value="LEARNING"/>
 </form>
-
 
 </body>
 </html>

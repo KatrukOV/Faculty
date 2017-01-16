@@ -11,12 +11,12 @@ import org.apache.log4j.Logger;
 
 import java.util.NoSuchElementException;
 
-final class PeriodServiceImpl implements PeriodService {
+public final class PeriodServiceImpl implements PeriodService {
 
   private final Logger logger;
   private final PeriodDao periodDao;
 
-  PeriodServiceImpl() {
+  public PeriodServiceImpl() {
     this.logger = Logger.getLogger(PeriodServiceImpl.class);
     this.periodDao = new PeriodDaoMySql();
   }
