@@ -3,24 +3,26 @@ package com.katruk.web.controller;
 import static java.util.Objects.isNull;
 
 import com.katruk.web.PageAttribute;
-import com.katruk.web.controller.commands.AddSubject;
-import com.katruk.web.controller.commands.CreateSubject;
-import com.katruk.web.controller.commands.GetEvaluationsBySubject;
-import com.katruk.web.controller.commands.GetTeacherSubjects;
-import com.katruk.web.controller.commands.SetConfirm;
+import com.katruk.web.controller.commands.admin.AddSubject;
+import com.katruk.web.controller.commands.admin.CreateSubject;
+import com.katruk.web.controller.commands.admin.SetDistribution;
+import com.katruk.web.controller.commands.admin.SetLearning;
+import com.katruk.web.controller.commands.teacher.GetEvaluationsBySubject;
+import com.katruk.web.controller.commands.teacher.GetTeacherSubjects;
+import com.katruk.web.controller.commands.teacher.SetConfirm;
 import com.katruk.web.controller.commands.SetDeclare;
-import com.katruk.web.controller.commands.GetStudents;
+import com.katruk.web.controller.commands.admin.GetStudents;
 import com.katruk.web.controller.commands.GetSubjects;
-import com.katruk.web.controller.commands.GetTeachers;
-import com.katruk.web.controller.commands.GetUsers;
+import com.katruk.web.controller.commands.admin.GetTeachers;
+import com.katruk.web.controller.commands.admin.GetUsers;
 import com.katruk.web.controller.commands.Login;
 import com.katruk.web.controller.commands.Logout;
 import com.katruk.web.controller.commands.Registration;
-import com.katruk.web.controller.commands.RemoveSubject;
-import com.katruk.web.controller.commands.SetContract;
-import com.katruk.web.controller.commands.SetForm;
-import com.katruk.web.controller.commands.SetPosition;
-import com.katruk.web.controller.commands.SetRole;
+import com.katruk.web.controller.commands.admin.RemoveSubject;
+import com.katruk.web.controller.commands.admin.SetContract;
+import com.katruk.web.controller.commands.admin.SetForm;
+import com.katruk.web.controller.commands.admin.SetPosition;
+import com.katruk.web.controller.commands.admin.SetRole;
 import com.katruk.web.controller.commands.ToProfile;
 import com.katruk.web.controller.commands.Unknown;
 
@@ -69,6 +71,11 @@ final class DispatcherHelper implements PageAttribute {
 //    commands.put("revoked", new RevokedCommand());
     commands.put("confirm", new SetConfirm());
 //    commands.put("deleted", new DeletedCommand());
+
+
+    commands.put("setDistribution", new SetDistribution());
+    commands.put("setLearning", new SetLearning());
+
   }
 
   Command getCommand(final HttpServletRequest request) {

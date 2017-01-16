@@ -1,8 +1,7 @@
-package com.katruk.web.controller.commands;
+package com.katruk.web.controller.commands.admin;
 
 import com.katruk.converter.StudentConverter;
 import com.katruk.entity.Student;
-import com.katruk.entity.dto.StudentDto;
 import com.katruk.service.StudentService;
 import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.util.Config;

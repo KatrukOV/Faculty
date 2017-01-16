@@ -1,4 +1,4 @@
-package com.katruk.web.controller.commands;
+package com.katruk.web.controller.commands.admin;
 
 import com.katruk.converter.StudentConverter;
 import com.katruk.entity.Student;
@@ -17,13 +17,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public final class SetContract implements Command, PageAttribute {
+public final class GetStudents implements Command, PageAttribute {
 
   private final Logger logger;
   private final StudentService studentService;
 
-  public SetContract() {
-    this.logger = Logger.getLogger(SetContract.class);
+  public GetStudents() {
+    this.logger = Logger.getLogger(GetStudents.class);
     this.studentService = new StudentServiceImpl();
   }
 
@@ -31,25 +31,16 @@ public final class SetContract implements Command, PageAttribute {
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
     String page = Config.getInstance().getValue(Config.STUDENTS);
     try {
-      Student.Contract contract = Student.Contract.valueOf(request.getParameter(CONTRACT));
-      System.out.println(">>>>>>>>>>>> contract= " + contract);
-      Long studentId = Long.parseLong(request.getParameter(STUDENT_ID));
-      Student student = this.studentService.getStudentById(studentId);
-      System.out.println(">>>>>>>>>>>> student= " + student);
-      if (!contract.equals(student.getContract())) {
-        student.setContract(contract);
-        this.studentService.save(student);
-        logger.info(String.format("set contract=%s for student= %s", contract, student));
-      }
       Collection<Student> students = this.studentService.getAll();
       List studentList = Collections.EMPTY_LIST;
       if (!students.isEmpty()) {
         studentList = new StudentConverter().convertToDto(students);
       }
       request.setAttribute(STUDENT_LIST, studentList);
+      logger.info(String.format("get all students = %d", studentList.size()));
     } catch (Exception e) {
       page = Config.getInstance().getValue(Config.ERROR_PAGE);
-      logger.error("Unable set contract for student", e);
+      logger.error("Unable get all students", e);
     }
     return page;
   }

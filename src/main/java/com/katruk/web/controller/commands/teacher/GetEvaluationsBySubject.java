@@ -1,4 +1,4 @@
-package com.katruk.web.controller.commands;
+package com.katruk.web.controller.commands.teacher;
 
 import com.katruk.converter.EvaluationConverter;
 import com.katruk.entity.Evaluation;

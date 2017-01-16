@@ -1,4 +1,4 @@
-package com.katruk.web.controller.commands;
+package com.katruk.web.controller.commands.admin;
 
 import com.katruk.converter.TeacherConverter;
 import com.katruk.entity.Teacher;

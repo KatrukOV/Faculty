@@ -35,8 +35,12 @@
 </h3>
 
 <form action="/dispatcher" method="POST">
-    <input type="hidden" name="command" value="set">
-    <input type="submit" value="get All Subjects"/>
+    <input type="hidden" name="command" value="setDistribution">
+    <input type="submit" value="DISTRIBUTION"/>
+</form>
+<form action="/dispatcher" method="POST">
+    <input type="hidden" name="command" value="setLearning">
+    <input type="submit" value="LEARNING"/>
 </form>
 
 

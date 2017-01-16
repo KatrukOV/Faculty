@@ -1,4 +1,4 @@
-package com.katruk.web.controller.commands;
+package com.katruk.web.controller.commands.admin;
 
 import static java.util.Objects.nonNull;
 
@@ -6,7 +6,6 @@ import com.katruk.converter.UserConverter;
 import com.katruk.entity.Student;
 import com.katruk.entity.Teacher;
 import com.katruk.entity.User;
-import com.katruk.entity.dto.UserDto;
 import com.katruk.exception.ServiceException;
 import com.katruk.service.StudentService;
 import com.katruk.service.TeacherService;

@@ -1,4 +1,4 @@
-package com.katruk.web.controller.commands;
+package com.katruk.web.controller.commands.teacher;
 
 import com.katruk.service.EvaluationService;
 import com.katruk.service.impl.EvaluationServiceImpl;
