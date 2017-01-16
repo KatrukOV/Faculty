@@ -35,12 +35,12 @@ public final class PeriodDaoMySql implements PeriodDao {
         statement.setLong(1, periodId);
         result = getPeriodByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
-        logger.error("", e);
-        throw new DaoException("", e);
+        logger.error("Cannot prepare statement", e);
+        throw new DaoException("Cannot prepare statement", e);
       }
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot get period by ID", e);
+      throw new DaoException("Cannot get period by ID", e);
     }
     return result;
   }
@@ -53,12 +53,12 @@ public final class PeriodDaoMySql implements PeriodDao {
           .prepareStatement(Sql.getInstance().get(Sql.GET_LAST_PERIOD))) {
         result = getPeriodByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
-        logger.error("", e);
-        throw new DaoException("", e);
+        logger.error("Cannot prepare statement", e);
+        throw new DaoException("Cannot prepare statement", e);
       }
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot get last period", e);
+      throw new DaoException("Cannot get last period", e);
     }
     return result;
   }
@@ -85,13 +85,13 @@ public final class PeriodDaoMySql implements PeriodDao {
         }
       } catch (SQLException e) {
         connection.rollback();
-        logger.error("", e);
-        throw new DaoException("", e);
+        logger.error("Cannot prepare statement", e);
+        throw new DaoException("Cannot prepare statement", e);
       }
       connection.setAutoCommit(true);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot save period", e);
+      throw new DaoException("Cannot save period", e);
     }
     return period;
   }
@@ -109,8 +109,8 @@ public final class PeriodDaoMySql implements PeriodDao {
         periods.add(period);
       }
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Unable to get period by statement", e);
+      throw new DaoException("Unable to get period by statement", e);
     }
     return periods;
   }
