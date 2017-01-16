@@ -39,8 +39,8 @@ public final class PeriodServiceImpl implements PeriodService {
     try {
       period = this.periodDao.save(period);
     } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
+      logger.error("cant save period", e);
+      throw new ServiceException("cant save period", e);
     }
     return period;
   }

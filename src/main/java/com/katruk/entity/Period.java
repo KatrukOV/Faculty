@@ -27,6 +27,15 @@ public final class Period extends Model {
   public void setDate(Date date) {
     this.date = date;
   }
+
+  @Override
+  public String toString() {
+    return "Period{" +
+           "id=" + getId() +
+           "status=" + status +
+           ", date=" + date +
+           "} ";
+  }
 }
 
 

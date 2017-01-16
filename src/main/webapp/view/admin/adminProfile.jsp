@@ -31,9 +31,10 @@
 
 <h3>
     Period: ${periodSatus}
+</h3>
+<h3>
     Last date: ${periodDate}
 </h3>
-
 <form action="/dispatcher" method="POST">
     <input type="hidden" name="command" value="setDistribution">
     <input type="submit" value="DISTRIBUTION"/>
@@ -42,6 +43,5 @@
     <input type="hidden" name="command" value="setLearning">
     <input type="submit" value="LEARNING"/>
 </form>
-
 </body>
 </html>

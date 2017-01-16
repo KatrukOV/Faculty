@@ -93,6 +93,7 @@ public final class PeriodDaoMySql implements PeriodDao {
       logger.error("Cannot save period", e);
       throw new DaoException("Cannot save period", e);
     }
+
     return period;
   }
 
@@ -105,6 +106,7 @@ public final class PeriodDaoMySql implements PeriodDao {
         period.setId(resultSet.getLong("id"));
         period.setStatus(Period.Status.valueOf(resultSet.getString("status")));
         Date date = Date.valueOf(resultSet.getString("date"));
+        System.out.println("date="+date);
         period.setDate(date);
         periods.add(period);
       }

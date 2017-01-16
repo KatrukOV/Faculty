@@ -35,6 +35,9 @@ public final class ToProfile implements Command, PageAttribute {
       Period period;
       try {
         period = this.periodService.getLastPeriod();
+
+        System.out.println("p +"+period);
+
         request.setAttribute(PERIOD_STATUS, period.getStatus().name());
         request.setAttribute(PERIOD_DATE, period.getDate());
       } catch (ServiceException e) {
