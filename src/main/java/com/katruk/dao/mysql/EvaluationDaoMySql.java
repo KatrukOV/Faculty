@@ -33,7 +33,7 @@ public final class EvaluationDaoMySql implements EvaluationDao {
   }
 
   @Override
-  public Optional<Evaluation> getEvaluationById(final Long subjectId, final Long studentId)
+  public Optional<Evaluation> getEvaluationBySubjectIdAndStudentId(final Long subjectId, final Long studentId)
       throws DaoException {
     System.out.println("input subjectId=" + subjectId + " studentId=" + studentId);
     final Optional<Evaluation> result;
@@ -42,6 +42,28 @@ public final class EvaluationDaoMySql implements EvaluationDao {
           .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_ID))) {
         statement.setLong(1, subjectId);
         statement.setLong(2, studentId);
+        System.out.println("statement getEvaluationBySubjectIdAndStudentId=" + statement);
+        result = getEvaluationByStatement(statement).stream().findFirst();
+      } catch (SQLException e) {
+        connection.rollback();
+        logger.error("", e);
+        throw new DaoException("", e);
+      }
+    } catch (SQLException e) {
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+    System.out.println("getEvaluationBySubjectIdAndStudentId out=" + result);
+    return result;
+  }
+
+  @Override
+  public Optional<Evaluation> getEvaluationById(final Long evaluationId) throws DaoException {
+    final Optional<Evaluation> result;
+    try (Connection connection = this.connectionPool.getConnection()) {
+      try (PreparedStatement statement = connection
+          .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_ID))) {
+        statement.setLong(1, evaluationId);
         System.out.println("statement getEvaluationById=" + statement);
         result = getEvaluationByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
@@ -53,8 +75,9 @@ public final class EvaluationDaoMySql implements EvaluationDao {
       logger.error("", e);
       throw new DaoException("", e);
     }
-    System.out.println("getEvaluationById out=" + result);
+    System.out.println("getEvaluationBySubjectIdAndStudentId out=" + result);
     return result;
+
   }
 
   @Override
@@ -100,8 +123,8 @@ public final class EvaluationDaoMySql implements EvaluationDao {
     System.out.println("input evaluation= " + evaluation);
     Evaluation result;
     try {
-      result = getEvaluationById(evaluation.getSubject().getId(),
-                                 evaluation.getStudent().getId()).orElse(null);
+      result = getEvaluationBySubjectIdAndStudentId(evaluation.getSubject().getId(),
+                                                    evaluation.getStudent().getId()).orElse(null);
       System.out.println("in base Evaluation is= " + result);
     } catch (DaoException e) {
       result = null;

@@ -14,6 +14,7 @@ import com.katruk.service.SubjectService;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public final class EvaluationServiceImpl implements EvaluationService {
@@ -28,6 +29,25 @@ public final class EvaluationServiceImpl implements EvaluationService {
     this.studentService = new StudentServiceImpl();
     this.subjectService = new SubjectServiceImpl();
     this.evaluationDao = new EvaluationDaoMySql();
+  }
+
+  @Override
+  public Evaluation getEvaluationById(Long evaluationId) throws ServiceException {
+    final Evaluation evaluation;
+    try {
+      evaluation = this.evaluationDao.getEvaluationById(evaluationId)
+          .orElseThrow(
+              () -> new DaoException("Evaluation not found", new NoSuchElementException()));
+    } catch (DaoException e) {
+      logger.error("err", e);
+      throw new ServiceException("err", e);
+    }
+    final Subject subject = this.subjectService.getSubjectById(evaluation.getSubject().getId());
+    evaluation.setSubject(subject);
+    final Student student = this.studentService.getStudentById(evaluation.getStudent().getId());
+    evaluation.setStudent(student);
+    System.out.println("evaluation=" + evaluation);
+    return evaluation;
   }
 
   @Override
@@ -52,7 +72,7 @@ public final class EvaluationServiceImpl implements EvaluationService {
             });
       }
     }
-    System.out.println("evaluations="+evaluations);
+    System.out.println("evaluations=" + evaluations);
     return evaluations;
   }
 

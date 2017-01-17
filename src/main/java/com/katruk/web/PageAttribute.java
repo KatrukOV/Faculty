@@ -20,6 +20,8 @@ public interface PageAttribute {
   String FORM = "form";
   String POSITION = "position";
 
+  String STATUS = "status";
+
   String TITLE = "title";
 //  String TEACHER = "teacher";
 
@@ -37,8 +39,11 @@ public interface PageAttribute {
   String STUDENT_LIST = "studentList";
   String TEACHER_LIST = "teacherList";
   String SUBJECT_LIST = "subjectList";
+
+  String EVALUATION_ID = "evaluationId";
   String EVALUATION_LIST = "evaluationList";
-  String STUDENT_MARK_LIST = "studentMarkList";
+
+//  String STUDENT_MARK_LIST = "studentMarkList";
 
 
   String PERIOD_STATUS = "periodStatus";

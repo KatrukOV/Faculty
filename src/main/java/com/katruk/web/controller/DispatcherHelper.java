@@ -9,7 +9,7 @@ import com.katruk.web.controller.commands.admin.SetDistribution;
 import com.katruk.web.controller.commands.admin.SetLearning;
 import com.katruk.web.controller.commands.teacher.GetEvaluationsBySubject;
 import com.katruk.web.controller.commands.teacher.GetTeacherSubjects;
-import com.katruk.web.controller.commands.teacher.SetConfirm;
+import com.katruk.web.controller.commands.teacher.SetConfirmOrReject;
 import com.katruk.web.controller.commands.SetDeclare;
 import com.katruk.web.controller.commands.admin.GetStudents;
 import com.katruk.web.controller.commands.GetSubjects;
@@ -69,7 +69,7 @@ final class DispatcherHelper implements PageAttribute {
 //
     commands.put("declare", new SetDeclare());
 //    commands.put("revoked", new RevokedCommand());
-    commands.put("confirm", new SetConfirm());
+    commands.put("setConfirmOrReject", new SetConfirmOrReject());
 //    commands.put("deleted", new DeletedCommand());
 
 

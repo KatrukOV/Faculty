@@ -49,6 +49,8 @@ public final class Sql {
 
   public static final String CREATE_EVALUATION = "CREATE_EVALUATION";
   public static final String UPDATE_EVALUATION = "UPDATE_EVALUATION";
+  public static final String GET_EVALUATION_BY_SUBJECT_AND_STUDENT =
+      "GET_EVALUATION_BY_SUBJECT_AND_STUDENT";
   public static final String GET_EVALUATION_BY_ID = "GET_EVALUATION_BY_ID";
   public static final String GET_EVALUATION_BY_STUDENT = "GET_EVALUATION_BY_STUDENT";
   public static final String GET_EVALUATION_BY_SUBJECT = "GET_EVALUATION_BY_SUBJECT";

@@ -44,7 +44,7 @@
                             </select>
                             <input type="hidden" name="evaluationId"
                                    value="${evaluation.evaluationId}"/>
-                            <input type="hidden" name="command" value="setCofirmOrReject"/>
+                            <input type="hidden" name="command" value="setConfirmOrReject"/>
                             <input type="submit" value="Go"/>
                         </form>
                     </td>
