@@ -23,7 +23,8 @@ public final class EvaluationConverter {
 
   public EvaluationDto convertToDto(Evaluation evaluation) {
     EvaluationDto evaluationDto = new EvaluationDto();
-    evaluationDto.setTitle(evaluation.getSubject().getTitle());
+//    evaluationDto.setTitle(evaluation.getSubject().getTitle());
+    evaluationDto.setEvaluationId(evaluation.getId());
     evaluationDto.setLastName(evaluation.getStudent().getUser().getPerson().getLastName());
     evaluationDto.setName(evaluation.getStudent().getUser().getPerson().getName());
     evaluationDto.setPatronymic(evaluation.getStudent().getUser().getPerson().getPatronymic());

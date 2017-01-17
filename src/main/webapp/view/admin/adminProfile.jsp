@@ -28,9 +28,8 @@
     <input type="hidden" name="command" value="getSubjects">
     <input type="submit" value="get All Subjects"/>
 </form>
-
 <h3>
-    Period: ${periodSatus}
+    Period: ${periodStatus}
 </h3>
 <h3>
     Last date: ${periodDate}

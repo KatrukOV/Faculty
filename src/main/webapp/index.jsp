@@ -5,7 +5,7 @@
        value="${not empty param.locate ? param.locate : not empty locate ? locate : pageContext.request.locale}"
        scope="session"/>
 <fmt:setLocale value="${locate}"/>
-<fmt:setBundle basename="page"/>
+<fmt:setBundle basename="text"/>
 
 <%--<!DOCTYPE html>--%>
 <html lang="${locate}">
@@ -27,7 +27,6 @@
 
 <jsp:include page="/view/all/message.jsp"/>
 
-<hr/>
 <form action="/dispatcher" method="POST">
     <label for="username"><fmt:message key="index.username"/>: </label>
     <input type="text" id="username" name="username">

@@ -41,7 +41,7 @@ public interface PageAttribute {
   String STUDENT_MARK_LIST = "studentMarkList";
 
 
-  String PERIOD_STATUS = "periodSatus";
+  String PERIOD_STATUS = "periodStatus";
   String PERIOD_DATE = "periodDate";
 
 }

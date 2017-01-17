@@ -41,5 +41,4 @@ public final class PageConfig {
   public String getValue(String key) {
     return configFile.getString(key);
   }
-
 }

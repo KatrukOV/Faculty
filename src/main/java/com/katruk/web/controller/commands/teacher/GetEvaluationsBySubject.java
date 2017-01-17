@@ -2,11 +2,14 @@ package com.katruk.web.controller.commands.teacher;
 
 import com.katruk.converter.EvaluationConverter;
 import com.katruk.entity.Evaluation;
+import com.katruk.entity.Period;
 import com.katruk.entity.dto.EvaluationDto;
 import com.katruk.service.EvaluationService;
+import com.katruk.service.PeriodService;
 import com.katruk.service.StudentService;
 import com.katruk.service.SubjectService;
 import com.katruk.service.impl.EvaluationServiceImpl;
+import com.katruk.service.impl.PeriodServiceImpl;
 import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.service.impl.SubjectServiceImpl;
 import com.katruk.util.PageConfig;
@@ -25,12 +28,14 @@ import javax.servlet.http.HttpServletResponse;
 public final class GetEvaluationsBySubject implements Command, PageAttribute {
 
   private final Logger logger;
+  private final PeriodService periodService;
   private final SubjectService subjectService;
   private final StudentService studentService;
   private final EvaluationService evaluationService;
 
   public GetEvaluationsBySubject() {
     this.logger = Logger.getLogger(GetEvaluationsBySubject.class);
+    this.periodService = new PeriodServiceImpl();
     this.subjectService = new SubjectServiceImpl();
     this.studentService = new StudentServiceImpl();
     this.evaluationService = new EvaluationServiceImpl();
@@ -49,9 +54,10 @@ public final class GetEvaluationsBySubject implements Command, PageAttribute {
       if (!evaluations.isEmpty()) {
         evaluationList = new EvaluationConverter().convertToDto(evaluations);
       }
-
-      String title = ((EvaluationDto) evaluationList.get(0)).getTitle();
-
+      Period period = this.periodService.getLastPeriod();
+      request.setAttribute(PERIOD_STATUS, period.getStatus());
+      //todo ????
+      String title = evaluations.iterator().next().getSubject().getTitle();
       request.setAttribute(TITLE, title);
       request.setAttribute(EVALUATION_LIST, evaluationList);
       logger.info(String.format("get all evaluations = %d", evaluationList.size()));

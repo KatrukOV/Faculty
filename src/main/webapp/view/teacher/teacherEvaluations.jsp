@@ -12,25 +12,48 @@
         <thead>
         <tr>
             <th><b>Student</b></th>
-            <c:if test="${status == ''}">
-                <th><b>Com</b></th>
+            <c:if test="${periodStatus == 'DISTRIBUTION'}">
+                <th><b>Confirm / Reject</b></th>
             </c:if>
-            <th><b>View</b></th>
+            <c:if test="${periodStatus == 'LEARNING'}">
+                <th><b>Evaluate</b></th>
+            </c:if>
         </tr>
         </thead>
         <tbody>
-        <c:forEach var="subject" items="${subjectList}">
+        <c:forEach var="evaluation" items="${evaluationList}">
             <tr>
                 <td>
-                    <label><b>${subject.title}</b></label>
+                    <label><b>${evaluation.lastName}</b></label>
+                    <label><b>${evaluation.name}</b></label>
+                    <label><b>${evaluation.patronymic}</b></label>
                 </td>
-                <td>
-                    <form action="/dispatcher" method="POST">
-                        <input type="hidden" name="subjectId" value="${subject.subjectId}"/>
-                        <input type="hidden" name="command" value="getEvaluationsBySubject"/>
-                        <input type="submit" value="View"/>
-                    </form>
-                </td>
+                <c:if test="${periodStatus == 'DISTRIBUTION'}">
+                    <td>
+                        <form action="/dispatcher" method="POST">
+                            <input type="hidden" name="evaluationId"
+                                   value="${evaluation.evaluationId}"/>
+                            <input type="hidden" name="command" value="setConfirm"/>
+                            <input type="submit" value="Confirm"/>
+                        </form>
+                        <form action="/dispatcher" method="POST">
+                            <input type="hidden" name="evaluationId"
+                                   value="${evaluation.evaluationId}"/>
+                            <input type="hidden" name="command" value="setReject"/>
+                            <input type="submit" value="Reject"/>
+                        </form>
+                    </td>
+                </c:if>
+                <c:if test="${periodStatus == 'LEARNING'}">
+                    <td>
+                        <form action="/dispatcher" method="POST">
+                            <input type="hidden" name="evaluationId"
+                                   value="${evaluation.evaluationId}"/>
+                            <input type="hidden" name="command" value="evaluate"/>
+                            <input type="submit" value="Evaluate"/>
+                        </form>
+                    </td>
+                </c:if>
             </tr>
         </c:forEach>
         </tbody>

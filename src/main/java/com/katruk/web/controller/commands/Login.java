@@ -86,7 +86,7 @@ public final class Login implements Command, PageAttribute {
                 page = PageConfig.getInstance().getValue(PageConfig.ADMIN_PROFILE);
                 Period period = this.periodService.getLastPeriod();
                 System.out.println("per="+period);
-                request.setAttribute(PERIOD_STATUS, period.getStatus().name());
+                request.setAttribute(PERIOD_STATUS, period.getStatus());
                 request.setAttribute(PERIOD_DATE, period.getDate());
                 break;
               }

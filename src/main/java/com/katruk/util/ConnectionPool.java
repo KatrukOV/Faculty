@@ -25,10 +25,10 @@ public final class ConnectionPool {
   private ConnectionPool() {
     BaseConfig dbConfig = BaseConfig.getInstance();
     PoolProperties poolProperties = new PoolProperties();
-    poolProperties.setDriverClassName(dbConfig.getValue(PageConfig.DRIVER));
-    poolProperties.setUrl(dbConfig.getValue(PageConfig.URL));
-    poolProperties.setUsername(dbConfig.getValue(PageConfig.USERNAME));
-    poolProperties.setPassword(dbConfig.getValue(PageConfig.PASSWORD));
+    poolProperties.setDriverClassName(dbConfig.getValue(BaseConfig.DRIVER));
+    poolProperties.setUrl(dbConfig.getValue(BaseConfig.URL));
+    poolProperties.setUsername(dbConfig.getValue(BaseConfig.USERNAME));
+    poolProperties.setPassword(dbConfig.getValue(BaseConfig.PASSWORD));
     poolProperties.setMaxIdle(MAX_AMOUNT_OF_THREAD);
     poolProperties.setMaxWait(MAX_WAIT_AMOUNT);
     poolProperties.setMaxActive(MAX_AMOUNT_OF_ACTIVE_THREADS);
