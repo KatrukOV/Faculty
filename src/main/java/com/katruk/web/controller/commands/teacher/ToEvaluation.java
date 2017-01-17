@@ -44,7 +44,7 @@ public final class ToEvaluation implements Command, PageAttribute {
       Evaluation evaluation = this.evaluationService.getEvaluationById(evaluationId);
       EvaluationDto evaluationDto = new EvaluationConverter().convertToDto(evaluation);
       request.setAttribute(EVALUATION, evaluationDto);
-      logger.info(String.format("evaluation = %d", evaluationDto));
+//      logger.info(String.format("evaluation = %d", evaluationDto));
     } catch (Exception e) {
       page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable get evaluation", e);

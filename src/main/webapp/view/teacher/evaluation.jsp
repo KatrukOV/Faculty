@@ -4,11 +4,11 @@
 </head>
 <body style="text-align:center;">
 <h3>Create evaluation</h3>
-<br/>
-<h4>for student: </h4>
+<h4>for student:
 <b>${evaluation.lastName}</b>
 <b>${evaluation.name}</b>
-<br/>
+</h4>
+<%--<br/>--%>
 <b>rating: ${evaluation.rating}</b>
 <b>feedback: ${evaluation.feedback}</b>
 <hr/>
@@ -39,8 +39,7 @@
     </select>
     <%--<br>--%>
     <label>Feedback: </label>
-    <input type="text" name="name" placeholder="feedback"/>
-    <br>
+    <input type="text" name="feedback" placeholder="feedback"/>
     <input type="hidden" name="evaluationId" value="${evaluation.evaluationId}"/>
     <input type="hidden" name="command" value="evaluate"/>
     <input type="submit" value="Confirm"/>
