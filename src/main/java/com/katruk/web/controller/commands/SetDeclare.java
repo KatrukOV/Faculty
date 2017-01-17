@@ -15,7 +15,7 @@ import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.service.impl.SubjectServiceImpl;
 import com.katruk.service.impl.TeacherServiceImpl;
 import com.katruk.service.impl.UserServiceImpl;
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
@@ -48,7 +48,7 @@ public final class SetDeclare implements Command, PageAttribute {
 
   @Override
   public String execute(HttpServletRequest request, HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.SUBJECTS);
+    String page = PageConfig.getInstance().getValue(PageConfig.SUBJECTS);
     try {
       String username = (String) request.getSession().getAttribute(USERNAME);
       System.out.println("username= " + username);
@@ -72,7 +72,7 @@ public final class SetDeclare implements Command, PageAttribute {
       request.setAttribute(SUBJECT_LIST, subjectList);
       logger.info(String.format("get all subjects = %d", subjectList.size()));
     } catch (Exception e) {
-      page = Config.getInstance().getValue(Config.ERROR_PAGE);
+      page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("SetDeclare ", e);
     }
     return page;

@@ -4,7 +4,7 @@ import com.katruk.converter.TeacherConverter;
 import com.katruk.entity.Teacher;
 import com.katruk.service.TeacherService;
 import com.katruk.service.impl.TeacherServiceImpl;
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
@@ -29,7 +29,7 @@ public final class SetPosition implements Command, PageAttribute {
 
   @Override
   public String execute(HttpServletRequest request, HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.TEACHERS);
+    String page = PageConfig.getInstance().getValue(PageConfig.TEACHERS);
     try {
       System.out.println("ff=" + POSITION);
       System.out.println("ff11=" + request.getParameter(POSITION));
@@ -50,7 +50,7 @@ public final class SetPosition implements Command, PageAttribute {
       }
       request.setAttribute(TEACHER_LIST, teacherList);
     } catch (Exception e) {
-      page = Config.getInstance().getValue(Config.ERROR_PAGE);
+      page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable set position for teacher", e);
     }
     return page;

@@ -3,17 +3,20 @@ package com.katruk.web.controller.commands;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
+import com.katruk.entity.Period;
 import com.katruk.entity.Student;
 import com.katruk.entity.Teacher;
 import com.katruk.entity.User;
 import com.katruk.exception.ServiceException;
+import com.katruk.service.PeriodService;
 import com.katruk.service.StudentService;
 import com.katruk.service.TeacherService;
 import com.katruk.service.UserService;
+import com.katruk.service.impl.PeriodServiceImpl;
 import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.service.impl.TeacherServiceImpl;
 import com.katruk.service.impl.UserServiceImpl;
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
@@ -28,13 +31,16 @@ public final class Login implements Command, PageAttribute {
 
   private final static String ERROR_LOGIN_EMPTY = "Username or password is empty";
   private final static String ERROR_LOGIN_WRONG = "Wrong username or password";
-  private final static int MaxInactiveInterval = 60 * 60 * 24;
+  private final static int MAX_INACTIVE_INTERVAL = 60 * 60 * 24;
   private final Logger logger;
+  private final PeriodService periodService;
   private final UserService userService;
   private final StudentService studentService;
   private final TeacherService teacherService;
 
   public Login() {
+    System.out.println("create login obj");
+    this.periodService = new PeriodServiceImpl();
     this.userService = new UserServiceImpl();
     this.studentService = new StudentServiceImpl();
     this.teacherService = new TeacherServiceImpl();
@@ -43,24 +49,26 @@ public final class Login implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-
+    System.out.println("!!! begin login");
     final String username = request.getParameter(USERNAME);
     final String password = request.getParameter(PASSWORD);
     final HttpSession session = request.getSession();
-    String page = Config.getInstance().getValue(Config.INDEX);
+    String page = PageConfig.getInstance().getValue(PageConfig.INDEX);
     if (isNull(username) || isNull(password)) {
       request.setAttribute(ERROR, ERROR_LOGIN_EMPTY);
       this.logger.error(ERROR_LOGIN_EMPTY);
     } else {
       try {
         final User user = this.userService.getUserByUsername(username);
+        System.out.println("user=" +user);
         if (user.getPassword().equals(DigestUtils.sha1Hex(password))) {
           session.setAttribute(LAST_NAME, user.getPerson().getLastName());
           session.setAttribute(NAME, user.getPerson().getName());
           session.setAttribute(USERNAME, user.getUsername());
           session.setAttribute(ROLE, user.getRole());
-          session.setMaxInactiveInterval(MaxInactiveInterval);;
-          page = Config.getInstance().getValue(Config.PROFILE);
+          session.setMaxInactiveInterval(MAX_INACTIVE_INTERVAL);;
+          page = PageConfig.getInstance().getValue(PageConfig.PROFILE);
+          System.out.println("ih if user=" +user);
           if (nonNull(user.getRole())) {
             switch (user.getRole()) {
               case STUDENT: {
@@ -75,7 +83,11 @@ public final class Login implements Command, PageAttribute {
                 break;
               }
               case ADMIN: {
-                page = Config.getInstance().getValue(Config.ADMIN_PROFILE);
+                page = PageConfig.getInstance().getValue(PageConfig.ADMIN_PROFILE);
+                Period period = this.periodService.getLastPeriod();
+                System.out.println("per="+period);
+                request.setAttribute(PERIOD_STATUS, period.getStatus().name());
+                request.setAttribute(PERIOD_DATE, period.getDate());
                 break;
               }
               default:
@@ -86,7 +98,7 @@ public final class Login implements Command, PageAttribute {
       } catch (ServiceException e) {
         request.getSession().setAttribute(ERROR, ERROR_LOGIN_WRONG);
         logger.error(ERROR_LOGIN_WRONG, e);
-        page = Config.getInstance().getValue(Config.ERROR_PAGE);
+        page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       }
     }
     return page;

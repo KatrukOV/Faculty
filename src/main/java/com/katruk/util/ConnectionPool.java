@@ -15,18 +15,20 @@ public final class ConnectionPool {
   private final static int MAX_AMOUNT_OF_THREAD = 10;
   //max wait amount until request timeout exception
   private final static int MAX_WAIT_AMOUNT = 100;
-  //max amount of active threads in the POOL
+  //max amount of active threads in the INSTANCE
   private final static int MAX_AMOUNT_OF_ACTIVE_THREADS = 10;
   private final static String ERROR_GET_CONNECTION = "Can't get connection";
   private final DataSource dataSource;
   private final Logger logger;
-  private final static ConnectionPool POOL = new ConnectionPool();
+  private final static ConnectionPool INSTANCE = new ConnectionPool();
 
   private ConnectionPool() {
-    Config config = Config.getInstance();
+    BaseConfig dbConfig = BaseConfig.getInstance();
     PoolProperties poolProperties = new PoolProperties();
-    poolProperties.setUrl(config.getValue(Config.URL));
-    poolProperties.setDriverClassName(config.getValue(Config.DRIVER));
+    poolProperties.setDriverClassName(dbConfig.getValue(PageConfig.DRIVER));
+    poolProperties.setUrl(dbConfig.getValue(PageConfig.URL));
+    poolProperties.setUsername(dbConfig.getValue(PageConfig.USERNAME));
+    poolProperties.setPassword(dbConfig.getValue(PageConfig.PASSWORD));
     poolProperties.setMaxIdle(MAX_AMOUNT_OF_THREAD);
     poolProperties.setMaxWait(MAX_WAIT_AMOUNT);
     poolProperties.setMaxActive(MAX_AMOUNT_OF_ACTIVE_THREADS);
@@ -37,7 +39,7 @@ public final class ConnectionPool {
   }
 
   public static ConnectionPool getInstance() {
-    return POOL;
+    return INSTANCE;
   }
 
   public Connection getConnection() throws DaoException {

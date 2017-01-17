@@ -1,6 +1,6 @@
 package com.katruk.web.controller.commands;
 
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
@@ -23,6 +23,6 @@ public final class Unknown implements Command, PageAttribute {
     System.out.println(">>> UnknownCommand execute");
     request.setAttribute(ERROR, ERROR_LOGIN);
     this.logger.error(ERROR_LOGIN);
-    return Config.getInstance().getValue(Config.ERROR_PAGE);
+    return PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
   }
 }

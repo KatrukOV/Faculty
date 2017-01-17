@@ -1,6 +1,6 @@
 package com.katruk.web.controller.commands;
 
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
@@ -24,6 +24,6 @@ public final class Logout implements Command, PageAttribute {
     request.getSession().invalidate();
     request.setAttribute(INFO, LOGOUT);
     logger.info(LOGOUT);
-    return Config.getInstance().getValue(Config.INDEX);
+    return PageConfig.getInstance().getValue(PageConfig.INDEX);
   }
 }

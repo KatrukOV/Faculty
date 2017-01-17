@@ -84,7 +84,7 @@ public final class UserValidator {
     }
     // TODO: 16.12.2016 log
     throw new ValidateException(
-        String.format("User with username %s exists", userDto.getUsername()));
+        String.format("User with USERNAME %s exists", userDto.getUsername()));
 
   }
 }

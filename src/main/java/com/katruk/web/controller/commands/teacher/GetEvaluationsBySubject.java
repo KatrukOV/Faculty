@@ -9,7 +9,7 @@ import com.katruk.service.SubjectService;
 import com.katruk.service.impl.EvaluationServiceImpl;
 import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.service.impl.SubjectServiceImpl;
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
@@ -38,7 +38,7 @@ public final class GetEvaluationsBySubject implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.TEACHER_EVALUATIONS);
+    String page = PageConfig.getInstance().getValue(PageConfig.TEACHER_EVALUATIONS);
     try {
       Long subjectId = Long.parseLong(request.getParameter(SUBJECT_ID));
       System.out.println("subjectId" + subjectId);
@@ -56,7 +56,7 @@ public final class GetEvaluationsBySubject implements Command, PageAttribute {
       request.setAttribute(EVALUATION_LIST, evaluationList);
       logger.info(String.format("get all evaluations = %d", evaluationList.size()));
     } catch (Exception e) {
-      page = Config.getInstance().getValue(Config.ERROR_PAGE);
+      page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable get all evaluations", e);
     }
     return page;

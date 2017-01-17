@@ -2,7 +2,7 @@ package com.katruk.web.controller.commands.teacher;
 
 import com.katruk.service.EvaluationService;
 import com.katruk.service.impl.EvaluationServiceImpl;
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
@@ -39,10 +39,10 @@ public class SetConfirm implements Command, PageAttribute {
 
 
       logger.info(String.format("show students which DECLARED discipline"));
-      page = Config.getInstance().getValue(Config.TEACHER_CONFIRMED);
+      page = PageConfig.getInstance().getValue(PageConfig.TEACHER_CONFIRMED);
 
     } catch (Exception e) {
-      page = Config.getInstance().getValue(Config.ERROR_PAGE);
+      page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable to show students which DECLARED discipline", e);
     }
     return page;

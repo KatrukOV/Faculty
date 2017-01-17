@@ -5,7 +5,7 @@ import com.katruk.entity.Teacher;
 import com.katruk.exception.ServiceException;
 import com.katruk.service.TeacherService;
 import com.katruk.service.impl.TeacherServiceImpl;
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
@@ -30,7 +30,7 @@ public final class GetTeachers implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.TEACHERS);
+    String page = PageConfig.getInstance().getValue(PageConfig.TEACHERS);
     try {
       Collection<Teacher> teachers = this.teacherService.getAll();
       List teacherList = Collections.EMPTY_LIST;
@@ -40,7 +40,7 @@ public final class GetTeachers implements Command, PageAttribute {
       request.setAttribute(TEACHER_LIST, teacherList);
       logger.info(String.format("get all teachers = %d", teacherList.size()));
     } catch (ServiceException e) {
-      page = Config.getInstance().getValue(Config.ERROR_PAGE);
+      page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable get all teachers", e);
     }
     return page;

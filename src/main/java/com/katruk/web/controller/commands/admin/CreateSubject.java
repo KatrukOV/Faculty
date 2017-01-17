@@ -7,7 +7,7 @@ import com.katruk.service.SubjectService;
 import com.katruk.service.TeacherService;
 import com.katruk.service.impl.SubjectServiceImpl;
 import com.katruk.service.impl.TeacherServiceImpl;
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
@@ -34,7 +34,7 @@ public final class CreateSubject implements Command, PageAttribute {
 
   @Override
   public String execute(HttpServletRequest request, HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.ADD_SUBJECT);
+    String page = PageConfig.getInstance().getValue(PageConfig.ADD_SUBJECT);
     try {
       String title = request.getParameter(TITLE);
       System.out.println(">>>> title=" + title);
@@ -57,7 +57,7 @@ public final class CreateSubject implements Command, PageAttribute {
       request.setAttribute(TEACHER_LIST, teacherList);
 //      logger.info(String.format("s"));
     } catch (Exception e) {
-      page = Config.getInstance().getValue(Config.ERROR_PAGE);
+      page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable to create a subject", e);
     }
     return page;

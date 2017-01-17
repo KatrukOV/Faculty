@@ -7,7 +7,7 @@ import com.katruk.exception.ServiceException;
 import com.katruk.exception.ValidateException;
 import com.katruk.service.UserService;
 import com.katruk.service.impl.UserServiceImpl;
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.util.UserValidator;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
@@ -32,14 +32,14 @@ public final class Registration implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.INDEX);
+    String page = PageConfig.getInstance().getValue(PageConfig.INDEX);
     UserDto userDto = getUserDtoFromRequest(request);
     try {
       this.userValidator.validate(userDto);
     } catch (ValidateException e) {
       request.setAttribute(ERROR, e.getMessage());
       logger.error(e);
-      return Config.getInstance().getValue(Config.REGISTRATION);
+      return PageConfig.getInstance().getValue(PageConfig.REGISTRATION);
     }
     try {
       User user = new UserConverter().convertToUser(userDto);
@@ -47,7 +47,7 @@ public final class Registration implements Command, PageAttribute {
     } catch (ServiceException e) {
       request.setAttribute(ERROR, e.getMessage());
       logger.error(e);
-      return Config.getInstance().getValue(Config.ERROR_PAGE);
+      return PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
     }
     request.setAttribute(INFO, REGISTRATION_OK);
     logger.info(REGISTRATION_OK);

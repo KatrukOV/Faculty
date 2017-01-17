@@ -4,7 +4,7 @@ import com.katruk.entity.Period;
 import com.katruk.exception.ServiceException;
 import com.katruk.service.PeriodService;
 import com.katruk.service.impl.PeriodServiceImpl;
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
@@ -25,7 +25,7 @@ public final class SetDistribution implements Command, PageAttribute {
 
   @Override
   public String execute(HttpServletRequest request, HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.ADMIN_PROFILE);
+    String page = PageConfig.getInstance().getValue(PageConfig.ADMIN_PROFILE);
     Period period;
     try {
       period = this.periodService.getLastPeriod();
@@ -40,7 +40,7 @@ public final class SetDistribution implements Command, PageAttribute {
       request.setAttribute(PERIOD_DATE, period.getDate());
 
     } catch (ServiceException e) {
-      page = Config.getInstance().getValue(Config.ERROR_PAGE);
+      page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable set period DISTRIBUTION", e);
     }
     return page;

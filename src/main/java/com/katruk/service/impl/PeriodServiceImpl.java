@@ -31,6 +31,8 @@ public final class PeriodServiceImpl implements PeriodService {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
+
+    System.out.println("peri="+period);
     return period;
   }
 

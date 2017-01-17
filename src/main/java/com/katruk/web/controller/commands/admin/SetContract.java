@@ -4,7 +4,7 @@ import com.katruk.converter.StudentConverter;
 import com.katruk.entity.Student;
 import com.katruk.service.StudentService;
 import com.katruk.service.impl.StudentServiceImpl;
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
@@ -29,7 +29,7 @@ public final class SetContract implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.STUDENTS);
+    String page = PageConfig.getInstance().getValue(PageConfig.STUDENTS);
     try {
       Student.Contract contract = Student.Contract.valueOf(request.getParameter(CONTRACT));
       System.out.println(">>>>>>>>>>>> contract= " + contract);
@@ -48,7 +48,7 @@ public final class SetContract implements Command, PageAttribute {
       }
       request.setAttribute(STUDENT_LIST, studentList);
     } catch (Exception e) {
-      page = Config.getInstance().getValue(Config.ERROR_PAGE);
+      page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable set contract for student", e);
     }
     return page;

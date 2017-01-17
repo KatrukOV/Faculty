@@ -5,7 +5,7 @@ import com.katruk.entity.User;
 import com.katruk.exception.ServiceException;
 import com.katruk.service.UserService;
 import com.katruk.service.impl.UserServiceImpl;
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
@@ -30,7 +30,7 @@ public final class GetUsers implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.USERS);
+    String page = PageConfig.getInstance().getValue(PageConfig.USERS);
     try {
       Collection<User> users = this.userService.getAll();
       List userList = Collections.EMPTY_LIST;
@@ -40,7 +40,7 @@ public final class GetUsers implements Command, PageAttribute {
       request.setAttribute(USER_LIST, userList);
       logger.info(String.format("get all users = %d", userList.size()));
     } catch (ServiceException e) {
-      page = Config.getInstance().getValue(Config.ERROR_PAGE);
+      page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable get all users", e);
     }
     return page;

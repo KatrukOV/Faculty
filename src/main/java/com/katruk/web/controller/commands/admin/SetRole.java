@@ -13,7 +13,7 @@ import com.katruk.service.UserService;
 import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.service.impl.TeacherServiceImpl;
 import com.katruk.service.impl.UserServiceImpl;
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
@@ -42,7 +42,7 @@ public final class SetRole implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.USERS);
+    String page = PageConfig.getInstance().getValue(PageConfig.USERS);
     try {
       User.Role role = User.Role.valueOf(request.getParameter(ROLE));
       System.out.println(">>>>>>>>>>>> role= " + role);
@@ -86,7 +86,7 @@ public final class SetRole implements Command, PageAttribute {
       request.setAttribute(USER_LIST, userList);
       logger.info(String.format("set role=%s for user= %s", role, user));
     } catch (ServiceException e) {
-      page = Config.getInstance().getValue(Config.ERROR_PAGE);
+      page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable set role for user", e);
     }
     return page;

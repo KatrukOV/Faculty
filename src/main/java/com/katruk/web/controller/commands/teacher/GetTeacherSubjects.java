@@ -10,7 +10,7 @@ import com.katruk.service.UserService;
 import com.katruk.service.impl.SubjectServiceImpl;
 import com.katruk.service.impl.TeacherServiceImpl;
 import com.katruk.service.impl.UserServiceImpl;
-import com.katruk.util.Config;
+import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
@@ -39,7 +39,7 @@ public final class GetTeacherSubjects implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    String page = Config.getInstance().getValue(Config.TEACHER_SUBJECTS);
+    String page = PageConfig.getInstance().getValue(PageConfig.TEACHER_SUBJECTS);
     try {
       String username = (String) request.getSession().getAttribute(USERNAME);
       User user = this.userService.getUserByUsername(username);
@@ -52,7 +52,7 @@ public final class GetTeacherSubjects implements Command, PageAttribute {
       request.setAttribute(SUBJECT_LIST, subjectList);
       logger.info(String.format("get all subjects = %d", subjectList.size()));
     } catch (Exception e) {
-      page = Config.getInstance().getValue(Config.ERROR_PAGE);
+      page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable get all subjects", e);
     }
     return page;
