@@ -39,7 +39,7 @@ public final class EvaluationDaoMySql implements EvaluationDao {
     final Optional<Evaluation> result;
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_ID))) {
+          .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_SUBJECT_AND_STUDENT))) {
         statement.setLong(1, subjectId);
         statement.setLong(2, studentId);
         System.out.println("statement getEvaluationBySubjectIdAndStudentId=" + statement);
