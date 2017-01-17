@@ -2,7 +2,6 @@ package com.katruk.web.controller.commands.teacher;
 
 import com.katruk.converter.EvaluationConverter;
 import com.katruk.entity.Evaluation;
-import com.katruk.entity.Period;
 import com.katruk.entity.dto.EvaluationDto;
 import com.katruk.service.EvaluationService;
 import com.katruk.service.PeriodService;
@@ -18,14 +17,10 @@ import com.katruk.web.controller.Command;
 
 import org.apache.log4j.Logger;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public final class Evaluate implements Command, PageAttribute {
+public final class ToEvaluation implements Command, PageAttribute {
 
   private final Logger logger;
   private final PeriodService periodService;
@@ -33,8 +28,8 @@ public final class Evaluate implements Command, PageAttribute {
   private final StudentService studentService;
   private final EvaluationService evaluationService;
 
-  public Evaluate() {
-    this.logger = Logger.getLogger(Evaluate.class);
+  public ToEvaluation() {
+    this.logger = Logger.getLogger(ToEvaluation.class);
     this.periodService = new PeriodServiceImpl();
     this.subjectService = new SubjectServiceImpl();
     this.studentService = new StudentServiceImpl();
@@ -45,22 +40,14 @@ public final class Evaluate implements Command, PageAttribute {
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
     String page = PageConfig.getInstance().getValue(PageConfig.EVALUATION);
     try {
-      Evaluation.Rating rating = Evaluation.Rating.valueOf(request.getParameter(RATING));
-      String feedback = request.getParameter(FEEDBACK);
-
       Long evaluationId = Long.parseLong(request.getParameter(EVALUATION_ID));
       Evaluation evaluation = this.evaluationService.getEvaluationById(evaluationId);
-      evaluation.setRating(rating);
-      evaluation.setFeedback(feedback);
-      evaluation = this.evaluationService.save(evaluation);
-
       EvaluationDto evaluationDto = new EvaluationConverter().convertToDto(evaluation);
       request.setAttribute(EVALUATION, evaluationDto);
-//      logger.info(String.format("evaluation = %d", evaluationDto));
-
+      logger.info(String.format("evaluation = %d", evaluationDto));
     } catch (Exception e) {
       page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
-      logger.error("Unable get all evaluations", e);
+      logger.error("Unable get evaluation", e);
     }
     return page;
   }

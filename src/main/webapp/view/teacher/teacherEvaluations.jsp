@@ -54,7 +54,7 @@
                         <form action="/dispatcher" method="POST">
                             <input type="hidden" name="evaluationId"
                                    value="${evaluation.evaluationId}"/>
-                            <input type="hidden" name="command" value="evaluate"/>
+                            <input type="hidden" name="command" value="toEvaluation"/>
                             <input type="submit" value="Evaluate"/>
                         </form>
                     </td>

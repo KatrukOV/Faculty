@@ -26,6 +26,7 @@ import com.katruk.web.controller.commands.admin.SetPosition;
 import com.katruk.web.controller.commands.admin.SetRole;
 import com.katruk.web.controller.commands.ToProfile;
 import com.katruk.web.controller.commands.Unknown;
+import com.katruk.web.controller.commands.teacher.ToEvaluation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +65,7 @@ final class DispatcherHelper implements PageAttribute {
     commands.put("getEvaluationsBySubject", new GetEvaluationsBySubject());
 
     commands.put("evaluate", new Evaluate());
+    commands.put("toEvaluation", new ToEvaluation());
 
 //    commands.put("feedback", new FeedbackCommand());
 //    commands.put("addDiscipline", new AddDisciplineCommand());

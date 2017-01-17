@@ -25,7 +25,7 @@ public interface PageAttribute {
   String TITLE = "title";
 //  String TEACHER = "teacher";
 
-  String MARK = "mark";
+  String RATING = "rating";
   String FEEDBACK = "feedback";
 
 //  String PAGE = "page";
@@ -42,6 +42,7 @@ public interface PageAttribute {
 
   String EVALUATION_ID = "evaluationId";
   String EVALUATION_LIST = "evaluationList";
+  String EVALUATION = "evaluation";
 
 //  String STUDENT_MARK_LIST = "studentMarkList";
 

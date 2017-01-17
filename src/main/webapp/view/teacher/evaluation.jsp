@@ -8,6 +8,9 @@
 <h4>for student: </h4>
 <b>${evaluation.lastName}</b>
 <b>${evaluation.name}</b>
+<br/>
+<b>rating: ${evaluation.rating}</b>
+<b>feedback: ${evaluation.feedback}</b>
 <hr/>
 <jsp:include page="/view/all/message.jsp"/>
 <form action="/dispatcher" method="POST">
@@ -40,7 +43,7 @@
     <br>
     <input type="hidden" name="evaluationId" value="${evaluation.evaluationId}"/>
     <input type="hidden" name="command" value="evaluate"/>
-    <input type="submit" value="Evaluate"/>
+    <input type="submit" value="Confirm"/>
 </form>
 <hr/>
 <jsp:include page="/view/all/toProfile.jsp"/>
