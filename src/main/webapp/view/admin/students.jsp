@@ -31,7 +31,7 @@
                     <label>${student.form}</label>
                 </td>
                 <td>
-                    <form action="/dispatcher" method="post">
+                    <form action="/dispatcher" method="POST">
                         <select name="form">
                             <option value="FULL_TAME" ${student.contract.equals('FULL_TAME') ? 'selected="selected"' : ''}>
                                 FULL_TAME

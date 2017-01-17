@@ -28,7 +28,7 @@
                     <label> ${user.role} </label>
                 </td>
                 <td>
-                    <form action="/dispatcher" method="post">
+                    <form action="/dispatcher" method="POST">
                         <select name="role">
                             <option value="STUDENT" ${user.role.equals('STUDENT') ? 'selected="selected"' : ''}>
                                 STUDENT

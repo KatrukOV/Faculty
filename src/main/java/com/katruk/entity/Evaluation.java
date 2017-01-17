@@ -58,4 +58,16 @@ public final class Evaluation extends Model {
   public void setFeedback(String feedback) {
     this.feedback = feedback;
   }
+
+  @Override
+  public String toString() {
+    return "Evaluation{" +
+           "id=" + getId() +
+           " subject=" + subject +
+           ", student=" + student +
+           ", status=" + status +
+           ", rating=" + rating +
+           ", feedback='" + feedback + '\'' +
+           "}";
+  }
 }

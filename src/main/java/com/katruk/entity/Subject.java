@@ -20,4 +20,13 @@ public final class Subject extends Model {
   public void setTeacher(Teacher teacher) {
     this.teacher = teacher;
   }
+
+  @Override
+  public String toString() {
+    return "Subject{" +
+           " id='" + getId() + '\'' +
+           "title='" + title + '\'' +
+           ", teacher=" + teacher +
+           '}';
+  }
 }

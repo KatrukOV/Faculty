@@ -28,6 +28,7 @@ public final class EvaluationConverter {
     evaluationDto.setLastName(evaluation.getStudent().getUser().getPerson().getLastName());
     evaluationDto.setName(evaluation.getStudent().getUser().getPerson().getName());
     evaluationDto.setPatronymic(evaluation.getStudent().getUser().getPerson().getPatronymic());
+    evaluationDto.setStatus(evaluation.getStatus());
     evaluationDto.setRating(evaluation.getRating());
     evaluationDto.setFeedback(evaluation.getFeedback());
     return evaluationDto;

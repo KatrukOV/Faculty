@@ -45,7 +45,8 @@ public final class Student extends Model {
   @Override
   public String toString() {
     return "Student{" +
-           "user=" + user +
+           "id=" + getId() +
+           " user=" + user +
            ", form=" + form +
            ", contract=" + contract +
            '}';

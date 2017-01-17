@@ -26,4 +26,13 @@ public final class Teacher extends Model {
   public void setPosition(Position position) {
     this.position = position;
   }
+
+  @Override
+  public String toString() {
+    return "Teacher{" +
+           "id=" + getId() +
+           " user=" + user +
+           ", position=" + position +
+           '}';
+  }
 }

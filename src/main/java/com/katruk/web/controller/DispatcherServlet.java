@@ -41,7 +41,6 @@ public final class DispatcherServlet extends HttpServlet implements PageAttribut
     System.out.println(">>> command=" + command);
     String page = command.execute(request, response);
     RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
-    System.out.println("was execute dispatcher" + dispatcher);
     try {
       dispatcher.forward(request, response);
     } catch (ServletException | IOException e) {

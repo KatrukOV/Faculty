@@ -35,12 +35,14 @@ public final class EvaluationDaoMySql implements EvaluationDao {
   @Override
   public Optional<Evaluation> getEvaluationById(final Long subjectId, final Long studentId)
       throws DaoException {
+    System.out.println("input subjectId=" + subjectId + " studentId=" + studentId);
     final Optional<Evaluation> result;
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_ID))) {
         statement.setLong(1, subjectId);
-        statement.setLong(1, studentId);
+        statement.setLong(2, studentId);
+        System.out.println("statement getEvaluationById=" + statement);
         result = getEvaluationByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
         connection.rollback();
@@ -51,6 +53,7 @@ public final class EvaluationDaoMySql implements EvaluationDao {
       logger.error("", e);
       throw new DaoException("", e);
     }
+    System.out.println("getEvaluationById out=" + result);
     return result;
   }
 
@@ -78,6 +81,7 @@ public final class EvaluationDaoMySql implements EvaluationDao {
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_SUBJECT))) {
         statement.setLong(1, subjectId);
+        System.out.println("getEvaluationBySubject statement=" + statement);
         return getEvaluationByStatement(statement);
       } catch (SQLException e) {
         connection.rollback();
@@ -92,10 +96,19 @@ public final class EvaluationDaoMySql implements EvaluationDao {
 
   @Override
   public Evaluation save(final Evaluation evaluation) throws DaoException {
-    Evaluation result = getEvaluationById(evaluation.getSubject().getId(),
-                                          evaluation.getStudent().getId()).orElse(null);
-    if (nonNull(result)){
+    // TODO: 17.01.2017  bed logic
+    System.out.println("input evaluation= " + evaluation);
+    Evaluation result;
+    try {
+      result = getEvaluationById(evaluation.getSubject().getId(),
+                                 evaluation.getStudent().getId()).orElse(null);
+      System.out.println("in base Evaluation is= " + result);
+    } catch (DaoException e) {
+      result = null;
+    }
+    if (nonNull(result)) {
       evaluation.setId(result.getId());
+      System.out.println("with id evaluation= " + evaluation);
     }
 
     if (isNull(evaluation.getId())) {
@@ -103,6 +116,7 @@ public final class EvaluationDaoMySql implements EvaluationDao {
     } else {
       result = update(evaluation);
     }
+    System.out.println("input evaluation= " + result);
     return result;
   }
 
@@ -152,9 +166,10 @@ public final class EvaluationDaoMySql implements EvaluationDao {
         statement.setLong(1, evaluation.getSubject().getId());
         statement.setLong(2, evaluation.getStudent().getId());
         statement.setString(3, evaluation.getStatus().name());
-        statement.setString(4, evaluation.getRating().name());
+        statement
+            .setString(4, evaluation.getRating() != null ? evaluation.getRating().name() : null);
         statement.setString(5, evaluation.getFeedback());
-        statement.setLong(1, evaluation.getId());
+        statement.setLong(6, evaluation.getId());
         int affectedRows = statement.executeUpdate();
         if (affectedRows == 0) {
           throw new SQLException("Updating evaluation failed, no rows affected.");
@@ -187,9 +202,12 @@ public final class EvaluationDaoMySql implements EvaluationDao {
         evaluation.setSubject(subject);
         evaluation.setStudent(student);
         evaluation.setStatus(Evaluation.Status.valueOf(resultSet.getString("status")));
-        evaluation.setRating(Evaluation.Rating.valueOf(resultSet.getString("rating")));
+        if (nonNull(resultSet.getString("rating"))) {
+          evaluation.setRating(Evaluation.Rating.valueOf(resultSet.getString("rating")));
+        }
         evaluation.setFeedback(resultSet.getString("feedback"));
         result.add(evaluation);
+        System.out.println("in evaluation =" + evaluation);
       }
     } catch (SQLException e) {
       logger.error("", e);

@@ -4,11 +4,12 @@ import com.katruk.entity.Evaluation;
 
 public final class EvaluationDto {
 
-//  private String title;
+  //  private String title;
   private Long evaluationId;
   private String lastName;
   private String name;
   private String patronymic;
+  private Evaluation.Status status;
   private Evaluation.Rating rating;
   private String feedback;
 
@@ -51,6 +52,14 @@ public final class EvaluationDto {
 
   public void setPatronymic(String patronymic) {
     this.patronymic = patronymic;
+  }
+
+  public Evaluation.Status getStatus() {
+    return status;
+  }
+
+  public void setStatus(Evaluation.Status status) {
+    this.status = status;
   }
 
   public Evaluation.Rating getRating() {

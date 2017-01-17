@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Subjects</title>
+    <title>My Subjects</title>
 </head>
 <body style="text-align:center;">
 <h3>Teacher subjects</h3>

@@ -50,15 +50,16 @@ public final class GetEvaluationsBySubject implements Command, PageAttribute {
       Collection<Evaluation> evaluations =
           this.evaluationService.getEvaluationBySubjects(subjectId);
       System.out.println("evaluations by SUBJECT_ID" + evaluations);
+      //todo ????
+      String title = "";
       List evaluationList = Collections.EMPTY_LIST;
       if (!evaluations.isEmpty()) {
         evaluationList = new EvaluationConverter().convertToDto(evaluations);
+        title = evaluations.iterator().next().getSubject().getTitle();
       }
+      request.setAttribute(TITLE, title);
       Period period = this.periodService.getLastPeriod();
       request.setAttribute(PERIOD_STATUS, period.getStatus());
-      //todo ????
-      String title = evaluations.iterator().next().getSubject().getTitle();
-      request.setAttribute(TITLE, title);
       request.setAttribute(EVALUATION_LIST, evaluationList);
       logger.info(String.format("get all evaluations = %d", evaluationList.size()));
     } catch (Exception e) {

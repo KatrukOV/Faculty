@@ -63,6 +63,7 @@ public final class SetDeclare implements Command, PageAttribute {
       evaluation.setStudent(student);
       evaluation.setSubject(subject);
       evaluation.setStatus(Evaluation.Status.DECLARED);
+      System.out.println(">> exec evaluation="+evaluation);
       this.evaluationService.save(evaluation);
       Collection<Subject> subjects = this.subjectService.getAll();
       List subjectList = Collections.EMPTY_LIST;

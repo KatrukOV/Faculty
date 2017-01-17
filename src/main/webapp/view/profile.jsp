@@ -10,7 +10,7 @@
 <jsp:include page="/view/all/welcome.jsp"/>
 <jsp:include page="/view/all/message.jsp"/>
 <h1> You can: </h1>
-<form action="/dispatcher" method="get">
+<form action="/dispatcher" method="GET">
     <input type="hidden" name="command" value="getSubjects">
     <input type="submit" value="get All Subjects"/>
 </form>

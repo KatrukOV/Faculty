@@ -52,6 +52,7 @@ public final class EvaluationServiceImpl implements EvaluationService {
             });
       }
     }
+    System.out.println("evaluations="+evaluations);
     return evaluations;
   }
 
