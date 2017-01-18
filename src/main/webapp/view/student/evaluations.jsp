@@ -1,9 +1,10 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Evaluation</title>
 </head>
 <body style="text-align:center;">
-<h3>Evaluations of , ${sessionScope.get("name")} ${sessionScope.get("lastName")}</h3>
+<h3>Evaluations of: ${sessionScope.get("name")} ${sessionScope.get("lastName")}</h3>
 <jsp:include page="/view/all/message.jsp"/>
 <div align="center">
     <table border="1">

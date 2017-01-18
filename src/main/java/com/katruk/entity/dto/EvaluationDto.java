@@ -4,8 +4,8 @@ import com.katruk.entity.Evaluation;
 
 public final class EvaluationDto {
 
-  private String title;
   private Long evaluationId;
+  private String title;
   private String lastName;
   private String name;
   private String patronymic;
@@ -13,20 +13,20 @@ public final class EvaluationDto {
   private Evaluation.Rating rating;
   private String feedback;
 
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
   public Long getEvaluationId() {
     return evaluationId;
   }
 
   public void setEvaluationId(Long evaluationId) {
     this.evaluationId = evaluationId;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public String getLastName() {
@@ -75,5 +75,19 @@ public final class EvaluationDto {
 
   public void setFeedback(String feedback) {
     this.feedback = feedback;
+  }
+
+  @Override
+  public String toString() {
+    return "EvaluationDto{" +
+           "title='" + title + '\'' +
+           ", evaluationId=" + evaluationId +
+           ", lastName='" + lastName + '\'' +
+           ", name='" + name + '\'' +
+           ", patronymic='" + patronymic + '\'' +
+           ", status=" + status +
+           ", rating=" + rating +
+           ", feedback='" + feedback + '\'' +
+           '}';
   }
 }

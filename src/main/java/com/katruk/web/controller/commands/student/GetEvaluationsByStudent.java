@@ -65,6 +65,7 @@ public final class GetEvaluationsByStudent implements Command, PageAttribute {
 //      Period period = this.periodService.getLastPeriod();
 //      request.setAttribute(PERIOD_STATUS, period.getStatus());
       request.setAttribute(EVALUATION_LIST, evaluationList);
+      System.out.println("evaluationList="+evaluationList);
       logger.info(String.format("get all evaluations = %d", evaluationList.size()));
     } catch (Exception e) {
       page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
