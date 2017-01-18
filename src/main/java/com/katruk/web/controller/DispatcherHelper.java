@@ -7,6 +7,7 @@ import com.katruk.web.controller.commands.admin.AddSubject;
 import com.katruk.web.controller.commands.admin.CreateSubject;
 import com.katruk.web.controller.commands.admin.SetDistribution;
 import com.katruk.web.controller.commands.admin.SetLearning;
+import com.katruk.web.controller.commands.student.GetEvaluationsByStudent;
 import com.katruk.web.controller.commands.teacher.Evaluate;
 import com.katruk.web.controller.commands.teacher.GetEvaluationsBySubject;
 import com.katruk.web.controller.commands.teacher.GetTeacherSubjects;
@@ -66,6 +67,8 @@ final class DispatcherHelper implements PageAttribute {
 
     commands.put("evaluate", new Evaluate());
     commands.put("toEvaluation", new ToEvaluation());
+
+    commands.put("getEvaluationsByStudent", new GetEvaluationsByStudent());
 
 //    commands.put("feedback", new FeedbackCommand());
 //    commands.put("addDiscipline", new AddDisciplineCommand());

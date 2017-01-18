@@ -15,13 +15,11 @@
     <input type="submit" value="get All Subjects"/>
 </form>
 <br>
-
 <c:if test="${role == 'STUDENT'}">
     <form action="/dispatcher" method="GET">
         <input type="hidden" name="command" value="getEvaluationsByStudent">
         <input type="submit" value="get My evaluations"/>
     </form>
 </c:if>
-
 </body>
 </html>
