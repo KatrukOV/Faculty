@@ -20,7 +20,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class SetConfirmOrReject implements Command, PageAttribute {
+public final class SetConfirmOrReject implements Command, PageAttribute {
 
   private final Logger logger;
   private final EvaluationService evaluationService;
