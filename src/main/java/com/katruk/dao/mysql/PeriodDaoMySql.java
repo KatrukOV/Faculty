@@ -5,7 +5,9 @@ import com.katruk.entity.Period;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
 import com.katruk.util.Sql;
+
 import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-public final class PeriodDaoMySql implements PeriodDao {
+public final class PeriodDaoMySql implements PeriodDao, DataBaseNames {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
@@ -83,9 +85,9 @@ public final class PeriodDaoMySql implements PeriodDao {
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
         Period period = new Period();
-        period.setId(resultSet.getLong("id"));
-        period.setStatus(Period.Status.valueOf(resultSet.getString("status")));
-        Date date = Date.valueOf(resultSet.getString("date"));
+        period.setId(resultSet.getLong(ID));
+        period.setStatus(Period.Status.valueOf(resultSet.getString(STATUS)));
+        Date date = Date.valueOf(resultSet.getString(DATE));
         period.setDate(date);
         periods.add(period);
       }

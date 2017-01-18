@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-public final class StudentDaoMySql implements StudentDao {
+public final class StudentDaoMySql implements StudentDao, DataBaseNames {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
@@ -122,14 +122,14 @@ public final class StudentDaoMySql implements StudentDao {
       while (resultSet.next()) {
         Student student = new Student();
         User user = new User();
-        user.setId(resultSet.getLong("user_person_id"));
+        user.setId(resultSet.getLong(USER_ID));
         student.setUser(user);
         student.setId(user.getId());
-        String form = resultSet.getString("form");
+        String form = resultSet.getString(FORM);
         if (nonNull(form)) {
           student.setForm(Student.Form.valueOf(form));
         }
-        String contract = resultSet.getString("contract");
+        String contract = resultSet.getString(CONTRACT);
         if (nonNull(contract)) {
           student.setContract(Student.Contract.valueOf(contract));
         }

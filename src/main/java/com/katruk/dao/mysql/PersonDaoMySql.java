@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-public final class PersonDaoMySql implements PersonDao {
+public final class PersonDaoMySql implements PersonDao, DataBaseNames {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
@@ -145,10 +145,10 @@ public final class PersonDaoMySql implements PersonDao {
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
         Person person = new Person();
-        person.setId(resultSet.getLong("id"));
-        person.setLastName(resultSet.getString("last_name"));
-        person.setName(resultSet.getString("name"));
-        person.setPatronymic(resultSet.getString("patronymic"));
+        person.setId(resultSet.getLong(ID));
+        person.setLastName(resultSet.getString(LAST_NAME));
+        person.setName(resultSet.getString(NAME));
+        person.setPatronymic(resultSet.getString(PATRONYMIC));
         persons.add(person);
       }
     } catch (SQLException e) {

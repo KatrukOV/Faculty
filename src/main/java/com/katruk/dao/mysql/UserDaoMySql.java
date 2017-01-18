@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-public final class UserDaoMySql implements UserDao {
+public final class UserDaoMySql implements UserDao, DataBaseNames {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
@@ -124,13 +124,13 @@ public final class UserDaoMySql implements UserDao {
       while (resultSet.next()) {
         User user = new User();
         Person person = new Person();
-        person.setId(resultSet.getLong("person_id"));
+        person.setId(resultSet.getLong(PERSON_ID));
         user.setId(person.getId());
         user.setPerson(person);
-        user.setUsername(resultSet.getString("username"));
-        user.setPassword(resultSet.getString("password"));
-        if (nonNull(resultSet.getString("role"))) {
-          user.setRole(User.Role.valueOf(resultSet.getString("role")));
+        user.setUsername(resultSet.getString(USERNAME));
+        user.setPassword(resultSet.getString(PASSWORD));
+        if (nonNull(resultSet.getString(ROLE))) {
+          user.setRole(User.Role.valueOf(resultSet.getString(ROLE)));
         }
         result.add(user);
       }

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-public final class EvaluationDaoMySql implements EvaluationDao {
+public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
@@ -207,17 +207,17 @@ public final class EvaluationDaoMySql implements EvaluationDao {
       while (resultSet.next()) {
         Evaluation evaluation = new Evaluation();
         Subject subject = new Subject();
-        subject.setId(resultSet.getLong("subject_id"));
+        subject.setId(resultSet.getLong(SUBJECT_ID));
         Student student = new Student();
-        student.setId(resultSet.getLong("student_user_person_id"));
-        evaluation.setId(resultSet.getLong("id"));
+        student.setId(resultSet.getLong(STUDENT_ID));
+        evaluation.setId(resultSet.getLong(ID));
         evaluation.setSubject(subject);
         evaluation.setStudent(student);
-        evaluation.setStatus(Evaluation.Status.valueOf(resultSet.getString("status")));
-        if (nonNull(resultSet.getString("rating"))) {
-          evaluation.setRating(Evaluation.Rating.valueOf(resultSet.getString("rating")));
+        evaluation.setStatus(Evaluation.Status.valueOf(resultSet.getString(STATUS)));
+        if (nonNull(resultSet.getString(RATING))) {
+          evaluation.setRating(Evaluation.Rating.valueOf(resultSet.getString(RATING)));
         }
-        evaluation.setFeedback(resultSet.getString("feedback"));
+        evaluation.setFeedback(resultSet.getString(FEEDBACK));
         result.add(evaluation);
       }
     } catch (SQLException e) {

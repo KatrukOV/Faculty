@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-public final class SubjectDaoMySql implements SubjectDao {
+public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
@@ -198,10 +198,10 @@ public final class SubjectDaoMySql implements SubjectDao {
       while (resultSet.next()) {
         Subject subject = new Subject();
         Teacher teacher = new Teacher();
-        teacher.setId(resultSet.getLong("teacher_user_person_id"));
+        teacher.setId(resultSet.getLong(TEACHER_ID));
         subject.setTeacher(teacher);
-        subject.setTitle(resultSet.getString("title"));
-        subject.setId(resultSet.getLong("id"));
+        subject.setTitle(resultSet.getString(TITLE));
+        subject.setId(resultSet.getLong(ID));
         result.add(subject);
       }
     } catch (SQLException e) {

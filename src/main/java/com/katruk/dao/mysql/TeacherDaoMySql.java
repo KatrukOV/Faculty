@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-public final class TeacherDaoMySql implements TeacherDao {
+public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
@@ -125,10 +125,10 @@ public final class TeacherDaoMySql implements TeacherDao {
       while (resultSet.next()) {
         Teacher teacher = new Teacher();
         User user = new User();
-        user.setId(resultSet.getLong("user_person_id"));
+        user.setId(resultSet.getLong(USER_ID));
         teacher.setId(user.getId());
         teacher.setUser(user);
-        String position = resultSet.getString("position");
+        String position = resultSet.getString(POSITION);
         if (nonNull(position)) {
           teacher.setPosition(Teacher.Position.valueOf(position));
         }
