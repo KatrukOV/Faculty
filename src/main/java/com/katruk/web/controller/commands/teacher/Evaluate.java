@@ -2,26 +2,15 @@ package com.katruk.web.controller.commands.teacher;
 
 import com.katruk.converter.EvaluationConverter;
 import com.katruk.entity.Evaluation;
-import com.katruk.entity.Period;
 import com.katruk.entity.dto.EvaluationDto;
 import com.katruk.exception.ServiceException;
 import com.katruk.service.EvaluationService;
-import com.katruk.service.PeriodService;
-import com.katruk.service.StudentService;
-import com.katruk.service.SubjectService;
 import com.katruk.service.impl.EvaluationServiceImpl;
-import com.katruk.service.impl.PeriodServiceImpl;
-import com.katruk.service.impl.StudentServiceImpl;
-import com.katruk.service.impl.SubjectServiceImpl;
 import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
 import com.katruk.web.controller.Command;
 
 import org.apache.log4j.Logger;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

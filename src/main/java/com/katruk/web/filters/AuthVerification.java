@@ -1,10 +1,14 @@
 package com.katruk.web.filters;
 
 import static java.util.Objects.nonNull;
+
 import com.katruk.util.PageConfig;
 import com.katruk.web.PageAttribute;
+
 import org.apache.log4j.Logger;
+
 import java.io.IOException;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;

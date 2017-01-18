@@ -44,7 +44,6 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
         statement.setLong(2, studentId);
         result = getEvaluationByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
@@ -64,7 +63,6 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
         statement.setLong(1, evaluationId);
         result = getEvaluationByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
@@ -83,7 +81,6 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
         statement.setLong(1, studentId);
         return getEvaluationByStatement(statement);
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
@@ -101,7 +98,6 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
         statement.setLong(1, subjectId);
         return getEvaluationByStatement(statement);
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }

@@ -38,7 +38,6 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
         statement.setLong(1, teacherId);
         result = getTeacherByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
@@ -107,7 +106,6 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
           .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_TEACHER))) {
         result = getTeacherByStatement(statement);
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }

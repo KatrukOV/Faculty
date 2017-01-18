@@ -38,7 +38,6 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
         statement.setLong(1, personId);
         result = getPersonByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }

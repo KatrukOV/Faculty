@@ -2,6 +2,7 @@ package com.katruk.service;
 
 import com.katruk.entity.Person;
 import com.katruk.exception.ServiceException;
+
 import java.util.Collection;
 
 public interface PersonService {

@@ -1,10 +1,13 @@
 package com.katruk.converter;
 
 import static java.util.stream.Collectors.toList;
+
 import com.katruk.entity.Person;
 import com.katruk.entity.User;
 import com.katruk.entity.dto.UserDto;
+
 import org.apache.commons.codec.digest.DigestUtils;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;

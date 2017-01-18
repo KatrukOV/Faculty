@@ -1,6 +1,5 @@
 package com.katruk.dao.mysql;
 
-import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import com.katruk.dao.UserDao;
@@ -38,7 +37,6 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
           .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_USER))) {
         result = getUserByStatement(statement);
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
@@ -58,7 +56,6 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
         statement.setString(1, username);
         result = getUserByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
@@ -78,7 +75,6 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
         statement.setLong(1, userId);
         result = getUserByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }

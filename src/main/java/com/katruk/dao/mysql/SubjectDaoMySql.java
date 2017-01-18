@@ -3,7 +3,6 @@ package com.katruk.dao.mysql;
 import static java.util.Objects.isNull;
 
 import com.katruk.dao.SubjectDao;
-import com.katruk.entity.Person;
 import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
 import com.katruk.exception.DaoException;
@@ -38,7 +37,6 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
           .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_SUBJECT))) {
         return getSubjectByStatement(statement);
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
@@ -57,7 +55,6 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
         statement.setLong(1, subjectId);
         result = getSubjectByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
@@ -76,7 +73,6 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
         statement.setLong(1, teacherId);
         return getSubjectByStatement(statement);
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
@@ -94,7 +90,6 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
         statement.setLong(1, studentId);
         return getSubjectByStatement(statement);
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
@@ -118,14 +113,18 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
   @Override
   public void delete(Long subjectId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
+      connection.setAutoCommit(false);
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.DELETE_SUBJECT))) {
         statement.setLong(1, subjectId);
         statement.executeUpdate();
+        connection.commit();
       } catch (SQLException e) {
+        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
+      connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);

@@ -56,7 +56,6 @@ public final class StudentDaoMySql implements StudentDao, DataBaseNames {
         statement.setLong(1, studentId);
         result = getStudentByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
-        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
