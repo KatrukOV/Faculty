@@ -27,7 +27,7 @@ public final class PageConfig {
   public static final String TEACHER_CONFIRMED = "TEACHER_CONFIRMED";
 
 //  public static final String STUDENT_PROFILE = "STUDENT_PROFILE";
-  public static final String STUDENT_EVALUATIONS = "STUDENT_MARKS";
+  public static final String STUDENT_EVALUATIONS = "student.evaluations";
 //  public static final String STUDENT_DECLARED_DISCIPLINES = "STUDENT_DECLARED_DISCIPLINES";
 
   public static final String ERROR_PAGE = "error.page";
