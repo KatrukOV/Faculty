@@ -3,9 +3,7 @@ package com.katruk.converter;
 import static java.util.stream.Collectors.toList;
 
 import com.katruk.entity.Evaluation;
-import com.katruk.entity.Subject;
 import com.katruk.entity.dto.EvaluationDto;
-import com.katruk.entity.dto.SubjectDto;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,8 +21,8 @@ public final class EvaluationConverter {
 
   public EvaluationDto convertToDto(Evaluation evaluation) {
     EvaluationDto evaluationDto = new EvaluationDto();
-//    evaluationDto.setTitle(evaluation.getSubject().getTitle());
     evaluationDto.setEvaluationId(evaluation.getId());
+    evaluationDto.setTitle(evaluation.getSubject().getTitle());
     evaluationDto.setLastName(evaluation.getStudent().getUser().getPerson().getLastName());
     evaluationDto.setName(evaluation.getStudent().getUser().getPerson().getName());
     evaluationDto.setPatronymic(evaluation.getStudent().getUser().getPerson().getPatronymic());

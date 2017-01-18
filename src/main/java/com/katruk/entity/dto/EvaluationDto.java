@@ -4,7 +4,7 @@ import com.katruk.entity.Evaluation;
 
 public final class EvaluationDto {
 
-  //  private String title;
+  private String title;
   private Long evaluationId;
   private String lastName;
   private String name;
@@ -13,14 +13,13 @@ public final class EvaluationDto {
   private Evaluation.Rating rating;
   private String feedback;
 
-//  public String getTitle() {
-//    return title;
-//  }
-//
-//  public void setTitle(String title) {
-//    this.title = title;
-//  }
+  public String getTitle() {
+    return title;
+  }
 
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
   public Long getEvaluationId() {
     return evaluationId;
