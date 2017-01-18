@@ -37,7 +37,6 @@ public final class StudentDaoMySql implements StudentDao {
           .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_STUDENT))) {
         result = getStudentByStatement(statement);
       } catch (SQLException e) {
-//        connection.rollback();
         logger.error("", e);
         throw new DaoException("", e);
       }
@@ -75,12 +74,8 @@ public final class StudentDaoMySql implements StudentDao {
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.REPLACE_STUDENT))) {
         statement.setLong(1, student.getUser().getId());
-        // TODO: 06.01.17 do simple
         statement.setString(2, student.getForm() != null ? student.getForm().name() : null);
         statement.setString(3, student.getContract() != null ? student.getContract().name() : null);
-//        statement.setString(4, student.getForm() != null ? student.getForm().name() : null);
-//        statement.setString(5, student.getContract() != null ? student.getContract().name() : null);
-        System.out.println(">>> SQL= " + statement);
         statement.executeUpdate();
         connection.commit();
       } catch (SQLException e) {
@@ -130,16 +125,15 @@ public final class StudentDaoMySql implements StudentDao {
         user.setId(resultSet.getLong("user_person_id"));
         student.setUser(user);
         student.setId(user.getId());
-        String f = resultSet.getString("form");
-        if (nonNull(f)) {
-          student.setForm(Student.Form.valueOf(f));
+        String form = resultSet.getString("form");
+        if (nonNull(form)) {
+          student.setForm(Student.Form.valueOf(form));
         }
-        String c = resultSet.getString("contract");
-        if (nonNull(c)) {
-          student.setContract(Student.Contract.valueOf(c));
+        String contract = resultSet.getString("contract");
+        if (nonNull(contract)) {
+          student.setContract(Student.Contract.valueOf(contract));
         }
         result.add(student);
-        System.out.println(">>> stud=" + student);
       }
     } catch (SQLException e) {
       logger.error("", e);

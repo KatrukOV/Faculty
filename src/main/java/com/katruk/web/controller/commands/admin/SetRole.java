@@ -45,11 +45,8 @@ public final class SetRole implements Command, PageAttribute {
     String page = PageConfig.getInstance().getValue(PageConfig.USERS);
     try {
       User.Role role = User.Role.valueOf(request.getParameter(ROLE));
-      System.out.println(">>>>>>>>>>>> role= " + role);
       Long userId = Long.parseLong(request.getParameter(USER_ID));
-      System.out.println(">>>>>>>>>>>> user id= " + userId);
       User user = this.userService.getUserById(userId);
-      System.out.println(">>>>>>>>>>>> user= " + user);
       if (nonNull(user.getRole())&&!role.equals(user.getRole())) {
         switch (user.getRole()) {
           case STUDENT: {
@@ -92,4 +89,3 @@ public final class SetRole implements Command, PageAttribute {
     return page;
   }
 }
-

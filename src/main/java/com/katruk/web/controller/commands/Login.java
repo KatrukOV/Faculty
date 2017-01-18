@@ -39,7 +39,6 @@ public final class Login implements Command, PageAttribute {
   private final TeacherService teacherService;
 
   public Login() {
-    System.out.println("create login obj");
     this.periodService = new PeriodServiceImpl();
     this.userService = new UserServiceImpl();
     this.studentService = new StudentServiceImpl();
@@ -49,7 +48,6 @@ public final class Login implements Command, PageAttribute {
 
   @Override
   public String execute(final HttpServletRequest request, final HttpServletResponse response) {
-    System.out.println("!!! begin login");
     final String username = request.getParameter(USERNAME);
     final String password = request.getParameter(PASSWORD);
     final HttpSession session = request.getSession();
@@ -60,15 +58,13 @@ public final class Login implements Command, PageAttribute {
     } else {
       try {
         final User user = this.userService.getUserByUsername(username);
-        System.out.println("user=" +user);
         if (user.getPassword().equals(DigestUtils.sha1Hex(password))) {
           session.setAttribute(LAST_NAME, user.getPerson().getLastName());
           session.setAttribute(NAME, user.getPerson().getName());
           session.setAttribute(USERNAME, user.getUsername());
           session.setAttribute(ROLE, user.getRole());
-          session.setMaxInactiveInterval(MAX_INACTIVE_INTERVAL);;
+          session.setMaxInactiveInterval(MAX_INACTIVE_INTERVAL);
           page = PageConfig.getInstance().getValue(PageConfig.PROFILE);
-          System.out.println("ih if user=" +user);
           if (nonNull(user.getRole())) {
             switch (user.getRole()) {
               case STUDENT: {
@@ -85,13 +81,10 @@ public final class Login implements Command, PageAttribute {
               case ADMIN: {
                 page = PageConfig.getInstance().getValue(PageConfig.ADMIN_PROFILE);
                 Period period = this.periodService.getLastPeriod();
-                System.out.println("per="+period);
                 request.setAttribute(PERIOD_STATUS, period.getStatus());
                 request.setAttribute(PERIOD_DATE, period.getDate());
                 break;
               }
-              default:
-                System.out.println("!!!!! null ? ");
             }
           }
         }

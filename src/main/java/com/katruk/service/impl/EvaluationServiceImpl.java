@@ -46,7 +46,6 @@ public final class EvaluationServiceImpl implements EvaluationService {
     evaluation.setSubject(subject);
     final Student student = this.studentService.getStudentById(evaluation.getStudent().getId());
     evaluation.setStudent(student);
-    System.out.println("evaluation=" + evaluation);
     return evaluation;
   }
 
@@ -72,7 +71,6 @@ public final class EvaluationServiceImpl implements EvaluationService {
             });
       }
     }
-    System.out.println("evaluations=" + evaluations);
     return evaluations;
   }
 

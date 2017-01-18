@@ -76,18 +76,4 @@ public final class EvaluationDto {
   public void setFeedback(String feedback) {
     this.feedback = feedback;
   }
-
-  @Override
-  public String toString() {
-    return "EvaluationDto{" +
-           "title='" + title + '\'' +
-           ", evaluationId=" + evaluationId +
-           ", lastName='" + lastName + '\'' +
-           ", name='" + name + '\'' +
-           ", patronymic='" + patronymic + '\'' +
-           ", status=" + status +
-           ", rating=" + rating +
-           ", feedback='" + feedback + '\'' +
-           '}';
-  }
 }

@@ -22,7 +22,6 @@ final class PersonServiceImpl implements PersonService {
     this.personDao = new PersonDaoMySql();
   }
 
-
   @Override
   public Person getPersonById(Long personId) throws ServiceException {
     final Person person;

@@ -17,19 +17,10 @@ public final class PageConfig {
   public static final String TEACHERS = "admin.teachers";
   public static final String SUBJECTS = "subjects";
   public static final String ADD_SUBJECT = "admin.addSubject";
-
   public static final String TEACHER_SUBJECTS = "teacher.subjects";
-//  public static final String TEACHER_PROFILE = "TEACHER_PROFILE";
-
   public static final String TEACHER_EVALUATIONS = "teacher.evaluations";
   public static final String EVALUATION = "teacher.evaluation";
-
-  public static final String TEACHER_CONFIRMED = "TEACHER_CONFIRMED";
-
-//  public static final String STUDENT_PROFILE = "STUDENT_PROFILE";
   public static final String STUDENT_EVALUATIONS = "student.evaluations";
-//  public static final String STUDENT_DECLARED_DISCIPLINES = "STUDENT_DECLARED_DISCIPLINES";
-
   public static final String ERROR_PAGE = "error.page";
 
   private PageConfig() {

@@ -4,6 +4,7 @@ import com.katruk.converter.SubjectConverter;
 import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
 import com.katruk.entity.User;
+import com.katruk.exception.ServiceException;
 import com.katruk.service.SubjectService;
 import com.katruk.service.TeacherService;
 import com.katruk.service.UserService;
@@ -51,7 +52,7 @@ public final class GetTeacherSubjects implements Command, PageAttribute {
       }
       request.setAttribute(SUBJECT_LIST, subjectList);
       logger.info(String.format("get all subjects = %d", subjectList.size()));
-    } catch (Exception e) {
+    } catch (ServiceException e) {
       page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable get all subjects", e);
     }

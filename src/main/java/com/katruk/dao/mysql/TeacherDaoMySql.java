@@ -56,7 +56,6 @@ public final class TeacherDaoMySql implements TeacherDao {
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.REPLACE_TEACHER))) {
         statement.setLong(1, teacher.getUser().getId());
-        // TODO: 06.01.17 do simple
         statement.setString(2, teacher.getPosition() != null ? teacher.getPosition().name() : null);
         int affectedRows = statement.executeUpdate();
         connection.commit();

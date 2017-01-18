@@ -4,6 +4,7 @@ import com.katruk.converter.EvaluationConverter;
 import com.katruk.entity.Evaluation;
 import com.katruk.entity.Period;
 import com.katruk.entity.dto.EvaluationDto;
+import com.katruk.exception.ServiceException;
 import com.katruk.service.EvaluationService;
 import com.katruk.service.PeriodService;
 import com.katruk.service.StudentService;
@@ -28,16 +29,10 @@ import javax.servlet.http.HttpServletResponse;
 public final class Evaluate implements Command, PageAttribute {
 
   private final Logger logger;
-  private final PeriodService periodService;
-  private final SubjectService subjectService;
-  private final StudentService studentService;
   private final EvaluationService evaluationService;
 
   public Evaluate() {
     this.logger = Logger.getLogger(Evaluate.class);
-    this.periodService = new PeriodServiceImpl();
-    this.subjectService = new SubjectServiceImpl();
-    this.studentService = new StudentServiceImpl();
     this.evaluationService = new EvaluationServiceImpl();
   }
 
@@ -47,18 +42,15 @@ public final class Evaluate implements Command, PageAttribute {
     try {
       Evaluation.Rating rating = Evaluation.Rating.valueOf(request.getParameter(RATING));
       String feedback = request.getParameter(FEEDBACK);
-
       Long evaluationId = Long.parseLong(request.getParameter(EVALUATION_ID));
       Evaluation evaluation = this.evaluationService.getEvaluationById(evaluationId);
       evaluation.setRating(rating);
       evaluation.setFeedback(feedback);
       evaluation = this.evaluationService.save(evaluation);
-
       EvaluationDto evaluationDto = new EvaluationConverter().convertToDto(evaluation);
       request.setAttribute(EVALUATION, evaluationDto);
-//      logger.info(String.format("evaluation = %d", evaluationDto));
-
-    } catch (Exception e) {
+      logger.info(String.format("evaluation = %s", evaluationDto));
+    } catch (ServiceException e) {
       page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable get all evaluations", e);
     }

@@ -2,6 +2,7 @@ package com.katruk.web.controller.commands;
 
 import com.katruk.converter.SubjectConverter;
 import com.katruk.entity.Subject;
+import com.katruk.exception.ServiceException;
 import com.katruk.service.SubjectService;
 import com.katruk.service.TeacherService;
 import com.katruk.service.impl.SubjectServiceImpl;
@@ -23,12 +24,10 @@ public final class GetSubjects implements Command, PageAttribute {
 
   private final Logger logger;
   private final SubjectService subjectService;
-  private final TeacherService teacherService;
 
   public GetSubjects() {
     this.logger = Logger.getLogger(GetSubjects.class);
     this.subjectService = new SubjectServiceImpl();
-    this.teacherService = new TeacherServiceImpl();
   }
 
   @Override
@@ -42,7 +41,7 @@ public final class GetSubjects implements Command, PageAttribute {
       }
       request.setAttribute(SUBJECT_LIST, subjectList);
       logger.info(String.format("get all subjects = %d", subjectList.size()));
-    } catch (Exception e) {
+    } catch (ServiceException e) {
       page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable get all subjects", e);
     }

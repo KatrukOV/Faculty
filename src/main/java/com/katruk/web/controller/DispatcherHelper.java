@@ -40,59 +40,37 @@ final class DispatcherHelper implements PageAttribute {
 
   DispatcherHelper() {
     commands = new HashMap<>();
-
     commands.put("login", new Login());
     commands.put("registration", new Registration());
     commands.put("logout", new Logout());
-
     commands.put("toProfile", new ToProfile());
-
     commands.put("getUsers", new GetUsers());
     commands.put("getStudents", new GetStudents());
     commands.put("getTeachers", new GetTeachers());
     commands.put("getSubjects", new GetSubjects());
-
     commands.put("setRole", new SetRole());
     commands.put("setPosition", new SetPosition());
     commands.put("setForm", new SetForm());
     commands.put("setContract", new SetContract());
-
     commands.put("addSubject", new AddSubject());
     commands.put("createSubject", new CreateSubject());
     commands.put("removeSubject", new RemoveSubject());
-
     commands.put("getTeacherSubjects", new GetTeacherSubjects());
-//    commands.put("redirectToConfirmed", new RedirectToConfirmedCommand());
     commands.put("getEvaluationsBySubject", new GetEvaluationsBySubject());
-
     commands.put("evaluate", new Evaluate());
     commands.put("toEvaluation", new ToEvaluation());
-
     commands.put("getEvaluationsByStudent", new GetEvaluationsByStudent());
-
-//    commands.put("feedback", new FeedbackCommand());
-//    commands.put("addDiscipline", new AddDisciplineCommand());
-//
-//    commands.put("redirectToMarks", new RedirectToMarksCommand());
-//    commands.put("redirectToDeclaredDisciplines", new RedirectToDeclaredDisciplinesCommand());
-//
     commands.put("declare", new SetDeclare());
-//    commands.put("revoked", new RevokedCommand());
     commands.put("setConfirmOrReject", new SetConfirmOrReject());
-//    commands.put("deleted", new DeletedCommand());
-
-
     commands.put("setDistribution", new SetDistribution());
     commands.put("setLearning", new SetLearning());
-
   }
 
   Command getCommand(final HttpServletRequest request) {
-    Command resultCommand = this.commands.get(request.getParameter("command"));
+    Command resultCommand = this.commands.get(request.getParameter(COMMAND));
     if (isNull(resultCommand)) {
       resultCommand = new Unknown();
     }
-    System.out.println(">>> getCommand resultCommand=" + resultCommand);
     return resultCommand;
   }
 }

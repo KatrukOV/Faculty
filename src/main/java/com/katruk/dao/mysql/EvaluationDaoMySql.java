@@ -33,16 +33,15 @@ public final class EvaluationDaoMySql implements EvaluationDao {
   }
 
   @Override
-  public Optional<Evaluation> getEvaluationBySubjectIdAndStudentId(final Long subjectId, final Long studentId)
+  public Optional<Evaluation> getEvaluationBySubjectIdAndStudentId(final Long subjectId,
+                                                                   final Long studentId)
       throws DaoException {
-    System.out.println("input subjectId=" + subjectId + " studentId=" + studentId);
     final Optional<Evaluation> result;
     try (Connection connection = this.connectionPool.getConnection()) {
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_SUBJECT_AND_STUDENT))) {
         statement.setLong(1, subjectId);
         statement.setLong(2, studentId);
-        System.out.println("statement getEvaluationBySubjectIdAndStudentId=" + statement);
         result = getEvaluationByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
         connection.rollback();
@@ -53,7 +52,6 @@ public final class EvaluationDaoMySql implements EvaluationDao {
       logger.error("", e);
       throw new DaoException("", e);
     }
-    System.out.println("getEvaluationBySubjectIdAndStudentId out=" + result);
     return result;
   }
 
@@ -64,7 +62,6 @@ public final class EvaluationDaoMySql implements EvaluationDao {
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_ID))) {
         statement.setLong(1, evaluationId);
-        System.out.println("statement getEvaluationById=" + statement);
         result = getEvaluationByStatement(statement).stream().findFirst();
       } catch (SQLException e) {
         connection.rollback();
@@ -75,9 +72,7 @@ public final class EvaluationDaoMySql implements EvaluationDao {
       logger.error("", e);
       throw new DaoException("", e);
     }
-    System.out.println("getEvaluationBySubjectIdAndStudentId out=" + result);
     return result;
-
   }
 
   @Override
@@ -104,7 +99,6 @@ public final class EvaluationDaoMySql implements EvaluationDao {
       try (PreparedStatement statement = connection
           .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_SUBJECT))) {
         statement.setLong(1, subjectId);
-        System.out.println("getEvaluationBySubject statement=" + statement);
         return getEvaluationByStatement(statement);
       } catch (SQLException e) {
         connection.rollback();
@@ -120,26 +114,21 @@ public final class EvaluationDaoMySql implements EvaluationDao {
   @Override
   public Evaluation save(final Evaluation evaluation) throws DaoException {
     // TODO: 17.01.2017  bed logic
-    System.out.println("input evaluation= " + evaluation);
     Evaluation result;
     try {
       result = getEvaluationBySubjectIdAndStudentId(evaluation.getSubject().getId(),
                                                     evaluation.getStudent().getId()).orElse(null);
-      System.out.println("in base Evaluation is= " + result);
     } catch (DaoException e) {
       result = null;
     }
     if (nonNull(result)) {
       evaluation.setId(result.getId());
-      System.out.println("with id evaluation= " + evaluation);
     }
-
     if (isNull(evaluation.getId())) {
       result = insert(evaluation);
     } else {
       result = update(evaluation);
     }
-    System.out.println("input evaluation= " + result);
     return result;
   }
 
@@ -230,7 +219,6 @@ public final class EvaluationDaoMySql implements EvaluationDao {
         }
         evaluation.setFeedback(resultSet.getString("feedback"));
         result.add(evaluation);
-        System.out.println("in evaluation =" + evaluation);
       }
     } catch (SQLException e) {
       logger.error("", e);

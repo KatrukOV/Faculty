@@ -69,7 +69,6 @@ public final class TeacherServiceImpl implements TeacherService {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
-    System.out.println(">>> Teacher end =" + teacher);
     return teacher;
   }
 

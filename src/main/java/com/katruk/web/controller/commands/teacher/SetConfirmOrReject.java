@@ -3,6 +3,7 @@ package com.katruk.web.controller.commands.teacher;
 import com.katruk.converter.EvaluationConverter;
 import com.katruk.entity.Evaluation;
 import com.katruk.entity.Period;
+import com.katruk.exception.ServiceException;
 import com.katruk.service.EvaluationService;
 import com.katruk.service.PeriodService;
 import com.katruk.service.impl.EvaluationServiceImpl;
@@ -36,20 +37,16 @@ public final class SetConfirmOrReject implements Command, PageAttribute {
   public String execute(HttpServletRequest request, HttpServletResponse response) {
     String page = PageConfig.getInstance().getValue(PageConfig.TEACHER_EVALUATIONS);
     try {
-      System.out.println("status=" + request.getParameter(STATUS));
       Evaluation.Status status = Evaluation.Status.valueOf(request.getParameter(STATUS));
       Long evaluationId = Long.parseLong(request.getParameter(EVALUATION_ID));
       Evaluation evaluation = this.evaluationService.getEvaluationById(evaluationId);
-
       if (!status.equals(evaluation.getStatus())) {
         evaluation.setStatus(status);
         this.evaluationService.save(evaluation);
         logger.info(String.format("set status=%s for evaluation= %s", status, evaluation));
       }
-
       Collection<Evaluation> evaluations =
           this.evaluationService.getEvaluationBySubjects(evaluation.getSubject().getId());
-      System.out.println("evaluations by SUBJECT_ID" + evaluations);
       //todo ????
       String title = "";
       List evaluationList = Collections.EMPTY_LIST;
@@ -61,11 +58,8 @@ public final class SetConfirmOrReject implements Command, PageAttribute {
       Period period = this.periodService.getLastPeriod();
       request.setAttribute(PERIOD_STATUS, period.getStatus());
       request.setAttribute(EVALUATION_LIST, evaluationList);
-
       logger.info(String.format("get all evaluations = %d", evaluationList.size()));
-//      page = PageConfig.getInstance().getValue(PageConfig.TEACHER_CONFIRMED);
-
-    } catch (Exception e) {
+    } catch (ServiceException e) {
       page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable to show students which DECLARED ", e);
     }

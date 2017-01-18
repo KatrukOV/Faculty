@@ -36,14 +36,11 @@ public final class StudentServiceImpl implements StudentService {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
-    System.out.println("<< stu=" + students.size() + " stu=" + students);
     Collection<User> users = this.userService.getAll();
-    System.out.println("<< us=" + users.size() + " us=" + users);
     for (User user : users) {
       students.stream().filter(student -> Objects.equals(user.getId(), student.getUser().getId()))
           .forEach(student -> {
             student.setUser(user);
-            System.out.println(">,, st=" + student);
           });
     }
     return students;
@@ -61,7 +58,6 @@ public final class StudentServiceImpl implements StudentService {
     }
     final User user = this.userService.getUserById(student.getUser().getId());
     student.setUser(user);
-    System.out.println(">.. student=" + student);
     return student;
   }
 
@@ -73,7 +69,6 @@ public final class StudentServiceImpl implements StudentService {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
-    System.out.println(">>> Student end =" + student);
     return student;
   }
 

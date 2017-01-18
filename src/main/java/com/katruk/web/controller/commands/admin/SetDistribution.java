@@ -38,7 +38,6 @@ public final class SetDistribution implements Command, PageAttribute {
       period = this.periodService.save(period);
       request.setAttribute(PERIOD_STATUS, period.getStatus().name());
       request.setAttribute(PERIOD_DATE, period.getDate());
-
     } catch (ServiceException e) {
       page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable set period DISTRIBUTION", e);

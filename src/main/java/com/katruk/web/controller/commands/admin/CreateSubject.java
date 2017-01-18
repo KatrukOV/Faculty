@@ -37,25 +37,19 @@ public final class CreateSubject implements Command, PageAttribute {
     String page = PageConfig.getInstance().getValue(PageConfig.ADD_SUBJECT);
     try {
       String title = request.getParameter(TITLE);
-      System.out.println(">>>> title=" + title);
       Long teacherId = Long.parseLong(request.getParameter(TEACHER_ID));
-      System.out.println(">>>> teacher id=" + teacherId);
       Teacher teacher = this.teacherService.getTeacherById(teacherId);
-      System.out.println(">>>> teacher=" + teacher);
       Subject subject = new Subject();
       subject.setTitle(title);
       subject.setTeacher(teacher);
-      System.out.println(">>>> subject=" + subject);
       this.subjectService.save(subject);
-      System.out.println(">>>> subject id=" + subject.getId());
-
       Collection<Teacher> teachers = this.teacherService.getAll();
       List teacherList = Collections.EMPTY_LIST;
       if (!teachers.isEmpty()) {
         teacherList = new TeacherConverter().convertToDto(teachers);
       }
       request.setAttribute(TEACHER_LIST, teacherList);
-//      logger.info(String.format("s"));
+      logger.info("Subject was created");
     } catch (Exception e) {
       page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable to create a subject", e);

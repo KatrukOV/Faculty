@@ -4,6 +4,7 @@ import com.katruk.converter.EvaluationConverter;
 import com.katruk.entity.Evaluation;
 import com.katruk.entity.Period;
 import com.katruk.entity.dto.EvaluationDto;
+import com.katruk.exception.ServiceException;
 import com.katruk.service.EvaluationService;
 import com.katruk.service.PeriodService;
 import com.katruk.service.StudentService;
@@ -29,15 +30,11 @@ public final class GetEvaluationsBySubject implements Command, PageAttribute {
 
   private final Logger logger;
   private final PeriodService periodService;
-  private final SubjectService subjectService;
-  private final StudentService studentService;
   private final EvaluationService evaluationService;
 
   public GetEvaluationsBySubject() {
     this.logger = Logger.getLogger(GetEvaluationsBySubject.class);
     this.periodService = new PeriodServiceImpl();
-    this.subjectService = new SubjectServiceImpl();
-    this.studentService = new StudentServiceImpl();
     this.evaluationService = new EvaluationServiceImpl();
   }
 
@@ -46,10 +43,8 @@ public final class GetEvaluationsBySubject implements Command, PageAttribute {
     String page = PageConfig.getInstance().getValue(PageConfig.TEACHER_EVALUATIONS);
     try {
       Long subjectId = Long.parseLong(request.getParameter(SUBJECT_ID));
-      System.out.println("subjectId" + subjectId);
       Collection<Evaluation> evaluations =
           this.evaluationService.getEvaluationBySubjects(subjectId);
-      System.out.println("evaluations by SUBJECT_ID" + evaluations);
       //todo ????
       String title = "";
       List evaluationList = Collections.EMPTY_LIST;
@@ -62,7 +57,7 @@ public final class GetEvaluationsBySubject implements Command, PageAttribute {
       request.setAttribute(PERIOD_STATUS, period.getStatus());
       request.setAttribute(EVALUATION_LIST, evaluationList);
       logger.info(String.format("get all evaluations = %d", evaluationList.size()));
-    } catch (Exception e) {
+    } catch (ServiceException e) {
       page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable get all evaluations", e);
     }

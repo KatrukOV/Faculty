@@ -20,7 +20,6 @@ public final class Unknown implements Command, PageAttribute {
 
   @Override
   public String execute(HttpServletRequest request, HttpServletResponse response) {
-    System.out.println(">>> UnknownCommand execute");
     request.setAttribute(ERROR, ERROR_LOGIN);
     this.logger.error(ERROR_LOGIN);
     return PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);

@@ -15,14 +15,12 @@ abstract class BaseFilter implements Filter {
 
   @Override
   public void init(FilterConfig config) {
-    System.out.println(">>> BaseFilter init");
     this.filterConfig = config;
   }
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-
     chain.doFilter(request, response);
   }
 

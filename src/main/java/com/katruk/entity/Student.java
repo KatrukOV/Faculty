@@ -41,14 +41,4 @@ public final class Student extends Model {
   public void setContract(Contract contract) {
     this.contract = contract;
   }
-
-  @Override
-  public String toString() {
-    return "Student{" +
-           "id=" + getId() +
-           " user=" + user +
-           ", form=" + form +
-           ", contract=" + contract +
-           '}';
-  }
 }

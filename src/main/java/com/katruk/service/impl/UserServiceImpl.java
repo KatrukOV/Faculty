@@ -76,7 +76,6 @@ public final class UserServiceImpl implements UserService {
 
   @Override
   public User save(final User user) throws ServiceException {
-    System.out.println("?? user=" + user);
     final Person person = this.personService.save(user.getPerson());
     user.setPerson(person);
     user.setId(person.getId());

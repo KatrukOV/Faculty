@@ -2,6 +2,7 @@ package com.katruk.web.controller.commands.admin;
 
 import com.katruk.converter.SubjectConverter;
 import com.katruk.entity.Subject;
+import com.katruk.exception.ServiceException;
 import com.katruk.service.SubjectService;
 import com.katruk.service.TeacherService;
 import com.katruk.service.impl.SubjectServiceImpl;
@@ -23,12 +24,10 @@ public final class RemoveSubject implements Command, PageAttribute {
 
   private final Logger logger;
   private final SubjectService subjectService;
-  private final TeacherService teacherService;
 
   public RemoveSubject() {
     this.logger = Logger.getLogger(RemoveSubject.class);
     this.subjectService = new SubjectServiceImpl();
-    this.teacherService = new TeacherServiceImpl();
   }
 
   @Override
@@ -43,7 +42,7 @@ public final class RemoveSubject implements Command, PageAttribute {
         subjectList = new SubjectConverter().convertToDto(subjects);
       }
       request.setAttribute(SUBJECT_LIST, subjectList);
-    } catch (Exception e) {
+    } catch (ServiceException e) {
       page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable to create a subject", e);
     }

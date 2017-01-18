@@ -3,6 +3,7 @@ package com.katruk.web.controller.commands.teacher;
 import com.katruk.converter.EvaluationConverter;
 import com.katruk.entity.Evaluation;
 import com.katruk.entity.dto.EvaluationDto;
+import com.katruk.exception.ServiceException;
 import com.katruk.service.EvaluationService;
 import com.katruk.service.PeriodService;
 import com.katruk.service.StudentService;
@@ -23,16 +24,10 @@ import javax.servlet.http.HttpServletResponse;
 public final class ToEvaluation implements Command, PageAttribute {
 
   private final Logger logger;
-  private final PeriodService periodService;
-  private final SubjectService subjectService;
-  private final StudentService studentService;
   private final EvaluationService evaluationService;
 
   public ToEvaluation() {
     this.logger = Logger.getLogger(ToEvaluation.class);
-    this.periodService = new PeriodServiceImpl();
-    this.subjectService = new SubjectServiceImpl();
-    this.studentService = new StudentServiceImpl();
     this.evaluationService = new EvaluationServiceImpl();
   }
 
@@ -44,8 +39,8 @@ public final class ToEvaluation implements Command, PageAttribute {
       Evaluation evaluation = this.evaluationService.getEvaluationById(evaluationId);
       EvaluationDto evaluationDto = new EvaluationConverter().convertToDto(evaluation);
       request.setAttribute(EVALUATION, evaluationDto);
-//      logger.info(String.format("evaluation = %d", evaluationDto));
-    } catch (Exception e) {
+      logger.info(String.format("evaluation = %s", evaluationDto));
+    } catch (ServiceException e) {
       page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable get evaluation", e);
     }

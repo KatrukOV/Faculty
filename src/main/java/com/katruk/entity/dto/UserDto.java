@@ -76,19 +76,4 @@ public final class UserDto {
   public void setRole(User.Role role) {
     this.role = role;
   }
-
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("UserDto{");
-    sb.append("userId=").append(userId);
-    sb.append(", lastName='").append(lastName).append('\'');
-    sb.append(", name='").append(name).append('\'');
-    sb.append(", patronymic='").append(patronymic).append('\'');
-    sb.append(", username='").append(username).append('\'');
-    sb.append(", password='").append(password).append('\'');
-    sb.append(", confirmPassword='").append(confirmPassword).append('\'');
-    sb.append(", role=").append(role);
-    sb.append('}');
-    return sb.toString();
-  }
 }

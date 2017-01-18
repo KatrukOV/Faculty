@@ -27,25 +27,6 @@ public final class PeriodDaoMySql implements PeriodDao {
   }
 
   @Override
-  public Optional<Period> getPeriodById(Long periodId) throws DaoException {
-    final Optional<Period> result;
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_PERIOD_BY_ID))) {
-        statement.setLong(1, periodId);
-        result = getPeriodByStatement(statement).stream().findFirst();
-      } catch (SQLException e) {
-        logger.error("Cannot prepare statement", e);
-        throw new DaoException("Cannot prepare statement", e);
-      }
-    } catch (SQLException e) {
-      logger.error("Cannot get period by ID", e);
-      throw new DaoException("Cannot get period by ID", e);
-    }
-    return result;
-  }
-
-  @Override
   public Optional<Period> getLastPeriod() throws DaoException {
     final Optional<Period> result;
     try (Connection connection = this.connectionPool.getConnection()) {
@@ -93,7 +74,6 @@ public final class PeriodDaoMySql implements PeriodDao {
       logger.error("Cannot save period", e);
       throw new DaoException("Cannot save period", e);
     }
-
     return period;
   }
 
@@ -106,7 +86,6 @@ public final class PeriodDaoMySql implements PeriodDao {
         period.setId(resultSet.getLong("id"));
         period.setStatus(Period.Status.valueOf(resultSet.getString("status")));
         Date date = Date.valueOf(resultSet.getString("date"));
-        System.out.println("date="+date);
         period.setDate(date);
         periods.add(period);
       }

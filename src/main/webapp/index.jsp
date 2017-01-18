@@ -6,8 +6,6 @@
        scope="session"/>
 <fmt:setLocale value="${locate}"/>
 <fmt:setBundle basename="text"/>
-
-<%--<!DOCTYPE html>--%>
 <html lang="${locate}">
 <head>
     <title><fmt:message key="index.title"/></title>

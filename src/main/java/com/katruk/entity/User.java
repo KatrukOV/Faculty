@@ -44,16 +44,4 @@ public final class User extends Model {
   public void setRole(Role role) {
     this.role = role;
   }
-
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("User{");
-    sb.append("id=").append(getId());
-    sb.append("person=").append(person);
-    sb.append(", username='").append(username).append('\'');
-    sb.append(", password='").append(password).append('\'');
-    sb.append(", role=").append(role);
-    sb.append('}');
-    return sb.toString();
-  }
 }

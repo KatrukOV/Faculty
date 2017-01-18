@@ -38,7 +38,6 @@ public final class DispatcherServlet extends HttpServlet implements PageAttribut
 
   private void processRequest(HttpServletRequest request, HttpServletResponse response) {
     Command command = this.helper.getCommand(request);
-    System.out.println(">>> command=" + command);
     String page = command.execute(request, response);
     RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(page);
     try {

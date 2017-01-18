@@ -7,8 +7,6 @@ import java.util.Optional;
 
 public interface PeriodDao {
 
-  Optional<Period> getPeriodById(final Long periodId) throws DaoException;
-
   Optional<Period> getLastPeriod() throws DaoException;
 
   Period save(final Period period) throws DaoException;

@@ -29,14 +29,4 @@ public final class Person extends Model {
   public void setPatronymic(String patronymic) {
     this.patronymic = patronymic;
   }
-
-  @Override
-  public String toString() {
-    return "Person{" +
-           "id='" + getId() + '\'' +
-           "lastName='" + lastName + '\'' +
-           ", name='" + name + '\'' +
-           ", patronymic='" + patronymic + '\'' +
-           '}';
-  }
 }

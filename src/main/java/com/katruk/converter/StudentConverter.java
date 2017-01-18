@@ -20,7 +20,6 @@ public final class StudentConverter {
   }
 
   public StudentDto convertToDto(Student student) {
-    System.out.println(">>> student =" + student);
     StudentDto studentDto = new StudentDto();
     studentDto.setStudentId(student.getId());
     studentDto.setLastName(student.getUser().getPerson().getLastName());
@@ -28,7 +27,6 @@ public final class StudentConverter {
     studentDto.setPatronymic(student.getUser().getPerson().getPatronymic());
     studentDto.setForm(student.getForm());
     studentDto.setContract(student.getContract());
-    System.out.println(">>> S dto="+studentDto);
     return studentDto;
   }
 }

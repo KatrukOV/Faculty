@@ -2,6 +2,7 @@ package com.katruk.web.controller.commands.admin;
 
 import com.katruk.converter.StudentConverter;
 import com.katruk.entity.Student;
+import com.katruk.exception.ServiceException;
 import com.katruk.service.StudentService;
 import com.katruk.service.impl.StudentServiceImpl;
 import com.katruk.util.PageConfig;
@@ -32,10 +33,8 @@ public final class SetContract implements Command, PageAttribute {
     String page = PageConfig.getInstance().getValue(PageConfig.STUDENTS);
     try {
       Student.Contract contract = Student.Contract.valueOf(request.getParameter(CONTRACT));
-      System.out.println(">>>>>>>>>>>> contract= " + contract);
       Long studentId = Long.parseLong(request.getParameter(STUDENT_ID));
       Student student = this.studentService.getStudentById(studentId);
-      System.out.println(">>>>>>>>>>>> student= " + student);
       if (!contract.equals(student.getContract())) {
         student.setContract(contract);
         this.studentService.save(student);
@@ -47,7 +46,7 @@ public final class SetContract implements Command, PageAttribute {
         studentList = new StudentConverter().convertToDto(students);
       }
       request.setAttribute(STUDENT_LIST, studentList);
-    } catch (Exception e) {
+    } catch (ServiceException e) {
       page = PageConfig.getInstance().getValue(PageConfig.ERROR_PAGE);
       logger.error("Unable set contract for student", e);
     }

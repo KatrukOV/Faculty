@@ -98,7 +98,6 @@ public final class UserDaoMySql implements UserDao {
         statement.setLong(1, user.getPerson().getId());
         statement.setString(2, user.getUsername());
         statement.setString(3, user.getPassword());
-        // TODO: 06.01.17 do simple
         statement.setString(4, user.getRole() != null ? user.getRole().name() : null);
         int affectedRows = statement.executeUpdate();
         connection.commit();
