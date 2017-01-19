@@ -38,8 +38,8 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
              .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_USER))) {
       result = getUserByStatement(statement);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot get all users.", e);
+      throw new DaoException("Cannot get all users.", e);
     }
     return result;
   }
@@ -54,8 +54,8 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
       statement.setString(1, username);
       result = getUserByStatement(statement).stream().findFirst();
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error(String.format("Cannot get user by username: %s.", username), e);
+      throw new DaoException(String.format("Cannot get user by username: %s.", username), e);
     }
     return result;
   }
@@ -69,8 +69,8 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
       statement.setLong(1, userId);
       result = getUserByStatement(statement).stream().findFirst();
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error(String.format("Cannot get user by id: %d.", userId), e);
+      throw new DaoException(String.format("Cannot get user by id: %d.", userId), e);
     }
     return result;
   }
@@ -82,8 +82,8 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
       saveAndCommitOrRollback(user, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot save user.", e);
+      throw new DaoException("Cannot save user.", e);
     }
     return user;
   }
@@ -97,8 +97,8 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
       connection.commit();
     } catch (SQLException e) {
       connection.rollback();
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot prepare statement.", e);
+      throw new DaoException("Cannot prepare statement.", e);
     }
   }
 
@@ -118,8 +118,8 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
         result.add(user);
       }
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot get user by statement.", e);
+      throw new DaoException("Cannot get user by statement.", e);
     }
     return result;
   }

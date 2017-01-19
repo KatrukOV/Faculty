@@ -38,8 +38,8 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
       statement.setLong(1, teacherId);
       return getTeacherByStatement(statement).stream().findFirst();
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error(String.format("Cannot get teacher by id: %d.", teacherId), e);
+      throw new DaoException(String.format("Cannot get teacher by id: %d.", teacherId), e);
     }
   }
 
@@ -50,8 +50,8 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
       saveAndCommitOrRollback(teacher, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot save teacher.", e);
+      throw new DaoException("Cannot save teacher.", e);
     }
     return teacher;
   }
@@ -66,8 +66,8 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
       connection.commit();
     } catch (SQLException e) {
       connection.rollback();
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot prepare statement.", e);
+      throw new DaoException("Cannot prepare statement.", e);
     }
   }
 
@@ -78,8 +78,8 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
       deleteAndCommitOrRollback(teacherId, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error(String.format("Cannot delete teacher with id: %d.", teacherId), e);
+      throw new DaoException(String.format("Cannot delete teacher with id: %d.", teacherId), e);
     }
   }
 
@@ -92,8 +92,8 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
       connection.commit();
     } catch (SQLException e) {
       connection.rollback();
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot prepare statement.", e);
+      throw new DaoException("Cannot prepare statement.", e);
     }
   }
 
@@ -105,8 +105,8 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
              .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_TEACHER))) {
       result = getTeacherByStatement(statement);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot get all teachers.", e);
+      throw new DaoException("Cannot get all teachers.", e);
     }
     return result;
   }
@@ -120,8 +120,8 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
         result.add(teacher);
       }
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot get teacher by statement.", e);
+      throw new DaoException("Cannot get teacher by statement.", e);
     }
     return result;
   }
