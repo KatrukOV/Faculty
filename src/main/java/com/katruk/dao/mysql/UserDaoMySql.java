@@ -3,6 +3,7 @@ package com.katruk.dao.mysql;
 import static java.util.Objects.nonNull;
 
 import com.katruk.dao.UserDao;
+import com.katruk.dao.mysql.log.CannotPrepareStatement;
 import com.katruk.entity.Person;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
@@ -37,6 +38,8 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
           .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_USER))) {
         result = getUserByStatement(statement);
       } catch (SQLException e) {
+//        new CannotPrepareStatement(e, this.logger).logAndThrow();
+//        logAndThrow(e, this.logger);
         logger.error("", e);
         throw new DaoException("", e);
       }
@@ -46,6 +49,12 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
     }
     return result;
   }
+
+//  private void logAndThrow(SQLException sqlException, Logger logger) throws DaoException {
+//    String message = "Cannot prepare statement";
+//    logger.error(message, sqlException);
+//    throw new DaoException(message, sqlException);
+//  }
 
   @Override
   public Optional<User> getUserByUsername(final String username) throws DaoException {

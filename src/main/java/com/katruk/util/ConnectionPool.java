@@ -13,7 +13,7 @@ public final class ConnectionPool {
 
   //max amount of thread that are allowed to idle at the same time
   private final static int MAX_AMOUNT_OF_THREAD = 10;
-  //max wait amount until request timeout exception
+  //max wait amount until request timeout log
   private final static int MAX_WAIT_AMOUNT = 100;
   //max amount of active threads in the INSTANCE
   private final static int MAX_AMOUNT_OF_ACTIVE_THREADS = 10;
@@ -32,7 +32,6 @@ public final class ConnectionPool {
     poolProperties.setMaxIdle(MAX_AMOUNT_OF_THREAD);
     poolProperties.setMaxWait(MAX_WAIT_AMOUNT);
     poolProperties.setMaxActive(MAX_AMOUNT_OF_ACTIVE_THREADS);
-//    poolProperties.setDefaultAutoCommit(false);
     this.dataSource = new DataSource();
     this.dataSource.setPoolProperties(poolProperties);
     this.logger = Logger.getLogger(ConnectionPool.class);
