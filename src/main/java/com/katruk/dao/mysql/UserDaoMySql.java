@@ -1,17 +1,13 @@
 package com.katruk.dao.mysql;
 
 import static java.util.Objects.nonNull;
-
 import com.katruk.dao.UserDao;
-import com.katruk.dao.mysql.log.CannotPrepareStatement;
 import com.katruk.entity.Person;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
 import com.katruk.util.Sql;
-
 import org.apache.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,17 +28,11 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
 
   @Override
   public Collection<User> getAllUser() throws DaoException {
-    final Collection<User> result;
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_USER))) {
-        result = getUserByStatement(statement);
-      } catch (SQLException e) {
-//        new CannotPrepareStatement(e, this.logger).logAndThrow();
-//        logAndThrow(e, this.logger);
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+    Collection<User> result;
+    try (Connection connection = this.connectionPool.getConnection();
+         PreparedStatement statement = connection
+             .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_USER))) {
+      result = getUserByStatement(statement);
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);
@@ -50,24 +40,15 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
     return result;
   }
 
-//  private void logAndThrow(SQLException sqlException, Logger logger) throws DaoException {
-//    String message = "Cannot prepare statement";
-//    logger.error(message, sqlException);
-//    throw new DaoException(message, sqlException);
-//  }
 
   @Override
   public Optional<User> getUserByUsername(final String username) throws DaoException {
     final Optional<User> result;
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_USER_BY_USERNAME))) {
-        statement.setString(1, username);
-        result = getUserByStatement(statement).stream().findFirst();
-      } catch (SQLException e) {
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+    try (Connection connection = this.connectionPool.getConnection();
+         PreparedStatement statement = connection
+             .prepareStatement(Sql.getInstance().get(Sql.GET_USER_BY_USERNAME))) {
+      statement.setString(1, username);
+      result = getUserByStatement(statement).stream().findFirst();
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);
@@ -78,15 +59,11 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
   @Override
   public Optional<User> getUserById(final Long userId) throws DaoException {
     final Optional<User> result;
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_USER_BY_ID))) {
-        statement.setLong(1, userId);
-        result = getUserByStatement(statement).stream().findFirst();
-      } catch (SQLException e) {
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+    try (Connection connection = this.connectionPool.getConnection();
+         PreparedStatement statement = connection
+             .prepareStatement(Sql.getInstance().get(Sql.GET_USER_BY_ID))) {
+      statement.setLong(1, userId);
+      result = getUserByStatement(statement).stream().findFirst();
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);
