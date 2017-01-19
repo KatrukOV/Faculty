@@ -3,6 +3,7 @@ package com.katruk.dao.mysql;
 import static java.util.Objects.nonNull;
 
 import com.katruk.dao.UserDao;
+import com.katruk.dao.mysql.ch.CheckExecuteUpdate;
 import com.katruk.entity.Person;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
@@ -92,7 +93,7 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
     try (PreparedStatement statement = connection
         .prepareStatement(Sql.getInstance().get(Sql.REPLACE_USER))) {
       fillStatement(user, statement);
-      checkSave(statement);
+      new CheckExecuteUpdate(statement, "Replace user failed, no rows affected.").check();
       connection.commit();
     } catch (SQLException e) {
       connection.rollback();
@@ -106,13 +107,6 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
     statement.setString(2, user.getUsername());
     statement.setString(3, user.getPassword());
     statement.setString(4, user.getRole() != null ? user.getRole().name() : null);
-  }
-
-  private void checkSave(PreparedStatement statement) throws SQLException {
-    int affectedRows = statement.executeUpdate();
-    if (affectedRows == 0) {
-      throw new SQLException("Replace user failed, no rows affected.");
-    }
   }
 
   private Collection<User> getUserByStatement(final PreparedStatement statement)
