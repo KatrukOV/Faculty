@@ -1,13 +1,16 @@
 package com.katruk.dao.mysql;
 
 import static java.util.Objects.nonNull;
+
 import com.katruk.dao.UserDao;
 import com.katruk.entity.Person;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
 import com.katruk.util.Sql;
+
 import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -75,22 +78,7 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
   public User save(final User user) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.REPLACE_USER))) {
-        statement.setLong(1, user.getPerson().getId());
-        statement.setString(2, user.getUsername());
-        statement.setString(3, user.getPassword());
-        statement.setString(4, user.getRole() != null ? user.getRole().name() : null);
-        int affectedRows = statement.executeUpdate();
-        connection.commit();
-        if (affectedRows == 0) {
-          throw new SQLException("Replace user failed, no rows affected.");
-        }
-      } catch (SQLException e) {
-        connection.rollback();
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+      saveAndCommitOrRollback(user, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("", e);
@@ -99,21 +87,40 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
     return user;
   }
 
+  private void saveAndCommitOrRollback(User user, Connection connection)
+      throws SQLException, DaoException {
+    try (PreparedStatement statement = connection
+        .prepareStatement(Sql.getInstance().get(Sql.REPLACE_USER))) {
+      fillStatement(user, statement);
+      checkSave(statement);
+      connection.commit();
+    } catch (SQLException e) {
+      connection.rollback();
+      logger.error("", e);
+      throw new DaoException("", e);
+    }
+  }
+
+  private void fillStatement(User user, PreparedStatement statement) throws SQLException {
+    statement.setLong(1, user.getPerson().getId());
+    statement.setString(2, user.getUsername());
+    statement.setString(3, user.getPassword());
+    statement.setString(4, user.getRole() != null ? user.getRole().name() : null);
+  }
+
+  private void checkSave(PreparedStatement statement) throws SQLException {
+    int affectedRows = statement.executeUpdate();
+    if (affectedRows == 0) {
+      throw new SQLException("Replace user failed, no rows affected.");
+    }
+  }
+
   private Collection<User> getUserByStatement(final PreparedStatement statement)
       throws DaoException {
     Collection<User> result = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
-        User user = new User();
-        Person person = new Person();
-        person.setId(resultSet.getLong(PERSON_ID));
-        user.setId(person.getId());
-        user.setPerson(person);
-        user.setUsername(resultSet.getString(USERNAME));
-        user.setPassword(resultSet.getString(PASSWORD));
-        if (nonNull(resultSet.getString(ROLE))) {
-          user.setRole(User.Role.valueOf(resultSet.getString(ROLE)));
-        }
+        User user = getUser(resultSet);
         result.add(user);
       }
     } catch (SQLException e) {
@@ -121,5 +128,19 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
       throw new DaoException("", e);
     }
     return result;
+  }
+
+  private User getUser(ResultSet resultSet) throws SQLException {
+    User user = new User();
+    Person person = new Person();
+    person.setId(resultSet.getLong(PERSON_ID));
+    user.setId(person.getId());
+    user.setPerson(person);
+    user.setUsername(resultSet.getString(USERNAME));
+    user.setPassword(resultSet.getString(PASSWORD));
+    if (nonNull(resultSet.getString(ROLE))) {
+      user.setRole(User.Role.valueOf(resultSet.getString(ROLE)));
+    }
+    return user;
   }
 }
