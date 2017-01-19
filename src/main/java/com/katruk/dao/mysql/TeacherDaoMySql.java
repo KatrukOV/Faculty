@@ -32,15 +32,11 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
   @Override
   public Optional<Teacher> getTeacherById(final Long teacherId) throws DaoException {
     final Optional<Teacher> result;
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_TEACHER_BY_ID))) {
-        statement.setLong(1, teacherId);
-        result = getTeacherByStatement(statement).stream().findFirst();
-      } catch (SQLException e) {
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+    try (Connection connection = this.connectionPool.getConnection();
+         PreparedStatement statement = connection
+             .prepareStatement(Sql.getInstance().get(Sql.GET_TEACHER_BY_ID))) {
+      statement.setLong(1, teacherId);
+      result = getTeacherByStatement(statement).stream().findFirst();
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);
@@ -101,14 +97,10 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
   @Override
   public Collection<Teacher> getAllTeacher() throws DaoException {
     final Collection<Teacher> result;
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_TEACHER))) {
-        result = getTeacherByStatement(statement);
-      } catch (SQLException e) {
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+    try (Connection connection = this.connectionPool.getConnection();
+         PreparedStatement statement = connection
+             .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_TEACHER))) {
+      result = getTeacherByStatement(statement);
     } catch (SQLException e) {
       logger.error("", e);
       throw new DaoException("", e);
