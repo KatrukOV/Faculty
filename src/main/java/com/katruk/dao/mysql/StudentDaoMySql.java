@@ -3,6 +3,7 @@ package com.katruk.dao.mysql;
 import static java.util.Objects.nonNull;
 
 import com.katruk.dao.StudentDao;
+import com.katruk.dao.mysql.ch.CheckExecuteUpdate;
 import com.katruk.entity.Student;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
@@ -31,86 +32,82 @@ public final class StudentDaoMySql implements StudentDao, DataBaseNames {
 
   @Override
   public Collection<Student> getAllStudent() throws DaoException {
-    final Collection<Student> result;
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_STUDENT))) {
-        result = getStudentByStatement(statement);
-      } catch (SQLException e) {
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+    try (Connection connection = this.connectionPool.getConnection();
+         PreparedStatement statement = connection
+             .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_STUDENT))
+    ) {
+      return getStudentByStatement(statement);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot get all students.", e);
+      throw new DaoException("Cannot get all students.", e);
     }
-    return result;
   }
 
   @Override
   public Optional<Student> getStudentById(final Long studentId) throws DaoException {
-    final Optional<Student> result;
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_STUDENT_BY_ID))) {
-        statement.setLong(1, studentId);
-        result = getStudentByStatement(statement).stream().findFirst();
-      } catch (SQLException e) {
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+    try (Connection connection = this.connectionPool.getConnection();
+         PreparedStatement statement = connection
+             .prepareStatement(Sql.getInstance().get(Sql.GET_STUDENT_BY_ID))) {
+      statement.setLong(1, studentId);
+      return getStudentByStatement(statement).stream().findFirst();
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error(String.format("Cannot get student by id: %d.", studentId), e);
+      throw new DaoException(String.format("Cannot get student by id: %d.", studentId), e);
     }
-    return result;
   }
 
   @Override
   public Student save(final Student student) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.REPLACE_STUDENT))) {
-        statement.setLong(1, student.getUser().getId());
-        statement.setString(2, student.getForm() != null ? student.getForm().name() : null);
-        statement.setString(3, student.getContract() != null ? student.getContract().name() : null);
-        statement.executeUpdate();
-        connection.commit();
-      } catch (SQLException e) {
-        connection.rollback();
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+      saveAndCommitOrRollback(student, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot save student.", e);
+      throw new DaoException("Cannot save student.", e);
     }
     return student;
+  }
+
+  private void saveAndCommitOrRollback(Student student, Connection connection)
+      throws SQLException, DaoException {
+    try (PreparedStatement statement = connection
+        .prepareStatement(Sql.getInstance().get(Sql.REPLACE_STUDENT))) {
+      statement.setLong(1, student.getUser().getId());
+      statement.setString(2, student.getForm() != null ? student.getForm().name() : null);
+      statement.setString(3, student.getContract() != null ? student.getContract().name() : null);
+      statement.executeUpdate();
+      connection.commit();
+    } catch (SQLException e) {
+      connection.rollback();
+      logger.error("Cannot prepare statement.", e);
+      throw new DaoException("Cannot prepare statement.", e);
+    }
   }
 
   @Override
   public void delete(Long studentId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.DELETE_STUDENT))) {
-        statement.setLong(1, studentId);
-        int affectedRows = statement.executeUpdate();
-        connection.commit();
-        if (affectedRows == 0) {
-          throw new SQLException("Delete student failed, no rows affected.");
-        }
-      } catch (SQLException e) {
-        connection.rollback();
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+      deleteAndCommitOrRollback(studentId, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error(String.format("Cannot delete student by id: %d.", studentId), e);
+      throw new DaoException(String.format("Cannot delete student by id: %d.", studentId), e);
+    }
+  }
+
+  private void deleteAndCommitOrRollback(Long studentId, Connection connection)
+      throws SQLException, DaoException {
+    try (PreparedStatement statement = connection
+        .prepareStatement(Sql.getInstance().get(Sql.DELETE_STUDENT))) {
+      statement.setLong(1, studentId);
+      new CheckExecuteUpdate(statement, "Delete student failed, no rows affected.").check();
+      connection.commit();
+    } catch (SQLException e) {
+      connection.rollback();
+      logger.error("Cannot prepare statement.", e);
+      throw new DaoException("Cannot prepare statement.", e);
     }
   }
 
@@ -119,25 +116,30 @@ public final class StudentDaoMySql implements StudentDao, DataBaseNames {
     final Collection<Student> result = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
-        Student student = new Student();
-        User user = new User();
-        user.setId(resultSet.getLong(USER_ID));
-        student.setUser(user);
-        student.setId(user.getId());
-        String form = resultSet.getString(FORM);
-        if (nonNull(form)) {
-          student.setForm(Student.Form.valueOf(form));
-        }
-        String contract = resultSet.getString(CONTRACT);
-        if (nonNull(contract)) {
-          student.setContract(Student.Contract.valueOf(contract));
-        }
+        Student student = getStudent(resultSet);
         result.add(student);
       }
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot get student by statement.", e);
+      throw new DaoException("Cannot get student by statement.", e);
     }
     return result;
+  }
+
+  private Student getStudent(ResultSet resultSet) throws SQLException {
+    Student student = new Student();
+    User user = new User();
+    user.setId(resultSet.getLong(USER_ID));
+    student.setUser(user);
+    student.setId(user.getId());
+    String form = resultSet.getString(FORM);
+    if (nonNull(form)) {
+      student.setForm(Student.Form.valueOf(form));
+    }
+    String contract = resultSet.getString(CONTRACT);
+    if (nonNull(contract)) {
+      student.setContract(Student.Contract.valueOf(contract));
+    }
+    return student;
   }
 }
