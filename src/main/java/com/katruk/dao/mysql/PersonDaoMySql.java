@@ -97,12 +97,11 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
   }
 
   private void getAndSetId(Person person, PreparedStatement statement) throws SQLException {
-    try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-      if (generatedKeys.next()) {
-        person.setId(generatedKeys.getLong(1));
-      } else {
-        throw new SQLException("Creating person failed, no ID obtained.");
-      }
+    ResultSet generatedKeys = statement.getGeneratedKeys();
+    if (generatedKeys.next()) {
+      person.setId(generatedKeys.getLong(1));
+    } else {
+      throw new SQLException("Creating person failed, no ID obtained.");
     }
   }
 
