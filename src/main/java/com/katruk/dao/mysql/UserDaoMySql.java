@@ -92,7 +92,7 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
       throws SQLException, DaoException {
     try (PreparedStatement statement = connection
         .prepareStatement(Sql.getInstance().get(Sql.REPLACE_USER))) {
-      fillStatement(user, statement);
+      fillSaveUserStatement(user, statement);
       new CheckExecuteUpdate(statement, "Replace user failed, no rows affected.").check();
       connection.commit();
     } catch (SQLException e) {
@@ -102,7 +102,7 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
     }
   }
 
-  private void fillStatement(User user, PreparedStatement statement) throws SQLException {
+  private void fillSaveUserStatement(User user, PreparedStatement statement) throws SQLException {
     statement.setLong(1, user.getPerson().getId());
     statement.setString(2, user.getUsername());
     statement.setString(3, user.getPassword());

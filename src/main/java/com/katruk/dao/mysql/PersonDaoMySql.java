@@ -83,9 +83,7 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
     try (PreparedStatement statement = connection
         .prepareStatement(Sql.getInstance().get(Sql.CREATE_PERSON),
                           Statement.RETURN_GENERATED_KEYS)) {
-      statement.setString(1, person.getLastName());
-      statement.setString(2, person.getName());
-      statement.setString(3, person.getPatronymic());
+      fillInsertPersonStatement(person, statement);
       new CheckExecuteUpdate(statement, "Creating person failed, no rows affected.").check();
       connection.commit();
       getAndSetId(person, statement);
@@ -94,6 +92,13 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
       logger.error("Cannot prepare statement.", e);
       throw new DaoException("Cannot prepare statement.", e);
     }
+  }
+
+  private void fillInsertPersonStatement(Person person, PreparedStatement statement)
+      throws SQLException {
+    statement.setString(1, person.getLastName());
+    statement.setString(2, person.getName());
+    statement.setString(3, person.getPatronymic());
   }
 
   private void getAndSetId(Person person, PreparedStatement statement) throws SQLException {
@@ -121,10 +126,7 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
       throws SQLException, DaoException {
     try (PreparedStatement statement = connection
         .prepareStatement(Sql.getInstance().get(Sql.UPDATE_PERSON))) {
-      statement.setString(1, person.getLastName());
-      statement.setString(2, person.getName());
-      statement.setString(3, person.getPatronymic());
-      statement.setLong(4, person.getId());
+      fillUpdatePersonStatement(person, statement);
       new CheckExecuteUpdate(statement, "Updating person failed, no rows affected.").check();
       connection.commit();
     } catch (SQLException e) {
@@ -132,6 +134,14 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
       logger.error("Cannot prepare statement.", e);
       throw new DaoException("Cannot prepare statement.", e);
     }
+  }
+
+  private void fillUpdatePersonStatement(Person person, PreparedStatement statement)
+      throws SQLException {
+    statement.setString(1, person.getLastName());
+    statement.setString(2, person.getName());
+    statement.setString(3, person.getPatronymic());
+    statement.setLong(4, person.getId());
   }
 
   private Collection<Person> getPersonByStatement(final PreparedStatement statement)

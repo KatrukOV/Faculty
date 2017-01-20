@@ -4,6 +4,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import com.katruk.dao.EvaluationDao;
+import com.katruk.dao.mysql.ch.CheckExecuteUpdate;
 import com.katruk.entity.Evaluation;
 import com.katruk.entity.Student;
 import com.katruk.entity.Subject;
@@ -33,77 +34,60 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
   }
 
   @Override
-  public Optional<Evaluation> getEvaluationBySubjectIdAndStudentId(final Long subjectId,
-                                                                   final Long studentId)
-      throws DaoException {
-    final Optional<Evaluation> result;
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_SUBJECT_AND_STUDENT))) {
-        statement.setLong(1, subjectId);
-        statement.setLong(2, studentId);
-        result = getEvaluationByStatement(statement).stream().findFirst();
-      } catch (SQLException e) {
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+  public Optional<Evaluation> getEvaluationBySubjectIdAndStudentId(
+      final Long subjectId, final Long studentId) throws DaoException {
+    try (Connection connection = this.connectionPool.getConnection();
+         PreparedStatement statement = connection
+             .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_SUBJECT_AND_STUDENT))) {
+      statement.setLong(1, subjectId);
+      statement.setLong(2, studentId);
+      return getEvaluationByStatement(statement).stream().findFirst();
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error(String.format("Cannot get evaluation by subject Id: %d and student Id: %d.",
+                                 subjectId, studentId), e);
+      throw new DaoException(String.format(
+          "Cannot get evaluation by subject Id: %d and student Id: %d.", subjectId, studentId), e);
     }
-    return result;
   }
 
   @Override
   public Optional<Evaluation> getEvaluationById(final Long evaluationId) throws DaoException {
-    final Optional<Evaluation> result;
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_ID))) {
-        statement.setLong(1, evaluationId);
-        result = getEvaluationByStatement(statement).stream().findFirst();
-      } catch (SQLException e) {
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+    try (Connection connection = this.connectionPool.getConnection();
+         PreparedStatement statement = connection
+             .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_ID))) {
+      statement.setLong(1, evaluationId);
+      return getEvaluationByStatement(statement).stream().findFirst();
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error(String.format("Cannot get evaluation by id: %d.", evaluationId), e);
+      throw new DaoException(String.format("Cannot get evaluation by id: %d.", evaluationId), e);
     }
-    return result;
   }
 
   @Override
   public Collection<Evaluation> getEvaluationByStudent(final Long studentId) throws DaoException {
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_STUDENT))) {
-        statement.setLong(1, studentId);
-        return getEvaluationByStatement(statement);
-      } catch (SQLException e) {
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+    try (Connection connection = this.connectionPool.getConnection();
+         PreparedStatement statement = connection
+             .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_STUDENT))) {
+      statement.setLong(1, studentId);
+      return getEvaluationByStatement(statement);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error(String.format("Cannot get evaluations by student with id: %d.", studentId), e);
+      throw new DaoException(
+          String.format("Cannot get evaluations by student with id: %d.", studentId), e);
     }
   }
 
   @Override
   public Collection<Evaluation> getEvaluationBySubject(final Long subjectId) throws DaoException {
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_SUBJECT))) {
-        statement.setLong(1, subjectId);
-        return getEvaluationByStatement(statement);
-      } catch (SQLException e) {
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+    try (Connection connection = this.connectionPool.getConnection();
+         PreparedStatement statement = connection
+             .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_SUBJECT))) {
+      statement.setLong(1, subjectId);
+      return getEvaluationByStatement(statement);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error(String.format("Cannot get evaluations by subject with id: %d.", subjectId), e);
+      throw new DaoException(
+          String.format("Cannot get evaluations by subject with id: %d.", subjectId), e);
     }
   }
 
@@ -131,69 +115,83 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
   private Evaluation insert(Evaluation evaluation) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.CREATE_EVALUATION),
-                            Statement.RETURN_GENERATED_KEYS)) {
-        statement.setLong(1, evaluation.getSubject().getId());
-        statement.setLong(2, evaluation.getStudent().getId());
-        statement.setString(3, evaluation.getStatus().name());
-        statement
-            .setString(4, evaluation.getRating() != null ? evaluation.getRating().name() : null);
-        statement.setString(5, evaluation.getFeedback());
-        int affectedRows = statement.executeUpdate();
-        connection.commit();
-        if (affectedRows == 0) {
-          throw new SQLException("Creating evaluation failed, no rows affected.");
-        }
-        try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-          if (generatedKeys.next()) {
-            evaluation.setId(generatedKeys.getLong(1));
-          } else {
-            throw new SQLException("Creating evaluation failed, no ID obtained.");
-          }
-        }
-        connection.commit();
-      } catch (SQLException e) {
-        connection.rollback();
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+      insertAndCommitOrRollback(evaluation, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot insert evaluation.", e);
+      throw new DaoException("Cannot insert evaluation.", e);
     }
     return evaluation;
+  }
+
+  private void insertAndCommitOrRollback(Evaluation evaluation, Connection connection)
+      throws SQLException, DaoException {
+    try (PreparedStatement statement = connection.prepareStatement(
+        Sql.getInstance().get(Sql.CREATE_EVALUATION), Statement.RETURN_GENERATED_KEYS)) {
+      fillInsertEvaluationStatement(evaluation, statement);
+      new CheckExecuteUpdate(statement, "Creating evaluation failed, no rows affected.").check();
+      connection.commit();
+      getAndSetId(evaluation, statement);
+      connection.commit();
+    } catch (SQLException e) {
+      connection.rollback();
+      logger.error("Cannot prepare statement.", e);
+      throw new DaoException("Cannot prepare statement.", e);
+    }
+  }
+
+  private void fillInsertEvaluationStatement(Evaluation evaluation, PreparedStatement statement)
+      throws SQLException {
+    statement.setLong(1, evaluation.getSubject().getId());
+    statement.setLong(2, evaluation.getStudent().getId());
+    statement.setString(3, evaluation.getStatus().name());
+    statement.setString(4, evaluation.getRating() != null ? evaluation.getRating().name() : null);
+    statement.setString(5, evaluation.getFeedback());
+  }
+
+  private void getAndSetId(Evaluation evaluation, PreparedStatement statement) throws SQLException {
+    ResultSet generatedKeys = statement.getGeneratedKeys();
+    if (generatedKeys.next()) {
+      evaluation.setId(generatedKeys.getLong(1));
+    } else {
+      throw new SQLException("Creating evaluation failed, no ID obtained.");
+    }
   }
 
   private Evaluation update(Evaluation evaluation) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.UPDATE_EVALUATION))) {
-        statement.setLong(1, evaluation.getSubject().getId());
-        statement.setLong(2, evaluation.getStudent().getId());
-        statement.setString(3, evaluation.getStatus().name());
-        statement
-            .setString(4, evaluation.getRating() != null ? evaluation.getRating().name() : null);
-        statement.setString(5, evaluation.getFeedback());
-        statement.setLong(6, evaluation.getId());
-        int affectedRows = statement.executeUpdate();
-        if (affectedRows == 0) {
-          throw new SQLException("Updating evaluation failed, no rows affected.");
-        }
-        connection.commit();
-      } catch (SQLException e) {
-        connection.rollback();
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+      updeteAndCommitOrRollback(evaluation, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot update evaluation.", e);
+      throw new DaoException("Cannot update evaluation.", e);
     }
     return evaluation;
+  }
+
+  private void updeteAndCommitOrRollback(Evaluation evaluation, Connection connection)
+      throws SQLException, DaoException {
+    try (PreparedStatement statement = connection
+        .prepareStatement(Sql.getInstance().get(Sql.UPDATE_EVALUATION))) {
+      fillUpdateEvaluationStatement(evaluation, statement);
+      new CheckExecuteUpdate(statement, "Updating evaluation failed, no rows affected.").check();
+      connection.commit();
+    } catch (SQLException e) {
+      connection.rollback();
+      logger.error("Cannot prepare statement.", e);
+      throw new DaoException("Cannot prepare statement.", e);
+    }
+  }
+
+  private void fillUpdateEvaluationStatement(Evaluation evaluation, PreparedStatement statement)
+      throws SQLException {
+    statement.setLong(1, evaluation.getSubject().getId());
+    statement.setLong(2, evaluation.getStudent().getId());
+    statement.setString(3, evaluation.getStatus().name());
+    statement.setString(4, evaluation.getRating() != null ? evaluation.getRating().name() : null);
+    statement.setString(5, evaluation.getFeedback());
+    statement.setLong(6, evaluation.getId());
   }
 
   private Collection<Evaluation> getEvaluationByStatement(final PreparedStatement statement)
@@ -201,25 +199,30 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
     final Collection<Evaluation> result = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
-        Evaluation evaluation = new Evaluation();
-        Subject subject = new Subject();
-        subject.setId(resultSet.getLong(SUBJECT_ID));
-        Student student = new Student();
-        student.setId(resultSet.getLong(STUDENT_ID));
-        evaluation.setId(resultSet.getLong(ID));
-        evaluation.setSubject(subject);
-        evaluation.setStudent(student);
-        evaluation.setStatus(Evaluation.Status.valueOf(resultSet.getString(STATUS)));
-        if (nonNull(resultSet.getString(RATING))) {
-          evaluation.setRating(Evaluation.Rating.valueOf(resultSet.getString(RATING)));
-        }
-        evaluation.setFeedback(resultSet.getString(FEEDBACK));
+        Evaluation evaluation = getEvaluation(resultSet);
         result.add(evaluation);
       }
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot get evaluation by statement.", e);
+      throw new DaoException("Cannot get evaluation by statement.", e);
     }
     return result;
+  }
+
+  private Evaluation getEvaluation(ResultSet resultSet) throws SQLException {
+    Evaluation evaluation = new Evaluation();
+    Subject subject = new Subject();
+    subject.setId(resultSet.getLong(SUBJECT_ID));
+    Student student = new Student();
+    student.setId(resultSet.getLong(STUDENT_ID));
+    evaluation.setId(resultSet.getLong(ID));
+    evaluation.setSubject(subject);
+    evaluation.setStudent(student);
+    evaluation.setStatus(Evaluation.Status.valueOf(resultSet.getString(STATUS)));
+    if (nonNull(resultSet.getString(RATING))) {
+      evaluation.setRating(Evaluation.Rating.valueOf(resultSet.getString(RATING)));
+    }
+    evaluation.setFeedback(resultSet.getString(FEEDBACK));
+    return evaluation;
   }
 }

@@ -73,9 +73,7 @@ public final class StudentDaoMySql implements StudentDao, DataBaseNames {
       throws SQLException, DaoException {
     try (PreparedStatement statement = connection
         .prepareStatement(Sql.getInstance().get(Sql.REPLACE_STUDENT))) {
-      statement.setLong(1, student.getUser().getId());
-      statement.setString(2, student.getForm() != null ? student.getForm().name() : null);
-      statement.setString(3, student.getContract() != null ? student.getContract().name() : null);
+      fillSaveStudentStatement(student, statement);
       statement.executeUpdate();
       connection.commit();
     } catch (SQLException e) {
@@ -83,6 +81,12 @@ public final class StudentDaoMySql implements StudentDao, DataBaseNames {
       logger.error("Cannot prepare statement.", e);
       throw new DaoException("Cannot prepare statement.", e);
     }
+  }
+
+  private void fillSaveStudentStatement(Student student, PreparedStatement statement) throws SQLException {
+    statement.setLong(1, student.getUser().getId());
+    statement.setString(2, student.getForm() != null ? student.getForm().name() : null);
+    statement.setString(3, student.getContract() != null ? student.getContract().name() : null);
   }
 
   @Override

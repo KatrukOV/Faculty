@@ -174,9 +174,7 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
       throws SQLException, DaoException {
     try (PreparedStatement statement = connection
         .prepareStatement(Sql.getInstance().get(Sql.UPDATE_SUBJECT))) {
-      statement.setLong(1, subject.getTeacher().getId());
-      statement.setString(2, subject.getTitle());
-      statement.setLong(3, subject.getId());
+      fillUpdateSubjectStatement(subject, statement);
       new CheckExecuteUpdate(statement, "Updating subject failed, no rows affected.").check();
       connection.commit();
     } catch (SQLException e) {
@@ -184,6 +182,13 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
       logger.error("Cannot prepare statement.", e);
       throw new DaoException("Cannot prepare statement.", e);
     }
+  }
+
+  private void fillUpdateSubjectStatement(Subject subject, PreparedStatement statement)
+      throws SQLException {
+    statement.setLong(1, subject.getTeacher().getId());
+    statement.setString(2, subject.getTitle());
+    statement.setLong(3, subject.getId());
   }
 
   private Collection<Subject> getSubjectByStatement(final PreparedStatement statement)
