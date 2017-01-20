@@ -3,6 +3,7 @@ package com.katruk.dao.mysql;
 import static java.util.Objects.isNull;
 
 import com.katruk.dao.PersonDao;
+import com.katruk.dao.mysql.ch.CheckExecuteUpdate;
 import com.katruk.entity.Person;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
@@ -31,39 +32,27 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
 
   @Override
   public Optional<Person> getPersonById(final Long personId) throws DaoException {
-    final Optional<Person> result;
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_PERSON_BY_ID))) {
-        statement.setLong(1, personId);
-        result = getPersonByStatement(statement).stream().findFirst();
-      } catch (SQLException e) {
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+    try (Connection connection = this.connectionPool.getConnection();
+         PreparedStatement statement = connection
+             .prepareStatement(Sql.getInstance().get(Sql.GET_PERSON_BY_ID))) {
+      statement.setLong(1, personId);
+      return getPersonByStatement(statement).stream().findFirst();
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error(String.format("Cannot get person by id: %d.", personId), e);
+      throw new DaoException(String.format("Cannot get person by id: %d.", personId), e);
     }
-    return result;
   }
 
   @Override
   public Collection<Person> getAllPerson() throws DaoException {
-    final Collection<Person> result;
-    try (Connection connection = this.connectionPool.getConnection()) {
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_PERSON))) {
-        result = getPersonByStatement(statement);
-      } catch (SQLException e) {
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+    try (Connection connection = this.connectionPool.getConnection();
+         PreparedStatement statement = connection
+             .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_PERSON))) {
+      return getPersonByStatement(statement);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot get all persons.", e);
+      throw new DaoException("Cannot get all persons.", e);
     }
-    return result;
   }
 
   @Override
@@ -80,62 +69,70 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
   private Person insert(Person person) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.CREATE_PERSON),
-                            Statement.RETURN_GENERATED_KEYS)) {
-        statement.setString(1, person.getLastName());
-        statement.setString(2, person.getName());
-        statement.setString(3, person.getPatronymic());
-        int affectedRows = statement.executeUpdate();
-        connection.commit();
-        if (affectedRows == 0) {
-          throw new SQLException("Creating person failed, no rows affected.");
-        }
-        try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-          if (generatedKeys.next()) {
-            person.setId(generatedKeys.getLong(1));
-          } else {
-            throw new SQLException("Creating person failed, no ID obtained.");
-          }
-        }
-      } catch (SQLException e) {
-        connection.rollback();
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+      insertAndCommitOrRollback(person, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot insert person.", e);
+      throw new DaoException("Cannot insert person.", e);
     }
     return person;
+  }
+
+  private void insertAndCommitOrRollback(Person person, Connection connection)
+      throws SQLException, DaoException {
+    try (PreparedStatement statement = connection
+        .prepareStatement(Sql.getInstance().get(Sql.CREATE_PERSON),
+                          Statement.RETURN_GENERATED_KEYS)) {
+      statement.setString(1, person.getLastName());
+      statement.setString(2, person.getName());
+      statement.setString(3, person.getPatronymic());
+      new CheckExecuteUpdate(statement, "Creating person failed, no rows affected.").check();
+      connection.commit();
+      getAndSetId(person, statement);
+    } catch (SQLException e) {
+      connection.rollback();
+      logger.error("Cannot prepare statement.", e);
+      throw new DaoException("Cannot prepare statement.", e);
+    }
+  }
+
+  private void getAndSetId(Person person, PreparedStatement statement) throws SQLException {
+    try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+      if (generatedKeys.next()) {
+        person.setId(generatedKeys.getLong(1));
+      } else {
+        throw new SQLException("Creating person failed, no ID obtained.");
+      }
+    }
   }
 
   private Person update(Person person) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      try (PreparedStatement statement = connection
-          .prepareStatement(Sql.getInstance().get(Sql.UPDATE_PERSON))) {
-        statement.setString(1, person.getLastName());
-        statement.setString(2, person.getName());
-        statement.setString(3, person.getPatronymic());
-        statement.setLong(4, person.getId());
-        int affectedRows = statement.executeUpdate();
-        if (affectedRows == 0) {
-          throw new SQLException("Updating person failed, no rows affected.");
-        }
-        connection.commit();
-      } catch (SQLException e) {
-        connection.rollback();
-        logger.error("", e);
-        throw new DaoException("", e);
-      }
+      updateAndCommitOrRollback(person, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot update person.", e);
+      throw new DaoException("Cannot update person.", e);
     }
     return person;
+  }
+
+  private void updateAndCommitOrRollback(Person person, Connection connection)
+      throws SQLException, DaoException {
+    try (PreparedStatement statement = connection
+        .prepareStatement(Sql.getInstance().get(Sql.UPDATE_PERSON))) {
+      statement.setString(1, person.getLastName());
+      statement.setString(2, person.getName());
+      statement.setString(3, person.getPatronymic());
+      statement.setLong(4, person.getId());
+      new CheckExecuteUpdate(statement, "Updating person failed, no rows affected.").check();
+      connection.commit();
+    } catch (SQLException e) {
+      connection.rollback();
+      logger.error("Cannot prepare statement.", e);
+      throw new DaoException("Cannot prepare statement.", e);
+    }
   }
 
   private Collection<Person> getPersonByStatement(final PreparedStatement statement)
@@ -143,17 +140,22 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
     final Collection<Person> persons = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
-        Person person = new Person();
-        person.setId(resultSet.getLong(ID));
-        person.setLastName(resultSet.getString(LAST_NAME));
-        person.setName(resultSet.getString(NAME));
-        person.setPatronymic(resultSet.getString(PATRONYMIC));
+        Person person = getPerson(resultSet);
         persons.add(person);
       }
     } catch (SQLException e) {
-      logger.error("", e);
-      throw new DaoException("", e);
+      logger.error("Cannot get person by statement.", e);
+      throw new DaoException("Cannot get person by statement.", e);
     }
     return persons;
+  }
+
+  private Person getPerson(ResultSet resultSet) throws SQLException {
+    Person person = new Person();
+    person.setId(resultSet.getLong(ID));
+    person.setLastName(resultSet.getString(LAST_NAME));
+    person.setName(resultSet.getString(NAME));
+    person.setPatronymic(resultSet.getString(PATRONYMIC));
+    return person;
   }
 }
