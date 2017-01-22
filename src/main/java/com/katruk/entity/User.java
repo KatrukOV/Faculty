@@ -7,6 +7,14 @@ public final class User extends Model {
   private final String password;
   private final Role role;
 
+  public User(Long id) {
+    super(id);
+    this.person = null;
+    this.username = null;
+    this.password = null;
+    this.role = null;
+  }
+
   public User(Person person, String username, String password) {
     super();
     this.person = person;

@@ -83,10 +83,11 @@ public final class StudentDaoMySql implements StudentDao, DataBaseNames {
     }
   }
 
-  private void fillSaveStudentStatement(Student student, PreparedStatement statement) throws SQLException {
-    statement.setLong(1, student.getUser().getId());
-    statement.setString(2, student.getForm() != null ? student.getForm().name() : null);
-    statement.setString(3, student.getContract() != null ? student.getContract().name() : null);
+  private void fillSaveStudentStatement(Student student, PreparedStatement statement)
+      throws SQLException {
+    statement.setLong(1, student.user().id());
+    statement.setString(2, student.form() != null ? student.form().name() : null);
+    statement.setString(3, student.contract() != null ? student.contract().name() : null);
   }
 
   @Override
@@ -131,19 +132,17 @@ public final class StudentDaoMySql implements StudentDao, DataBaseNames {
   }
 
   private Student getStudent(ResultSet resultSet) throws SQLException {
-    Student student = new Student(user, form, contract);
-    User user = new User(person, username, password, role);
-    user.setId(resultSet.getLong(USER_ID));
-    student.setUser(user);
-    student.setId(user.getId());
-    String form = resultSet.getString(FORM);
-    if (nonNull(form)) {
-      student.setForm(Student.Form.valueOf(form));
+    Long id = resultSet.getLong(USER_ID);
+    User user = new User(id);
+    Student.Form form = null;
+    resultSet.getString(FORM);
+    if (nonNull(resultSet.getString(FORM))) {
+      form = Student.Form.valueOf(resultSet.getString(FORM));
     }
-    String contract = resultSet.getString(CONTRACT);
-    if (nonNull(contract)) {
-      student.setContract(Student.Contract.valueOf(contract));
+    Student.Contract contract = null;
+    if (nonNull(resultSet.getString(CONTRACT))) {
+      contract = (Student.Contract.valueOf(resultSet.getString(CONTRACT)));
     }
-    return student;
+    return new Student(id, user, form, contract);
   }
 }

@@ -45,7 +45,7 @@ public final class PeriodDaoMySql implements PeriodDao, DataBaseNames {
   public Period save(Period period) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      saveAndCommitOrRollback(period, connection);
+      period = saveAndCommitOrRollback(period, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("Cannot save period", e);
@@ -54,15 +54,15 @@ public final class PeriodDaoMySql implements PeriodDao, DataBaseNames {
     return period;
   }
 
-  private void saveAndCommitOrRollback(Period period, Connection connection)
+  private Period saveAndCommitOrRollback(Period period, Connection connection)
       throws SQLException, DaoException {
     try (PreparedStatement statement = connection
         .prepareStatement(Sql.getInstance().get(Sql.INSERT_PERIOD),
                           Statement.RETURN_GENERATED_KEYS)) {
-      statement.setString(1, period.getStatus().name());
+      statement.setString(1, period.status().name());
       new CheckExecuteUpdate(statement, "Creating period failed, no rows affected.").check();
       connection.commit();
-      getAndSetId(period, statement);
+      return getAndSetId(period, statement);
     } catch (SQLException e) {
       connection.rollback();
       logger.error("Cannot prepare statement", e);
@@ -70,10 +70,10 @@ public final class PeriodDaoMySql implements PeriodDao, DataBaseNames {
     }
   }
 
-  private void getAndSetId(Period period, PreparedStatement statement) throws SQLException {
+  private Period getAndSetId(Period period, PreparedStatement statement) throws SQLException {
     ResultSet generatedKeys = statement.getGeneratedKeys();
     if (generatedKeys.next()) {
-      period.setId(generatedKeys.getLong(1));
+      return period.addId(generatedKeys.getLong(1));
     } else {
       throw new SQLException("Creating period failed, no ID obtained.");
     }
@@ -95,11 +95,9 @@ public final class PeriodDaoMySql implements PeriodDao, DataBaseNames {
   }
 
   private Period getPeriod(ResultSet resultSet) throws SQLException {
-    Period period = new Period(status, date);
-    period.setId(resultSet.getLong(ID));
-    period.setStatus(Period.Status.valueOf(resultSet.getString(STATUS)));
+    Long id = resultSet.getLong(ID);
+    Period.Status status = Period.Status.valueOf(resultSet.getString(STATUS));
     Date date = Date.valueOf(resultSet.getString(DATE));
-    period.setDate(date);
-    return period;
+    return new Period(id, status, date);
   }
 }

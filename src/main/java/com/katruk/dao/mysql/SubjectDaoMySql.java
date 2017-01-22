@@ -87,7 +87,7 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
   @Override
   public Subject save(final Subject subject) throws DaoException {
     Subject result;
-    if (isNull(subject.getId())) {
+    if (isNull(subject.id())) {
       result = insert(subject);
     } else {
       result = update(subject);
@@ -124,7 +124,7 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
   private Subject insert(Subject subject) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      insertAndCommitOrRollback(subject, connection);
+      subject = insertAndCommitOrRollback(subject, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("Cannot insert subject.", e);
@@ -133,15 +133,15 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
     return subject;
   }
 
-  private void insertAndCommitOrRollback(Subject subject, Connection connection)
+  private Subject insertAndCommitOrRollback(Subject subject, Connection connection)
       throws SQLException, DaoException {
     try (PreparedStatement statement = connection.prepareStatement(
         Sql.getInstance().get(Sql.CREATE_SUBJECT), Statement.RETURN_GENERATED_KEYS)) {
-      statement.setLong(1, subject.getTeacher().getId());
-      statement.setString(2, subject.getTitle());
+      statement.setLong(1, subject.teacher().id());
+      statement.setString(2, subject.title());
       new CheckExecuteUpdate(statement, "Creating subject failed, no rows affected.").check();
       connection.commit();
-      getAndSetId(subject, statement);
+      return getAndSetId(subject, statement);
     } catch (SQLException e) {
       connection.rollback();
       logger.error("Cannot prepare statement.", e);
@@ -149,10 +149,10 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
     }
   }
 
-  private void getAndSetId(Subject subject, PreparedStatement statement) throws SQLException {
+  private Subject getAndSetId(Subject subject, PreparedStatement statement) throws SQLException {
     ResultSet generatedKeys = statement.getGeneratedKeys();
     if (generatedKeys.next()) {
-      subject.setId(generatedKeys.getLong(1));
+      return subject.addId(generatedKeys.getLong(1));
     } else {
       throw new SQLException("Creating subject failed, no ID obtained.");
     }
@@ -186,9 +186,9 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
 
   private void fillUpdateSubjectStatement(Subject subject, PreparedStatement statement)
       throws SQLException {
-    statement.setLong(1, subject.getTeacher().getId());
-    statement.setString(2, subject.getTitle());
-    statement.setLong(3, subject.getId());
+    statement.setLong(1, subject.teacher().id());
+    statement.setString(2, subject.title());
+    statement.setLong(3, subject.id());
   }
 
   private Collection<Subject> getSubjectByStatement(final PreparedStatement statement)
@@ -207,12 +207,10 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
   }
 
   private Subject getSubject(ResultSet resultSet) throws SQLException {
-    Subject subject = new Subject(title, teacher);
-    Teacher teacher = new Teacher(user, position);
-    teacher.setId(resultSet.getLong(TEACHER_ID));
-    subject.setTeacher(teacher);
-    subject.setTitle(resultSet.getString(TITLE));
-    subject.setId(resultSet.getLong(ID));
-    return subject;
+    Long teacherId = resultSet.getLong(TEACHER_ID);
+    Teacher teacher = new Teacher(teacherId);
+    Long id = resultSet.getLong(ID);
+    String title =  resultSet.getString(TITLE);
+    return new Subject(id, title, teacher);
   }
 }

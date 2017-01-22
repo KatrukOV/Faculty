@@ -13,4 +13,8 @@ abstract class Model implements Serializable {
   Model(Long id) {
     this.id = id;
   }
+
+  public Long id() {
+    return this.id;
+  }
 }

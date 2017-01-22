@@ -6,6 +6,13 @@ public final class Person extends Model {
   private final String name;
   private final String patronymic;
 
+  public Person(Long id) {
+    super(id);
+    this.lastName = null;
+    this.name = null;
+    this.patronymic = null;
+  }
+
   public Person(String lastName, String name, String patronymic) {
     super();
     this.lastName = lastName;
@@ -30,5 +37,9 @@ public final class Person extends Model {
 
   public String patronymic() {
     return patronymic;
+  }
+
+  public Person addId(Long id) {
+    return new Person(id, this.lastName, this.name, this.patronymic);
   }
 }

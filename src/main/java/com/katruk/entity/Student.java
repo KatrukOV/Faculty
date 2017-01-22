@@ -6,6 +6,13 @@ public final class Student extends Model {
   private final Form form;
   private final Contract contract;
 
+  public Student(Long id) {
+    super(id);
+    this.user = null;
+    this.form = null;
+    this.contract = null;
+  }
+
   public Student(User user) {
     super();
     this.user = user;

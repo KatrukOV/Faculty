@@ -5,6 +5,12 @@ public final class Teacher extends Model {
   private final User user;
   private final Position position;
 
+  public Teacher(Long id) {
+    super(id);
+    this.user = null;
+    this.position = null;
+  }
+
   public Teacher(User user) {
     super();
     this.user = user;

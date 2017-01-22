@@ -58,7 +58,7 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
   @Override
   public Person save(final Person person) throws DaoException {
     Person result;
-    if (isNull(person.getId())) {
+    if (isNull(person.id())) {
       result = insert(person);
     } else {
       result = update(person);
@@ -69,7 +69,7 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
   private Person insert(Person person) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      insertAndCommitOrRollback(person, connection);
+      person = insertAndCommitOrRollback(person, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("Cannot insert person.", e);
@@ -78,7 +78,7 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
     return person;
   }
 
-  private void insertAndCommitOrRollback(Person person, Connection connection)
+  private Person insertAndCommitOrRollback(Person person, Connection connection)
       throws SQLException, DaoException {
     try (PreparedStatement statement = connection
         .prepareStatement(Sql.getInstance().get(Sql.CREATE_PERSON),
@@ -86,7 +86,7 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
       fillInsertPersonStatement(person, statement);
       new CheckExecuteUpdate(statement, "Creating person failed, no rows affected.").check();
       connection.commit();
-      getAndSetId(person, statement);
+      return getAndSetId(person, statement);
     } catch (SQLException e) {
       connection.rollback();
       logger.error("Cannot prepare statement.", e);
@@ -96,15 +96,15 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
 
   private void fillInsertPersonStatement(Person person, PreparedStatement statement)
       throws SQLException {
-    statement.setString(1, person.getLastName());
-    statement.setString(2, person.getName());
-    statement.setString(3, person.getPatronymic());
+    statement.setString(1, person.lastName());
+    statement.setString(2, person.name());
+    statement.setString(3, person.patronymic());
   }
 
-  private void getAndSetId(Person person, PreparedStatement statement) throws SQLException {
+  private Person getAndSetId(Person person, PreparedStatement statement) throws SQLException {
     ResultSet generatedKeys = statement.getGeneratedKeys();
     if (generatedKeys.next()) {
-      person.setId(generatedKeys.getLong(1));
+      return person.addId(generatedKeys.getLong(1));
     } else {
       throw new SQLException("Creating person failed, no ID obtained.");
     }
@@ -138,10 +138,10 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
 
   private void fillUpdatePersonStatement(Person person, PreparedStatement statement)
       throws SQLException {
-    statement.setString(1, person.getLastName());
-    statement.setString(2, person.getName());
-    statement.setString(3, person.getPatronymic());
-    statement.setLong(4, person.getId());
+    statement.setString(1, person.lastName());
+    statement.setString(2, person.name());
+    statement.setString(3, person.patronymic());
+    statement.setLong(4, person.id());
   }
 
   private Collection<Person> getPersonByStatement(final PreparedStatement statement)
@@ -160,11 +160,10 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
   }
 
   private Person getPerson(ResultSet resultSet) throws SQLException {
-    Person person = new Person(lastName, name, patronymic);
-    person.setId(resultSet.getLong(ID));
-    person.setLastName(resultSet.getString(LAST_NAME));
-    person.setName(resultSet.getString(NAME));
-    person.setPatronymic(resultSet.getString(PATRONYMIC));
-    return person;
+    Long id = resultSet.getLong(ID);
+    String lastName = resultSet.getString(LAST_NAME);
+    String name = resultSet.getString(NAME);
+    String patronymic = resultSet.getString(PATRONYMIC);
+    return new Person(id, lastName, name, patronymic);
   }
 }

@@ -31,6 +31,8 @@ public final class Period extends Model {
   public Date date() {
     return date;
   }
+
+  public Period addId(Long id) {
+    return new Period(id, this.status, this.date);
+  }
 }
-
-

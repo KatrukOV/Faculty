@@ -67,4 +67,8 @@ public final class Evaluation extends Model {
   public String feedback() {
     return feedback;
   }
+
+  public Evaluation addId(Long id) {
+    return new Evaluation(id, this.subject, this.student, this.status, this.rating, this.feedback);
+  }
 }

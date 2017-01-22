@@ -103,10 +103,10 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
   }
 
   private void fillSaveUserStatement(User user, PreparedStatement statement) throws SQLException {
-    statement.setLong(1, user.getPerson().getId());
-    statement.setString(2, user.getUsername());
-    statement.setString(3, user.getPassword());
-    statement.setString(4, user.getRole() != null ? user.getRole().name() : null);
+    statement.setLong(1, user.person().id());
+    statement.setString(2, user.username());
+    statement.setString(3, user.password());
+    statement.setString(4, user.role() != null ? user.role().name() : null);
   }
 
   private Collection<User> getUserByStatement(final PreparedStatement statement)
@@ -125,16 +125,14 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
   }
 
   private User getUser(ResultSet resultSet) throws SQLException {
-    User user = new User(person, username, password, role);
-    Person person = new Person(lastName, name, patronymic);
-    person.setId(resultSet.getLong(PERSON_ID));
-    user.setId(person.getId());
-    user.setPerson(person);
-    user.setUsername(resultSet.getString(USERNAME));
-    user.setPassword(resultSet.getString(PASSWORD));
+    Long id = resultSet.getLong(PERSON_ID);
+    Person person = new Person(id);
+    String username = resultSet.getString(USERNAME);
+    String password = resultSet.getString(PASSWORD);
+    User.Role role = null;
     if (nonNull(resultSet.getString(ROLE))) {
-      user.setRole(User.Role.valueOf(resultSet.getString(ROLE)));
+      role = User.Role.valueOf(resultSet.getString(ROLE));
     }
-    return user;
+    return new User(id, person, username, password, role);
   }
 }
