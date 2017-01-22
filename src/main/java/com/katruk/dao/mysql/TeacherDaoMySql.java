@@ -127,8 +127,8 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
   }
 
   private Teacher getTeacher(ResultSet resultSet) throws SQLException {
-    Teacher teacher = new Teacher();
-    User user = new User();
+    Teacher teacher = new Teacher(user, position);
+    User user = new User(person, username, password, role);
     user.setId(resultSet.getLong(USER_ID));
     teacher.setId(user.getId());
     teacher.setUser(user);

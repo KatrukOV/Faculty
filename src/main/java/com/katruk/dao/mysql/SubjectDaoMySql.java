@@ -207,8 +207,8 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
   }
 
   private Subject getSubject(ResultSet resultSet) throws SQLException {
-    Subject subject = new Subject();
-    Teacher teacher = new Teacher();
+    Subject subject = new Subject(title, teacher);
+    Teacher teacher = new Teacher(user, position);
     teacher.setId(resultSet.getLong(TEACHER_ID));
     subject.setTeacher(teacher);
     subject.setTitle(resultSet.getString(TITLE));

@@ -4,28 +4,32 @@ import java.sql.Date;
 
 public final class Period extends Model {
 
-  private Status status;
-  private Date date;
+  private final Status status;
+  private final Date date;
+
+  public Period(Status status, Date date) {
+    super();
+    this.status = status;
+    this.date = date;
+  }
+
+  public Period(Long id, Status status, Date date) {
+    super(id);
+    this.status = status;
+    this.date = date;
+  }
 
   public enum Status {
     DISTRIBUTION,
     LEARNING
   }
 
-  public Status getStatus() {
+  public Status status() {
     return status;
   }
 
-  public void setStatus(Status status) {
-    this.status = status;
-  }
-
-  public Date getDate() {
+  public Date date() {
     return date;
-  }
-
-  public void setDate(Date date) {
-    this.date = date;
   }
 }
 

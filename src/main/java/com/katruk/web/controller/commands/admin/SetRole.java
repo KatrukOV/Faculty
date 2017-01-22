@@ -63,13 +63,13 @@ public final class SetRole implements Command, PageAttribute {
       this.userService.save(user);
       switch (role) {
         case STUDENT: {
-          final Student student = new Student();
+          final Student student = new Student(user, form, contract);
           student.setUser(user);
           this.studentService.save(student);
           break;
         }
         case TEACHER: {
-          final Teacher teacher = new Teacher();
+          final Teacher teacher = new Teacher(user, position);
           teacher.setUser(user);
           this.teacherService.save(teacher);
           break;

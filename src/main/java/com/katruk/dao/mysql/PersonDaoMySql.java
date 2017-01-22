@@ -160,7 +160,7 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
   }
 
   private Person getPerson(ResultSet resultSet) throws SQLException {
-    Person person = new Person();
+    Person person = new Person(lastName, name, patronymic);
     person.setId(resultSet.getLong(ID));
     person.setLastName(resultSet.getString(LAST_NAME));
     person.setName(resultSet.getString(NAME));

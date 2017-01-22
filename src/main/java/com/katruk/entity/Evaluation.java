@@ -2,11 +2,40 @@ package com.katruk.entity;
 
 public final class Evaluation extends Model {
 
-  private Subject subject;
-  private Student student;
-  private Status status;
-  private Rating rating;
-  private String feedback;
+  private final Subject subject;
+  private final Student student;
+  private final Status status;
+  private final Rating rating;
+  private final String feedback;
+
+  public Evaluation(Subject subject, Student student, Status status) {
+    super();
+    this.subject = subject;
+    this.student = student;
+    this.status = status;
+    this.rating = null;
+    this.feedback = null;
+  }
+
+  public Evaluation(Subject subject, Student student, Status status, Rating rating,
+                    String feedback) {
+    super();
+    this.subject = subject;
+    this.student = student;
+    this.status = status;
+    this.rating = rating;
+    this.feedback = feedback;
+  }
+
+  public Evaluation(Long id, Subject subject, Student student, Status status, Rating rating,
+                    String feedback) {
+    super(id);
+    this.subject = subject;
+    this.student = student;
+    this.status = status;
+    this.rating = rating;
+    this.feedback = feedback;
+  }
 
   public enum Status {
     DECLARED,
@@ -19,43 +48,23 @@ public final class Evaluation extends Model {
     A, B, C, D, E, Fx, F
   }
 
-  public Subject getSubject() {
+  public Subject subject() {
     return subject;
   }
 
-  public void setSubject(Subject subject) {
-    this.subject = subject;
-  }
-
-  public Student getStudent() {
+  public Student student() {
     return student;
   }
 
-  public void setStudent(Student student) {
-    this.student = student;
-  }
-
-  public Status getStatus() {
+  public Status status() {
     return status;
   }
 
-  public void setStatus(Status status) {
-    this.status = status;
-  }
-
-  public Rating getRating() {
+  public Rating rating() {
     return rating;
   }
 
-  public void setRating(Rating rating) {
-    this.rating = rating;
-  }
-
-  public String getFeedback() {
+  public String feedback() {
     return feedback;
-  }
-
-  public void setFeedback(String feedback) {
-    this.feedback = feedback;
   }
 }

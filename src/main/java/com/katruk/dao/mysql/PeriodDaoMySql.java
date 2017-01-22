@@ -95,7 +95,7 @@ public final class PeriodDaoMySql implements PeriodDao, DataBaseNames {
   }
 
   private Period getPeriod(ResultSet resultSet) throws SQLException {
-    Period period = new Period();
+    Period period = new Period(status, date);
     period.setId(resultSet.getLong(ID));
     period.setStatus(Period.Status.valueOf(resultSet.getString(STATUS)));
     Date date = Date.valueOf(resultSet.getString(DATE));

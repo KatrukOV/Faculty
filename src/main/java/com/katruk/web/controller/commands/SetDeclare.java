@@ -52,7 +52,7 @@ public final class SetDeclare implements Command, PageAttribute {
       Student student = this.studentService.getStudentById(user.getId());
       Long subjectId = Long.parseLong(request.getParameter(SUBJECT_ID));
       Subject subject = this.subjectService.getSubjectById(subjectId);
-      Evaluation evaluation = new Evaluation();
+      Evaluation evaluation = new Evaluation(subject, student, status, rating, feedback);
       evaluation.setStudent(student);
       evaluation.setSubject(subject);
       evaluation.setStatus(Evaluation.Status.DECLARED);

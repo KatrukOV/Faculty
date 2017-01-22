@@ -31,7 +31,7 @@ public final class SetLearning implements Command, PageAttribute {
       period = this.periodService.getLastPeriod();
     } catch (ServiceException e) {
       logger.info("create new Period", e);
-      period = new Period();
+      period = new Period(status, date);
     }
     period.setStatus(Period.Status.LEARNING);
     try {

@@ -125,8 +125,8 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
   }
 
   private User getUser(ResultSet resultSet) throws SQLException {
-    User user = new User();
-    Person person = new Person();
+    User user = new User(person, username, password, role);
+    Person person = new Person(lastName, name, patronymic);
     person.setId(resultSet.getLong(PERSON_ID));
     user.setId(person.getId());
     user.setPerson(person);

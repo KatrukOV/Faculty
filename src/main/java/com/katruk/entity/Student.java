@@ -2,9 +2,44 @@ package com.katruk.entity;
 
 public final class Student extends Model {
 
-  private User user;
-  private Form form;
-  private Contract contract;
+  private final User user;
+  private final Form form;
+  private final Contract contract;
+
+  public Student(User user) {
+    super();
+    this.user = user;
+    this.form = null;
+    this.contract = null;
+  }
+
+  public Student(User user, Form form) {
+    super();
+    this.user = user;
+    this.form = form;
+    this.contract = null;
+  }
+
+  public Student(User user, Contract contract) {
+    super();
+    this.user = user;
+    this.form = null;
+    this.contract = contract;
+  }
+
+  public Student(User user, Form form, Contract contract) {
+    super();
+    this.user = user;
+    this.form = form;
+    this.contract = contract;
+  }
+
+  public Student(Long id, User user, Form form, Contract contract) {
+    super(id);
+    this.user = user;
+    this.form = form;
+    this.contract = contract;
+  }
 
   public enum Form {
     FULL_TAME,
@@ -18,27 +53,15 @@ public final class Student extends Model {
     CONTRACT
   }
 
-  public User getUser() {
+  public User user() {
     return user;
   }
 
-  public void setUser(User user) {
-    this.user = user;
-  }
-
-  public Form getForm() {
+  public Form form() {
     return form;
   }
 
-  public void setForm(Form form) {
-    this.form = form;
-  }
-
-  public Contract getContract() {
+  public Contract contract() {
     return contract;
-  }
-
-  public void setContract(Contract contract) {
-    this.contract = contract;
   }
 }

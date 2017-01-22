@@ -210,10 +210,10 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
   }
 
   private Evaluation getEvaluation(ResultSet resultSet) throws SQLException {
-    Evaluation evaluation = new Evaluation();
-    Subject subject = new Subject();
+    Evaluation evaluation = new Evaluation(subject, student, status, rating, feedback);
+    Subject subject = new Subject(title, teacher);
     subject.setId(resultSet.getLong(SUBJECT_ID));
-    Student student = new Student();
+    Student student = new Student(user, form, contract);
     student.setId(resultSet.getLong(STUDENT_ID));
     evaluation.setId(resultSet.getLong(ID));
     evaluation.setSubject(subject);

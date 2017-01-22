@@ -131,8 +131,8 @@ public final class StudentDaoMySql implements StudentDao, DataBaseNames {
   }
 
   private Student getStudent(ResultSet resultSet) throws SQLException {
-    Student student = new Student();
-    User user = new User();
+    Student student = new Student(user, form, contract);
+    User user = new User(person, username, password, role);
     user.setId(resultSet.getLong(USER_ID));
     student.setUser(user);
     student.setId(user.getId());

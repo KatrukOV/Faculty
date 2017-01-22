@@ -2,8 +2,26 @@ package com.katruk.entity;
 
 public final class Teacher extends Model {
 
-  private User user;
-  private Position position;
+  private final User user;
+  private final Position position;
+
+  public Teacher(User user) {
+    super();
+    this.user = user;
+    this.position = null;
+  }
+
+  public Teacher(User user, Position position) {
+    super();
+    this.user = user;
+    this.position = position;
+  }
+
+  public Teacher(Long id, User user, Position position) {
+    super(id);
+    this.user = user;
+    this.position = position;
+  }
 
   public enum Position {
     PROFESSOR,
@@ -11,19 +29,11 @@ public final class Teacher extends Model {
     ASSISTANT
   }
 
-  public User getUser() {
+  public User user() {
     return user;
   }
 
-  public void setUser(User user) {
-    this.user = user;
-  }
-
-  public Position getPosition() {
+  public Position position() {
     return position;
-  }
-
-  public void setPosition(Position position) {
-    this.position = position;
   }
 }

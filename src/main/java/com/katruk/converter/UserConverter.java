@@ -23,8 +23,8 @@ public final class UserConverter {
   }
 
   public User convertToUser(UserDto userDto) {
-    User user = new User();
-    Person person = new Person();
+    User user = new User(person, username, password, role);
+    Person person = new Person(lastName, name, patronymic);
     person.setLastName(userDto.getLastName());
     person.setName(userDto.getName());
     person.setPatronymic(userDto.getPatronymic());

@@ -2,10 +2,34 @@ package com.katruk.entity;
 
 public final class User extends Model {
 
-  private Person person;
-  private String username;
-  private String password;
-  private Role role;
+  private final Person person;
+  private final String username;
+  private final String password;
+  private final Role role;
+
+  public User(Person person, String username, String password) {
+    super();
+    this.person = person;
+    this.username = username;
+    this.password = password;
+    this.role = null;
+  }
+
+  public User(Person person, String username, String password, Role role) {
+    super();
+    this.person = person;
+    this.username = username;
+    this.password = password;
+    this.role = role;
+  }
+
+  public User(Long id, Person person, String username, String password, Role role) {
+    super(id);
+    this.person = person;
+    this.username = username;
+    this.password = password;
+    this.role = role;
+  }
 
   public enum Role {
     STUDENT,
@@ -13,35 +37,19 @@ public final class User extends Model {
     ADMIN
   }
 
-  public Person getPerson() {
+  public Person person() {
     return person;
   }
 
-  public void setPerson(Person person) {
-    this.person = person;
-  }
-
-  public String getUsername() {
+  public String username() {
     return username;
   }
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public String getPassword() {
+  public String password() {
     return password;
   }
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
-
-  public Role getRole() {
+  public Role role() {
     return role;
-  }
-
-  public void setRole(Role role) {
-    this.role = role;
   }
 }
