@@ -4,7 +4,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 import com.katruk.dao.EvaluationDao;
-import com.katruk.dao.mysql.ch.CheckExecuteUpdate;
+import com.katruk.dao.mysql.checkExecute.CheckExecuteUpdate;
 import com.katruk.entity.Evaluation;
 import com.katruk.entity.Student;
 import com.katruk.entity.Subject;

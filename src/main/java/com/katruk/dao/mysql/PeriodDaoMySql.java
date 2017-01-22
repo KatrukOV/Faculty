@@ -1,7 +1,7 @@
 package com.katruk.dao.mysql;
 
 import com.katruk.dao.PeriodDao;
-import com.katruk.dao.mysql.ch.CheckExecuteUpdate;
+import com.katruk.dao.mysql.checkExecute.CheckExecuteUpdate;
 import com.katruk.entity.Period;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;

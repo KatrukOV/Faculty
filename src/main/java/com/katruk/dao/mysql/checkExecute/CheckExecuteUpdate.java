@@ -1,4 +1,4 @@
-package com.katruk.dao.mysql.ch;
+package com.katruk.dao.mysql.checkExecute;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

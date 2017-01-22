@@ -3,7 +3,7 @@ package com.katruk.dao.mysql;
 import static java.util.Objects.nonNull;
 
 import com.katruk.dao.UserDao;
-import com.katruk.dao.mysql.ch.CheckExecuteUpdate;
+import com.katruk.dao.mysql.checkExecute.CheckExecuteUpdate;
 import com.katruk.entity.Person;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
