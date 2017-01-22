@@ -21,12 +21,12 @@ public final class StudentConverter {
 
   public StudentDto convertToDto(Student student) {
     StudentDto studentDto = new StudentDto();
-    studentDto.setStudentId(student.getId());
-    studentDto.setLastName(student.getUser().getPerson().getLastName());
-    studentDto.setName(student.getUser().getPerson().getName());
-    studentDto.setPatronymic(student.getUser().getPerson().getPatronymic());
-    studentDto.setForm(student.getForm());
-    studentDto.setContract(student.getContract());
+    studentDto.setStudentId(student.id());
+    studentDto.setLastName(student.user().person().lastName());
+    studentDto.setName(student.user().person().name());
+    studentDto.setPatronymic(student.user().person().patronymic());
+    studentDto.setForm(student.form());
+    studentDto.setContract(student.contract());
     return studentDto;
   }
 }

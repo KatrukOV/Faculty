@@ -23,25 +23,20 @@ public final class UserConverter {
   }
 
   public User convertToUser(UserDto userDto) {
-    User user = new User(person, username, password, role);
-    Person person = new Person(lastName, name, patronymic);
-    person.setLastName(userDto.getLastName());
-    person.setName(userDto.getName());
-    person.setPatronymic(userDto.getPatronymic());
-    user.setPerson(person);
-    user.setUsername(userDto.getUsername());
-    user.setPassword(encodePassword(userDto.getPassword()));
-    return user;
+    Person person = new Person(userDto.getLastName(), userDto.getName(), userDto.getPatronymic());
+    String username = userDto.getUsername();
+    String password = encodePassword(userDto.getPassword());
+    return new User(person, username, password);
   }
 
   public UserDto convertToDto(User user) {
     UserDto userDto = new UserDto();
-    userDto.setUserId(user.getId());
-    userDto.setLastName(user.getPerson().getLastName());
-    userDto.setName(user.getPerson().getName());
-    userDto.setPatronymic(user.getPerson().getPatronymic());
-    userDto.setUsername(user.getUsername());
-    userDto.setRole(user.getRole());
+    userDto.setUserId(user.id());
+    userDto.setLastName(user.person().lastName());
+    userDto.setName(user.person().name());
+    userDto.setPatronymic(user.person().patronymic());
+    userDto.setUsername(user.username());
+    userDto.setRole(user.role());
     return userDto;
   }
 

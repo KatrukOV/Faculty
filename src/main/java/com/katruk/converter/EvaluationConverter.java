@@ -21,14 +21,14 @@ public final class EvaluationConverter {
 
   public EvaluationDto convertToDto(Evaluation evaluation) {
     EvaluationDto evaluationDto = new EvaluationDto();
-    evaluationDto.setEvaluationId(evaluation.getId());
-    evaluationDto.setTitle(evaluation.getSubject().getTitle());
-    evaluationDto.setLastName(evaluation.getStudent().getUser().getPerson().getLastName());
-    evaluationDto.setName(evaluation.getStudent().getUser().getPerson().getName());
-    evaluationDto.setPatronymic(evaluation.getStudent().getUser().getPerson().getPatronymic());
-    evaluationDto.setStatus(evaluation.getStatus());
-    evaluationDto.setRating(evaluation.getRating());
-    evaluationDto.setFeedback(evaluation.getFeedback());
+    evaluationDto.setEvaluationId(evaluation.id());
+    evaluationDto.setTitle(evaluation.subject().title());
+    evaluationDto.setLastName(evaluation.student().user().person().lastName());
+    evaluationDto.setName(evaluation.student().user().person().name());
+    evaluationDto.setPatronymic(evaluation.student().user().person().patronymic());
+    evaluationDto.setStatus(evaluation.status());
+    evaluationDto.setRating(evaluation.rating());
+    evaluationDto.setFeedback(evaluation.feedback());
     return evaluationDto;
   }
 }

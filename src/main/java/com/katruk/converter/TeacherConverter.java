@@ -21,11 +21,11 @@ public final class TeacherConverter {
 
   public TeacherDto convertToDto(Teacher teacher) {
     TeacherDto teacherDto = new TeacherDto();
-    teacherDto.setTeacherId(teacher.getId());
-    teacherDto.setLastName(teacher.getUser().getPerson().getLastName());
-    teacherDto.setName(teacher.getUser().getPerson().getName());
-    teacherDto.setPatronymic(teacher.getUser().getPerson().getPatronymic());
-    teacherDto.setPosition(teacher.getPosition());
+    teacherDto.setTeacherId(teacher.id());
+    teacherDto.setLastName(teacher.user().person().lastName());
+    teacherDto.setName(teacher.user().person().name());
+    teacherDto.setPatronymic(teacher.user().person().patronymic());
+    teacherDto.setPosition(teacher.position());
     return teacherDto;
   }
 }
