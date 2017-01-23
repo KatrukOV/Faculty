@@ -60,4 +60,8 @@ public final class User extends Model {
   public Role role() {
     return role;
   }
+
+  public User changePerson(Person person) {
+    return new User(this.id(), person, this.username, this.password, this.role);
+  }
 }

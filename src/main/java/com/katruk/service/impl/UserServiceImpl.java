@@ -38,7 +38,7 @@ public final class UserServiceImpl implements UserService {
     }
     Collection<Person> persons = this.personService.getAll();
     for (User user : users) {
-      persons.stream().filter(person -> Objects.equals(user.getId(), person.getId()))
+      persons.stream().filter(person -> Objects.equals(user.id(), person.id()))
           .forEach(user::setPerson);
     }
     return users;
@@ -54,7 +54,7 @@ public final class UserServiceImpl implements UserService {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
-    final Person person = this.personService.getPersonById(user.getPerson().getId());
+    final Person person = this.personService.getPersonById(user.person().id());
     user.setPerson(person);
     return user;
   }
@@ -78,7 +78,7 @@ public final class UserServiceImpl implements UserService {
   public User save(final User user) throws ServiceException {
     final Person person = this.personService.save(user.getPerson());
     user.setPerson(person);
-    user.setId(person.getId());
+    user.setId(person.id());
     try {
       this.userDao.save(user);
     } catch (DaoException e) {
