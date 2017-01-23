@@ -11,6 +11,7 @@ import com.katruk.service.UserService;
 
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -31,60 +32,65 @@ public final class UserServiceImpl implements UserService {
   public Collection<User> getAll() throws ServiceException {
     Collection<User> users;
     try {
-      users = this.userDao.getAllUser();
+      users = this.userDao.allUser();
     } catch (DaoException e) {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
     Collection<Person> persons = this.personService.getAll();
+//    for (User user : users) {
+//      persons.stream().filter(person -> Objects.equals(user.id(), person.id()))
+//          .forEach(user::changePerson);
+//    }
+    Collection<User> results = new ArrayList<>();
     for (User user : users) {
-      persons.stream().filter(person -> Objects.equals(user.id(), person.id()))
-          .forEach(user::setPerson);
+      for (Person person : persons) {
+        if(Objects.equals(user.id(), person.id())){
+          results.add(user.changePerson(person));
+        }
+      }
     }
-    return users;
+    return results;
   }
 
   @Override
   public User getUserByUsername(final String username) throws ServiceException {
     final User user;
     try {
-      user = this.userDao.getUserByUsername(username)
+      user = this.userDao.findUserByUsername(username)
           .orElseThrow(() -> new DaoException("User not found", new NoSuchElementException()));
     } catch (DaoException e) {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
     final Person person = this.personService.getPersonById(user.person().id());
-    user.setPerson(person);
-    return user;
+    return user.changePerson(person);
   }
 
   @Override
   public User getUserById(final Long userId) throws ServiceException {
     final User user;
     try {
-      user = this.userDao.getUserById(userId)
+      user = this.userDao.findUserById(userId)
           .orElseThrow(() -> new DaoException("User not found", new NoSuchElementException()));
     } catch (DaoException e) {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
-    final Person person = this.personService.getPersonById(user.getPerson().getId());
-    user.setPerson(person);
-    return user;
+    final Person person = this.personService.getPersonById(user.person().id());
+    return user.changePerson(person);
   }
 
   @Override
   public User save(final User user) throws ServiceException {
-    final Person person = this.personService.save(user.getPerson());
-    user.setPerson(person);
-    user.setId(person.id());
+    final Person person = this.personService.save(user.person());
+    final User userForSave =
+        new User(person.id(), person, user.username(), user.password(), user.role());
     try {
-      this.userDao.save(user);
+      return this.userDao.save(userForSave);
     } catch (DaoException e) {
       logger.error("err", e);
       throw new ServiceException("err", e);
     }
-    return user;
   }
 }
