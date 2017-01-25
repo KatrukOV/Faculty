@@ -59,34 +59,7 @@ public final class Login implements Command, PageAttribute {
       try {
         final User user = this.userService.getUserByUsername(username);
         if (user.getPassword().equals(DigestUtils.sha1Hex(password))) {
-          session.setAttribute(LAST_NAME, user.getPerson().getLastName());
-          session.setAttribute(NAME, user.getPerson().getName());
-          session.setAttribute(USERNAME, user.getUsername());
-          session.setAttribute(ROLE, user.getRole());
-          session.setMaxInactiveInterval(MAX_INACTIVE_INTERVAL);
-          page = PageConfig.getInstance().getValue(PageConfig.PROFILE);
-          if (nonNull(user.getRole())) {
-            switch (user.getRole()) {
-              case STUDENT: {
-                final Student student = this.studentService.getStudentById(user.getId());
-                session.setAttribute(CONTRACT, student.getContract());
-                session.setAttribute(FORM, student.getForm());
-                break;
-              }
-              case TEACHER: {
-                final Teacher teacher = this.teacherService.getTeacherById(user.getId());
-                session.setAttribute(POSITION, teacher.getPosition());
-                break;
-              }
-              case ADMIN: {
-                page = PageConfig.getInstance().getValue(PageConfig.ADMIN_PROFILE);
-                Period period = this.periodService.getLastPeriod();
-                request.setAttribute(PERIOD_STATUS, period.getStatus());
-                request.setAttribute(PERIOD_DATE, period.getDate());
-                break;
-              }
-            }
-          }
+          page = getPage(request, session, user);
         }
       } catch (ServiceException e) {
         request.getSession().setAttribute(ERROR, ERROR_LOGIN_WRONG);
@@ -95,5 +68,57 @@ public final class Login implements Command, PageAttribute {
       }
     }
     return page;
+  }
+
+  private String getPage(HttpServletRequest request, HttpSession session, User user)
+      throws ServiceException {
+    String page;
+    setAttribute(session, user);
+    page = PageConfig.getInstance().getValue(PageConfig.PROFILE);
+    if (nonNull(user.getRole())) {
+      switch (user.getRole()) {
+        case STUDENT: {
+          setAttributeForStudent(session, user);
+          break;
+        }
+        case TEACHER: {
+          setAttributeForTeacher(session, user);
+          break;
+        }
+        case ADMIN: {
+          page = setAttributeForAdmin(request);
+          break;
+        }
+      }
+    }
+    return page;
+  }
+
+  private String setAttributeForAdmin(HttpServletRequest request) throws ServiceException {
+    String page;
+    page = PageConfig.getInstance().getValue(PageConfig.ADMIN_PROFILE);
+    Period period = this.periodService.getLastPeriod();
+    request.setAttribute(PERIOD_STATUS, period.getStatus());
+    request.setAttribute(PERIOD_DATE, period.getDate());
+    return page;
+  }
+
+  private void setAttributeForTeacher(HttpSession session, User user) throws ServiceException {
+    final Teacher teacher = this.teacherService.getTeacherById(user.getId());
+    session.setAttribute(POSITION, teacher.getPosition());
+  }
+
+  private void setAttributeForStudent(HttpSession session, User user) throws ServiceException {
+    final Student student = this.studentService.getStudentById(user.getId());
+    session.setAttribute(CONTRACT, student.getContract());
+    session.setAttribute(FORM, student.getForm());
+  }
+
+  private void setAttribute(HttpSession session, User user) {
+    session.setAttribute(LAST_NAME, user.getPerson().getLastName());
+    session.setAttribute(NAME, user.getPerson().getName());
+    session.setAttribute(USERNAME, user.getUsername());
+    session.setAttribute(ROLE, user.getRole());
+    session.setMaxInactiveInterval(MAX_INACTIVE_INTERVAL);
   }
 }
