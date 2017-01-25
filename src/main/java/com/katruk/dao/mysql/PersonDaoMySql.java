@@ -66,6 +66,8 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
     return result;
   }
 
+
+
   private Person insert(Person person) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
