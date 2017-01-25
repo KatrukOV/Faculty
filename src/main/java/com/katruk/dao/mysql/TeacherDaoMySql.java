@@ -60,8 +60,8 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
       throws SQLException, DaoException {
     try (PreparedStatement statement = connection
         .prepareStatement(Sql.getInstance().get(Sql.REPLACE_TEACHER))) {
-      statement.setLong(1, teacher.user().id());
-      statement.setString(2, teacher.position() != null ? teacher.position().name() : null);
+      statement.setLong(1, teacher.getUser().getId());
+      statement.setString(2, teacher.getPosition() != null ? teacher.getPosition().name() : null);
       new CheckExecuteUpdate(statement, "Replace teacher failed, no rows affected.").check();
       connection.commit();
     } catch (SQLException e) {
@@ -127,12 +127,15 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
   }
 
   private Teacher getTeacher(ResultSet resultSet) throws SQLException {
-    Long id = resultSet.getLong(USER_ID);
-    User user = new User(id);
-    Teacher.Position position = null;
-    if (nonNull(resultSet.getString(POSITION))) {
-      position = Teacher.Position.valueOf(resultSet.getString(POSITION));
+    Teacher teacher = new Teacher();
+    User user = new User();
+    user.setId(resultSet.getLong(USER_ID));
+    teacher.setId(user.getId());
+    teacher.setUser(user);
+    String position = resultSet.getString(POSITION);
+    if (nonNull(position)) {
+      teacher.setPosition(Teacher.Position.valueOf(position));
     }
-    return new Teacher(id, user, position);
+    return teacher;
   }
 }

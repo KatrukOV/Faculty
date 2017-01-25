@@ -29,8 +29,8 @@ final class PersonServiceImpl implements PersonService {
       person = this.personDao.getPersonById(personId)
           .orElseThrow(() -> new DaoException("Person not found", new NoSuchElementException()));
     } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
+      logger.error(String.format("Cannot get person by id: %d.", personId), e);
+      throw new ServiceException(String.format("Cannot get person by id: %d.", personId), e);
     }
     return person;
   }
@@ -40,8 +40,8 @@ final class PersonServiceImpl implements PersonService {
     try {
       person = this.personDao.save(person);
     } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
+      logger.error("Cannot save person.", e);
+      throw new ServiceException("Cannot save person.", e);
     }
     return person;
   }
@@ -52,8 +52,8 @@ final class PersonServiceImpl implements PersonService {
     try {
       persons = this.personDao.getAllPerson();
     } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
+      logger.error("Cannot get all persons.", e);
+      throw new ServiceException("Cannot get all persons.", e);
     }
     return persons;
   }

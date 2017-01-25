@@ -33,8 +33,7 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
     this.logger = Logger.getLogger(EvaluationDaoMySql.class);
   }
 
-  @Override
-  public Optional<Evaluation> getEvaluationBySubjectIdAndStudentId(
+  private Optional<Evaluation> getEvaluationBySubjectIdAndStudentId(
       final Long subjectId, final Long studentId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection();
          PreparedStatement statement = connection
@@ -92,19 +91,19 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
   }
 
   @Override
-  public Evaluation save(Evaluation evaluation) throws DaoException {
+  public Evaluation save(final Evaluation evaluation) throws DaoException {
     // TODO: 17.01.2017  bed logic
     Evaluation result;
     try {
-      result = getEvaluationBySubjectIdAndStudentId(evaluation.subject().id(),
-                                                    evaluation.student().id()).orElse(null);
+      result = getEvaluationBySubjectIdAndStudentId(evaluation.getSubject().getId(),
+                                                    evaluation.getStudent().getId()).orElse(null);
     } catch (DaoException e) {
       result = null;
     }
     if (nonNull(result)) {
-      evaluation = evaluation.addId(result.id());
+      evaluation.setId(result.getId());
     }
-    if (isNull(evaluation.id())) {
+    if (isNull(evaluation.getId())) {
       result = insert(evaluation);
     } else {
       result = update(evaluation);
@@ -115,7 +114,7 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
   private Evaluation insert(Evaluation evaluation) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      evaluation = insertAndCommitOrRollback(evaluation, connection);
+      insertAndCommitOrRollback(evaluation, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("Cannot insert evaluation.", e);
@@ -124,15 +123,15 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
     return evaluation;
   }
 
-  private Evaluation insertAndCommitOrRollback(final Evaluation evaluation,
-                                               final Connection connection)
+  private void insertAndCommitOrRollback(Evaluation evaluation, Connection connection)
       throws SQLException, DaoException {
     try (PreparedStatement statement = connection.prepareStatement(
         Sql.getInstance().get(Sql.CREATE_EVALUATION), Statement.RETURN_GENERATED_KEYS)) {
       fillInsertEvaluationStatement(evaluation, statement);
       new CheckExecuteUpdate(statement, "Creating evaluation failed, no rows affected.").check();
       connection.commit();
-      return getAndSetId(evaluation, statement);
+      getAndSetId(evaluation, statement);
+      connection.commit();
     } catch (SQLException e) {
       connection.rollback();
       logger.error("Cannot prepare statement.", e);
@@ -140,21 +139,19 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
     }
   }
 
-  private void fillInsertEvaluationStatement(final Evaluation evaluation,
-                                             final PreparedStatement statement)
+  private void fillInsertEvaluationStatement(Evaluation evaluation, PreparedStatement statement)
       throws SQLException {
-    statement.setLong(1, evaluation.subject().id());
-    statement.setLong(2, evaluation.student().id());
-    statement.setString(3, evaluation.status().name());
-    statement.setString(4, evaluation.rating() != null ? evaluation.rating().name() : null);
-    statement.setString(5, evaluation.feedback());
+    statement.setLong(1, evaluation.getSubject().getId());
+    statement.setLong(2, evaluation.getStudent().getId());
+    statement.setString(3, evaluation.getStatus().name());
+    statement.setString(4, evaluation.getRating() != null ? evaluation.getRating().name() : null);
+    statement.setString(5, evaluation.getFeedback());
   }
 
-  private Evaluation getAndSetId(final Evaluation evaluation, final PreparedStatement statement)
-      throws SQLException {
+  private void getAndSetId(Evaluation evaluation, PreparedStatement statement) throws SQLException {
     ResultSet generatedKeys = statement.getGeneratedKeys();
     if (generatedKeys.next()) {
-      return evaluation.addId(generatedKeys.getLong(1));
+      evaluation.setId(generatedKeys.getLong(1));
     } else {
       throw new SQLException("Creating evaluation failed, no ID obtained.");
     }
@@ -163,7 +160,7 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
   private Evaluation update(Evaluation evaluation) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      evaluation = updateAndCommitOrRollback(evaluation, connection);
+      updeteAndCommitOrRollback(evaluation, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("Cannot update evaluation.", e);
@@ -172,8 +169,7 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
     return evaluation;
   }
 
-  private Evaluation updateAndCommitOrRollback(Evaluation evaluation,
-                                               final Connection connection)
+  private void updeteAndCommitOrRollback(Evaluation evaluation, Connection connection)
       throws SQLException, DaoException {
     try (PreparedStatement statement = connection
         .prepareStatement(Sql.getInstance().get(Sql.UPDATE_EVALUATION))) {
@@ -185,18 +181,16 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
       logger.error("Cannot prepare statement.", e);
       throw new DaoException("Cannot prepare statement.", e);
     }
-    return evaluation;
   }
 
-  private void fillUpdateEvaluationStatement(final Evaluation evaluation,
-                                             final PreparedStatement statement)
+  private void fillUpdateEvaluationStatement(Evaluation evaluation, PreparedStatement statement)
       throws SQLException {
-    statement.setLong(1, evaluation.subject().id());
-    statement.setLong(2, evaluation.student().id());
-    statement.setString(3, evaluation.status().name());
-    statement.setString(4, evaluation.rating() != null ? evaluation.rating().name() : null);
-    statement.setString(5, evaluation.feedback());
-    statement.setLong(6, evaluation.id());
+    statement.setLong(1, evaluation.getSubject().getId());
+    statement.setLong(2, evaluation.getStudent().getId());
+    statement.setString(3, evaluation.getStatus().name());
+    statement.setString(4, evaluation.getRating() != null ? evaluation.getRating().name() : null);
+    statement.setString(5, evaluation.getFeedback());
+    statement.setLong(6, evaluation.getId());
   }
 
   private Collection<Evaluation> getEvaluationByStatement(final PreparedStatement statement)
@@ -214,21 +208,20 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
     return result;
   }
 
-  private Evaluation getEvaluation(final ResultSet resultSet) throws SQLException {
-    Long subjectId = resultSet.getLong(SUBJECT_ID);
-    Subject subject = new Subject(subjectId);
-    Long studentId = resultSet.getLong(STUDENT_ID);
-    Student student = new Student(studentId);
-    Long id = resultSet.getLong(ID);
-    Evaluation.Status status = null;
-    if (nonNull(resultSet.getString(STATUS))) {
-      status = Evaluation.Status.valueOf(resultSet.getString(STATUS));
-    }
-    Evaluation.Rating rating = null;
+  private Evaluation getEvaluation(ResultSet resultSet) throws SQLException {
+    Evaluation evaluation = new Evaluation();
+    Subject subject = new Subject();
+    subject.setId(resultSet.getLong(SUBJECT_ID));
+    Student student = new Student();
+    student.setId(resultSet.getLong(STUDENT_ID));
+    evaluation.setId(resultSet.getLong(ID));
+    evaluation.setSubject(subject);
+    evaluation.setStudent(student);
+    evaluation.setStatus(Evaluation.Status.valueOf(resultSet.getString(STATUS)));
     if (nonNull(resultSet.getString(RATING))) {
-      rating = Evaluation.Rating.valueOf(resultSet.getString(RATING));
+      evaluation.setRating(Evaluation.Rating.valueOf(resultSet.getString(RATING)));
     }
-    String feedback = resultSet.getString(FEEDBACK);
-    return new Evaluation(id, subject, student, status, rating, feedback);
+    evaluation.setFeedback(resultSet.getString(FEEDBACK));
+    return evaluation;
   }
 }

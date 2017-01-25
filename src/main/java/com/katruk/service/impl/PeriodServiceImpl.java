@@ -28,8 +28,8 @@ public final class PeriodServiceImpl implements PeriodService {
       period = this.periodDao.getLastPeriod()
           .orElseThrow(() -> new DaoException("Period not found", new NoSuchElementException()));
     } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
+      logger.error("Cannot get last period.", e);
+      throw new ServiceException("Cannot get last period.", e);
     }
     return period;
   }
@@ -39,8 +39,8 @@ public final class PeriodServiceImpl implements PeriodService {
     try {
       period = this.periodDao.save(period);
     } catch (DaoException e) {
-      logger.error("cant save period", e);
-      throw new ServiceException("cant save period", e);
+      logger.error("Cannot save period", e);
+      throw new ServiceException("Cannot save period", e);
     }
     return period;
   }

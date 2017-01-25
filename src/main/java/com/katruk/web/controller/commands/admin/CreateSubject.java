@@ -39,7 +39,7 @@ public final class CreateSubject implements Command, PageAttribute {
       String title = request.getParameter(TITLE);
       Long teacherId = Long.parseLong(request.getParameter(TEACHER_ID));
       Teacher teacher = this.teacherService.getTeacherById(teacherId);
-      Subject subject = new Subject(title, teacher);
+      Subject subject = new Subject();
       subject.setTitle(title);
       subject.setTeacher(teacher);
       this.subjectService.save(subject);

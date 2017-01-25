@@ -2,44 +2,31 @@ package com.katruk.entity;
 
 public final class Person extends Model {
 
-  private final String lastName;
-  private final String name;
-  private final String patronymic;
+  private String lastName;
+  private String name;
+  private String patronymic;
 
-  public Person(Long id) {
-    super(id);
-    this.lastName = null;
-    this.name = null;
-    this.patronymic = null;
-  }
-
-  public Person(String lastName, String name, String patronymic) {
-    super();
-    this.lastName = lastName;
-    this.name = name;
-    this.patronymic = patronymic;
-  }
-
-  public Person(Long id, String lastName, String name, String patronymic) {
-    super(id);
-    this.lastName = lastName;
-    this.name = name;
-    this.patronymic = patronymic;
-  }
-
-  public String lastName() {
+  public String getLastName() {
     return lastName;
   }
 
-  public String name() {
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
+
+  public String getName() {
     return name;
   }
 
-  public String patronymic() {
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getPatronymic() {
     return patronymic;
   }
 
-  public Person addId(Long id) {
-    return new Person(id, this.lastName, this.name, this.patronymic);
+  public void setPatronymic(String patronymic) {
+    this.patronymic = patronymic;
   }
 }

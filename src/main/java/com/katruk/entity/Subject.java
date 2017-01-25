@@ -2,36 +2,22 @@ package com.katruk.entity;
 
 public final class Subject extends Model {
 
-  private final String title;
-  private final Teacher teacher;
+  private String title;
+  private Teacher teacher;
 
-  public Subject(Long id) {
-    super(id);
-    this.title = null;
-    this.teacher = null;
-  }
-
-  public Subject(String title, Teacher teacher) {
-    super();
-    this.title = title;
-    this.teacher = teacher;
-  }
-
-  public Subject(Long id, String title, Teacher teacher) {
-    super(id);
-    this.title = title;
-    this.teacher = teacher;
-  }
-
-  public String title() {
+  public String getTitle() {
     return title;
   }
 
-  public Teacher teacher() {
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public Teacher getTeacher() {
     return teacher;
   }
 
-  public Subject addId(Long id) {
-    return new Subject(id, this.title, this.teacher);
+  public void setTeacher(Teacher teacher) {
+    this.teacher = teacher;
   }
 }

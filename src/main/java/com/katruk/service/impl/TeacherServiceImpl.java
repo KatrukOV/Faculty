@@ -33,8 +33,8 @@ public final class TeacherServiceImpl implements TeacherService {
     try {
       teachers = this.teacherDao.getAllTeacher();
     } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
+      logger.error("Cannot get all teachers.", e);
+      throw new ServiceException("Cannot get all teachers.", e);
     }
     Collection<User> users = this.userService.getAll();
     for (User user : users) {
@@ -53,8 +53,8 @@ public final class TeacherServiceImpl implements TeacherService {
       teacher = this.teacherDao.getTeacherById(teacherId)
           .orElseThrow(() -> new DaoException("Teacher not found", new NoSuchElementException()));
     } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
+      logger.error(String.format("Cannot get teacher by id: %d.", teacherId), e);
+      throw new ServiceException(String.format("Cannot get teacher by id: %d.", teacherId), e);
     }
     final User user = this.userService.getUserById(teacher.getUser().getId());
     teacher.setUser(user);
@@ -66,8 +66,8 @@ public final class TeacherServiceImpl implements TeacherService {
     try {
       this.teacherDao.save(teacher);
     } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
+      logger.error("Cannot save teacher.", e);
+      throw new ServiceException("Cannot save teacher.", e);
     }
     return teacher;
   }
@@ -77,8 +77,8 @@ public final class TeacherServiceImpl implements TeacherService {
     try {
       this.teacherDao.delete(teacherId);
     } catch (DaoException e) {
-      logger.error("err", e);
-      throw new ServiceException("err", e);
+      logger.error(String.format("Cannot remove teacher with id: %d.", teacherId), e);
+      throw new ServiceException(String.format("Cannot remove teacher with id: %d.", teacherId), e);
     }
   }
 }

@@ -23,20 +23,25 @@ public final class UserConverter {
   }
 
   public User convertToUser(UserDto userDto) {
-    Person person = new Person(userDto.getLastName(), userDto.getName(), userDto.getPatronymic());
-    String username = userDto.getUsername();
-    String password = encodePassword(userDto.getPassword());
-    return new User(person, username, password);
+    User user = new User();
+    Person person = new Person();
+    person.setLastName(userDto.getLastName());
+    person.setName(userDto.getName());
+    person.setPatronymic(userDto.getPatronymic());
+    user.setPerson(person);
+    user.setUsername(userDto.getUsername());
+    user.setPassword(encodePassword(userDto.getPassword()));
+    return user;
   }
 
   public UserDto convertToDto(User user) {
     UserDto userDto = new UserDto();
-    userDto.setUserId(user.id());
-    userDto.setLastName(user.person().lastName());
-    userDto.setName(user.person().name());
-    userDto.setPatronymic(user.person().patronymic());
-    userDto.setUsername(user.username());
-    userDto.setRole(user.role());
+    userDto.setUserId(user.getId());
+    userDto.setLastName(user.getPerson().getLastName());
+    userDto.setName(user.getPerson().getName());
+    userDto.setPatronymic(user.getPerson().getPatronymic());
+    userDto.setUsername(user.getUsername());
+    userDto.setRole(user.getRole());
     return userDto;
   }
 

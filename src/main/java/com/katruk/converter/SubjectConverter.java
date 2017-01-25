@@ -21,12 +21,12 @@ public final class SubjectConverter {
 
   public SubjectDto convertToDto(Subject subject) {
     SubjectDto subjectDto = new SubjectDto();
-    subjectDto.setSubjectId(subject.id());
-    subjectDto.setLastName(subject.teacher().user().person().lastName());
-    subjectDto.setName(subject.teacher().user().person().name());
-    subjectDto.setPatronymic(subject.teacher().user().person().patronymic());
-    subjectDto.setPosition(subject.teacher().position());
-    subjectDto.setTitle(subject.title());
+    subjectDto.setSubjectId(subject.getId());
+    subjectDto.setLastName(subject.getTeacher().getUser().getPerson().getLastName());
+    subjectDto.setName(subject.getTeacher().getUser().getPerson().getName());
+    subjectDto.setPatronymic(subject.getTeacher().getUser().getPerson().getPatronymic());
+    subjectDto.setPosition(subject.getTeacher().getPosition());
+    subjectDto.setTitle(subject.getTitle());
     return subjectDto;
   }
 }

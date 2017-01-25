@@ -4,17 +4,13 @@ import java.io.Serializable;
 
 abstract class Model implements Serializable {
 
-  private final Long id;
+  private Long id;
 
-  Model() {
-    this.id = null;
+  public Long getId() {
+    return id;
   }
 
-  Model(Long id) {
+  public void setId(Long id) {
     this.id = id;
-  }
-
-  public Long id() {
-    return this.id;
   }
 }

@@ -18,61 +18,65 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public final class UserDaoMySql implements UserDao, DataBaseNames {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
 
-  public UserDaoMySql() throws DaoException {
+  public UserDaoMySql() {
     this.connectionPool = ConnectionPool.getInstance();
     this.logger = Logger.getLogger(UserDaoMySql.class);
   }
 
   @Override
-  public Collection<User> allUser() throws DaoException {
+  public Collection<User> getAllUser() throws DaoException {
+    Collection<User> result;
     try (Connection connection = this.connectionPool.getConnection();
          PreparedStatement statement = connection
              .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_USER))) {
-      return getUserByStatement(statement);
+      result = getUserByStatement(statement);
     } catch (SQLException e) {
-      logger.error("Cannot load all users.", e);
-      throw new DaoException("Cannot load all users.", e);
+      logger.error("Cannot get all users.", e);
+      throw new DaoException("Cannot get all users.", e);
     }
+    return result;
   }
 
+
   @Override
-  public User findUserByUsername(final String username) throws DaoException {
+  public Optional<User> getUserByUsername(final String username) throws DaoException {
+    final Optional<User> result;
     try (Connection connection = this.connectionPool.getConnection();
          PreparedStatement statement = connection
              .prepareStatement(Sql.getInstance().get(Sql.GET_USER_BY_USERNAME))) {
       statement.setString(1, username);
-      return getUserByStatement(statement).stream().iterator().next();
+      result = getUserByStatement(statement).stream().findFirst();
     } catch (SQLException e) {
-      String message = String.format("User not found by username: %s.", username);
-      logger.info(message);
-      throw new DaoException(message, new NoSuchElementException());
+      logger.error(String.format("Cannot get user by username: %s.", username), e);
+      throw new DaoException(String.format("Cannot get user by username: %s.", username), e);
     }
+    return result;
   }
 
   @Override
-  public User findUserById(final Long userId) throws DaoException {
+  public Optional<User> getUserById(final Long userId) throws DaoException {
+    final Optional<User> result;
     try (Connection connection = this.connectionPool.getConnection();
          PreparedStatement statement = connection
              .prepareStatement(Sql.getInstance().get(Sql.GET_USER_BY_ID))) {
       statement.setLong(1, userId);
-      return getUserByStatement(statement).stream().iterator().next();
+      result = getUserByStatement(statement).stream().findFirst();
     } catch (SQLException e) {
-      String message = String.format("User not found by id: %d.", userId);
-      logger.info(message);
-      throw new DaoException(message, new NoSuchElementException());
+      logger.error(String.format("Cannot get user by id: %d.", userId), e);
+      throw new DaoException(String.format("Cannot get user by id: %d.", userId), e);
     }
+    return result;
   }
 
   @Override
   public User save(final User user) throws DaoException {
-
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
       saveAndCommitOrRollback(user, connection);
@@ -99,42 +103,38 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
   }
 
   private void fillSaveUserStatement(User user, PreparedStatement statement) throws SQLException {
-    statement.setLong(1, user.person().id());
-    statement.setString(2, user.username());
-    statement.setString(3, user.password());
-    statement.setString(4, user.role() != null ? user.role().name() : null);
+    statement.setLong(1, user.getPerson().getId());
+    statement.setString(2, user.getUsername());
+    statement.setString(3, user.getPassword());
+    statement.setString(4, user.getRole() != null ? user.getRole().name() : null);
   }
 
   private Collection<User> getUserByStatement(final PreparedStatement statement)
       throws DaoException {
-    final Collection<User> users = new ArrayList<>();
+    Collection<User> result = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
         User user = getUser(resultSet);
-        users.add(user);
+        result.add(user);
       }
     } catch (SQLException e) {
       logger.error("Cannot get user by statement.", e);
       throw new DaoException("Cannot get user by statement.", e);
     }
-    if (users.isEmpty()) {
-      throw new DaoException("No user by statement.", new NoSuchElementException());
-    }
-    return users;
+    return result;
   }
 
   private User getUser(ResultSet resultSet) throws SQLException {
-    Long id = resultSet.getLong(PERSON_ID);
-    String lastName = resultSet.getString(LAST_NAME);
-    String name = resultSet.getString(NAME);
-    String patronymic = resultSet.getString(PATRONYMIC);
-    Person person = new Person(id, lastName, name, patronymic);
-    String username = resultSet.getString(USERNAME);
-    String password = resultSet.getString(PASSWORD);
-    User.Role role = null;
+    User user = new User();
+    Person person = new Person();
+    person.setId(resultSet.getLong(PERSON_ID));
+    user.setId(person.getId());
+    user.setPerson(person);
+    user.setUsername(resultSet.getString(USERNAME));
+    user.setPassword(resultSet.getString(PASSWORD));
     if (nonNull(resultSet.getString(ROLE))) {
-      role = User.Role.valueOf(resultSet.getString(ROLE));
+      user.setRole(User.Role.valueOf(resultSet.getString(ROLE)));
     }
-    return new User(id, person, username, password, role);
+    return user;
   }
 }

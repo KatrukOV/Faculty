@@ -2,40 +2,11 @@ package com.katruk.entity;
 
 public final class Evaluation extends Model {
 
-  private final Subject subject;
-  private final Student student;
-  private final Status status;
-  private final Rating rating;
-  private final String feedback;
-
-  public Evaluation(Subject subject, Student student, Status status) {
-    super();
-    this.subject = subject;
-    this.student = student;
-    this.status = status;
-    this.rating = null;
-    this.feedback = null;
-  }
-
-  public Evaluation(Subject subject, Student student, Status status, Rating rating,
-                    String feedback) {
-    super();
-    this.subject = subject;
-    this.student = student;
-    this.status = status;
-    this.rating = rating;
-    this.feedback = feedback;
-  }
-
-  public Evaluation(Long id, Subject subject, Student student, Status status, Rating rating,
-                    String feedback) {
-    super(id);
-    this.subject = subject;
-    this.student = student;
-    this.status = status;
-    this.rating = rating;
-    this.feedback = feedback;
-  }
+  private Subject subject;
+  private Student student;
+  private Status status;
+  private Rating rating;
+  private String feedback;
 
   public enum Status {
     DECLARED,
@@ -48,27 +19,43 @@ public final class Evaluation extends Model {
     A, B, C, D, E, Fx, F
   }
 
-  public Subject subject() {
+  public Subject getSubject() {
     return subject;
   }
 
-  public Student student() {
+  public void setSubject(Subject subject) {
+    this.subject = subject;
+  }
+
+  public Student getStudent() {
     return student;
   }
 
-  public Status status() {
+  public void setStudent(Student student) {
+    this.student = student;
+  }
+
+  public Status getStatus() {
     return status;
   }
 
-  public Rating rating() {
+  public void setStatus(Status status) {
+    this.status = status;
+  }
+
+  public Rating getRating() {
     return rating;
   }
 
-  public String feedback() {
+  public void setRating(Rating rating) {
+    this.rating = rating;
+  }
+
+  public String getFeedback() {
     return feedback;
   }
 
-  public Evaluation addId(Long id) {
-    return new Evaluation(id, this.subject, this.student, this.status, this.rating, this.feedback);
+  public void setFeedback(String feedback) {
+    this.feedback = feedback;
   }
 }
