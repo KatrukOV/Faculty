@@ -1,8 +1,11 @@
 package com.katruk.dao.mysql;
 
+import static java.util.Objects.isNull;
+
 import com.katruk.dao.PeriodDao;
 import com.katruk.dao.mysql.checkExecute.CheckExecuteUpdate;
 import com.katruk.entity.Period;
+import com.katruk.entity.Person;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
 import com.katruk.util.Sql;
@@ -17,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public final class PeriodDaoMySql implements PeriodDao, DataBaseNames {
@@ -30,11 +34,11 @@ public final class PeriodDaoMySql implements PeriodDao, DataBaseNames {
   }
 
   @Override
-  public Optional<Period> getLastPeriod() throws DaoException {
+  public Period getLastPeriod() throws DaoException {
     try (Connection connection = this.connectionPool.getConnection();
          PreparedStatement statement = connection
              .prepareStatement(Sql.getInstance().get(Sql.GET_LAST_PERIOD))) {
-      return getPeriodByStatement(statement).stream().findFirst();
+      return getPeriodByStatement(statement).stream().iterator().next();
     } catch (SQLException e) {
       logger.error("Cannot get last period", e);
       throw new DaoException("Cannot get last period", e);
@@ -45,7 +49,7 @@ public final class PeriodDaoMySql implements PeriodDao, DataBaseNames {
   public Period save(Period period) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      saveAndCommitOrRollback(period, connection);
+      period = saveAndCommitOrRollback(period, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("Cannot save period", e);
@@ -54,7 +58,7 @@ public final class PeriodDaoMySql implements PeriodDao, DataBaseNames {
     return period;
   }
 
-  private void saveAndCommitOrRollback(Period period, Connection connection)
+  private Period saveAndCommitOrRollback(Period period, Connection connection)
       throws SQLException, DaoException {
     try (PreparedStatement statement = connection
         .prepareStatement(Sql.getInstance().get(Sql.INSERT_PERIOD),
@@ -62,7 +66,7 @@ public final class PeriodDaoMySql implements PeriodDao, DataBaseNames {
       statement.setString(1, period.getStatus().name());
       new CheckExecuteUpdate(statement, "Creating period failed, no rows affected.").check();
       connection.commit();
-      getAndSetId(period, statement);
+      return getAndSetId(period, statement);
     } catch (SQLException e) {
       connection.rollback();
       logger.error("Cannot prepare statement", e);
@@ -70,10 +74,11 @@ public final class PeriodDaoMySql implements PeriodDao, DataBaseNames {
     }
   }
 
-  private void getAndSetId(Period period, PreparedStatement statement) throws SQLException {
+  private Period getAndSetId(Period period, PreparedStatement statement) throws SQLException {
     ResultSet generatedKeys = statement.getGeneratedKeys();
     if (generatedKeys.next()) {
       period.setId(generatedKeys.getLong(1));
+      return period;
     } else {
       throw new SQLException("Creating period failed, no ID obtained.");
     }
@@ -90,6 +95,9 @@ public final class PeriodDaoMySql implements PeriodDao, DataBaseNames {
     } catch (SQLException e) {
       logger.error("Unable to get period by statement", e);
       throw new DaoException("Unable to get period by statement", e);
+    }
+    if (periods.isEmpty()) {
+      throw new DaoException("No user by statement.", new NoSuchElementException());
     }
     return periods;
   }
