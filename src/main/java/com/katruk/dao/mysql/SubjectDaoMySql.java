@@ -1,12 +1,14 @@
 package com.katruk.dao.mysql;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
-import com.katruk.dao.DataBaseNames;
 import com.katruk.dao.SubjectDao;
 import com.katruk.dao.mysql.duplCode.CheckExecuteUpdate;
+import com.katruk.dao.mysql.duplCode.GetUser;
 import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
+import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
 import com.katruk.util.Sql;
@@ -20,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
@@ -45,12 +48,12 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
   }
 
   @Override
-  public Optional<Subject> getSubjectById(final Long subjectId) throws DaoException {
+  public Subject getSubjectById(final Long subjectId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection();
          PreparedStatement statement = connection
              .prepareStatement(Sql.getInstance().get(Sql.GET_SUBJECT_BY_ID))) {
       statement.setLong(1, subjectId);
-      return getSubjectByStatement(statement).stream().findFirst();
+      return getSubjectByStatement(statement).stream().iterator().next();
     } catch (SQLException e) {
       logger.error(String.format("Cannot get subject by id: %d.", subjectId), e);
       throw new DaoException(String.format("Cannot get subject by id: %d.", subjectId), e);
@@ -111,7 +114,7 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
   private Subject insert(Subject subject) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      insertAndCommitOrRollback(subject, connection);
+      subject = insertAndCommitOrRollback(subject, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("Cannot insert subject.", e);
@@ -120,7 +123,7 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
     return subject;
   }
 
-  private void insertAndCommitOrRollback(Subject subject, Connection connection)
+  private Subject insertAndCommitOrRollback(Subject subject, Connection connection)
       throws SQLException, DaoException {
     try (PreparedStatement statement = connection.prepareStatement(
         Sql.getInstance().get(Sql.CREATE_SUBJECT), Statement.RETURN_GENERATED_KEYS)) {
@@ -128,7 +131,7 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
       statement.setString(2, subject.getTitle());
       new CheckExecuteUpdate(statement, "Creating subject failed, no rows affected.").check();
       connection.commit();
-      getAndSetId(subject, statement);
+      return getAndSetId(subject, statement);
     } catch (SQLException e) {
       connection.rollback();
       logger.error("Cannot prepare statement.", e);
@@ -136,10 +139,11 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
     }
   }
 
-  private void getAndSetId(Subject subject, PreparedStatement statement) throws SQLException {
+  private Subject getAndSetId(Subject subject, PreparedStatement statement) throws SQLException {
     ResultSet generatedKeys = statement.getGeneratedKeys();
     if (generatedKeys.next()) {
       subject.setId(generatedKeys.getLong(1));
+      return subject;
     } else {
       throw new SQLException("Creating subject failed, no ID obtained.");
     }
@@ -180,23 +184,32 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
 
   private Collection<Subject> getSubjectByStatement(final PreparedStatement statement)
       throws DaoException {
-    final Collection<Subject> result = new ArrayList<>();
+    final Collection<Subject> subjects = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
         Subject subject = getSubject(resultSet);
-        result.add(subject);
+        subjects.add(subject);
       }
     } catch (SQLException e) {
       logger.error("Cannot get subject by statement.", e);
       throw new DaoException("Cannot get subject by statement.", e);
     }
-    return result;
+    if (subjects.isEmpty()) {
+      throw new DaoException("No subjects by statement.", new NoSuchElementException());
+    }
+    return subjects;
   }
 
   private Subject getSubject(ResultSet resultSet) throws SQLException {
     Subject subject = new Subject();
     Teacher teacher = new Teacher();
-    teacher.setId(resultSet.getLong(TEACHER_ID));
+    User user = new GetUser(resultSet).get();
+    teacher.setId(user.getId());
+    teacher.setUser(user);
+    String position = resultSet.getString(POSITION);
+    if (nonNull(position)) {
+      teacher.setPosition(Teacher.Position.valueOf(position));
+    }
     subject.setTeacher(teacher);
     subject.setTitle(resultSet.getString(TITLE));
     subject.setId(resultSet.getLong(ID));

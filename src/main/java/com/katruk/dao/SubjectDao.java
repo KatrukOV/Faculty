@@ -10,9 +10,9 @@ public interface SubjectDao {
 
   Collection<Subject> getAllSubject() throws DaoException;
 
-  Optional<Subject> getSubjectById(final Long subjectId) throws DaoException;
-
   Collection<Subject> getSubjectByTeacher(final Long teacherId) throws DaoException;
+
+  Subject getSubjectById(final Long subjectId) throws DaoException;
 
   Subject save(final Subject subject) throws DaoException;
 
