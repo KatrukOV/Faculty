@@ -19,13 +19,11 @@ import java.util.Objects;
 public final class EvaluationServiceImpl implements EvaluationService {
 
   private final Logger logger;
-  private final StudentService studentService;
   private final SubjectService subjectService;
   private final EvaluationDao evaluationDao;
 
   public EvaluationServiceImpl() {
     this.logger = Logger.getLogger(EvaluationServiceImpl.class);
-    this.studentService = new StudentServiceImpl();
     this.subjectService = new SubjectServiceImpl();
     this.evaluationDao = new EvaluationDaoMySql();
   }
@@ -42,8 +40,6 @@ public final class EvaluationServiceImpl implements EvaluationService {
     }
     final Subject subject = this.subjectService.getSubjectById(evaluation.getSubject().getId());
     evaluation.setSubject(subject);
-    final Student student = this.studentService.getStudentById(evaluation.getStudent().getId());
-    evaluation.setStudent(student);
     return evaluation;
   }
 
@@ -60,14 +56,8 @@ public final class EvaluationServiceImpl implements EvaluationService {
     }
     if (!evaluations.isEmpty()) {
       Subject subject = this.subjectService.getSubjectById(subjectId);
-      Collection<Student> students = this.studentService.getAll();
       for (Evaluation evaluation : evaluations) {
-        students.stream()
-            .filter(student -> Objects.equals(student.getId(), evaluation.getStudent().getId()))
-            .forEach(student -> {
-              evaluation.setStudent(student);
-              evaluation.setSubject(subject);
-            });
+        evaluation.setSubject(subject);
       }
     }
     return evaluations;
@@ -85,15 +75,11 @@ public final class EvaluationServiceImpl implements EvaluationService {
           String.format("Cannot get evaluations by student with id: %d.", studentId), e);
     }
     if (!evaluations.isEmpty()) {
-      Collection<Subject> subjects = this.subjectService.getAll();
-      Student student = this.studentService.getStudentById(studentId);
+      Subject subject = this.subjectService.getSubjectById(
+          evaluations.iterator().next().getSubject().getId()
+      );
       for (Evaluation evaluation : evaluations) {
-        subjects.stream()
-            .filter(subject -> Objects.equals(evaluation.getSubject().getId(), subject.getId()))
-            .forEach(subject -> {
-              evaluation.setSubject(subject);
-              evaluation.setStudent(student);
-            });
+        evaluation.setSubject(subject);
       }
     }
     return evaluations;
