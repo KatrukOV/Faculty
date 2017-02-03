@@ -24,8 +24,9 @@ public final class PeriodServiceImpl implements PeriodService {
     try {
       return this.periodDao.getLastPeriod();
     } catch (DaoException e) {
-      logger.error("Cannot get last period.", e);
-      throw new ServiceException("Cannot get last period.", e);
+      String message = "Cannot get last period.";
+      logger.error(message, e);
+      throw new ServiceException(message, e);
     }
   }
 
@@ -34,8 +35,9 @@ public final class PeriodServiceImpl implements PeriodService {
     try {
       return this.periodDao.save(period);
     } catch (DaoException e) {
-      logger.error("Cannot save period", e);
-      throw new ServiceException("Cannot save period", e);
+      String message = "Cannot save period";
+      logger.error(message, e);
+      throw new ServiceException(message, e);
     }
   }
 }
