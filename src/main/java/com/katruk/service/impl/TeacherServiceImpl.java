@@ -26,8 +26,9 @@ public final class TeacherServiceImpl implements TeacherService {
     try {
       return this.teacherDao.getAllTeacher();
     } catch (DaoException e) {
-      logger.error("Cannot get all teachers.", e);
-      throw new ServiceException("Cannot get all teachers.", e);
+      String message = "Cannot get all teachers.";
+      logger.error(message, e);
+      throw new ServiceException(message, e);
     }
   }
 
@@ -36,8 +37,9 @@ public final class TeacherServiceImpl implements TeacherService {
     try {
       return this.teacherDao.getTeacherById(teacherId);
     } catch (DaoException e) {
-      logger.error(String.format("Cannot get teacher by id: %d.", teacherId), e);
-      throw new ServiceException(String.format("Cannot get teacher by id: %d.", teacherId), e);
+      String message = String.format("Cannot get teacher by id: %d.", teacherId);
+      logger.error(message, e);
+      throw new ServiceException(message, e);
     }
   }
 
@@ -46,8 +48,9 @@ public final class TeacherServiceImpl implements TeacherService {
     try {
       return this.teacherDao.save(teacher);
     } catch (DaoException e) {
-      logger.error("Cannot save teacher.", e);
-      throw new ServiceException("Cannot save teacher.", e);
+      String message = "Cannot save teacher.";
+      logger.error(message, e);
+      throw new ServiceException(message, e);
     }
   }
 
@@ -56,8 +59,9 @@ public final class TeacherServiceImpl implements TeacherService {
     try {
       this.teacherDao.delete(teacherId);
     } catch (DaoException e) {
-      logger.error(String.format("Cannot remove teacher with id: %d.", teacherId), e);
-      throw new ServiceException(String.format("Cannot remove teacher with id: %d.", teacherId), e);
+      String message = String.format("Cannot remove teacher with id: %d.", teacherId);
+      logger.error(message, e);
+      throw new ServiceException(message, e);
     }
   }
 }
