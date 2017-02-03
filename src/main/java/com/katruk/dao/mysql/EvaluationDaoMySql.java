@@ -3,9 +3,10 @@ package com.katruk.dao.mysql;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
-import com.katruk.dao.DataBaseNames;
 import com.katruk.dao.EvaluationDao;
 import com.katruk.dao.mysql.duplCode.CheckExecuteUpdate;
+import com.katruk.dao.mysql.duplCode.GetStudent;
+import com.katruk.dao.mysql.duplCode.GetSubject;
 import com.katruk.entity.Evaluation;
 import com.katruk.entity.Student;
 import com.katruk.entity.Subject;
@@ -22,7 +23,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 
 public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
 
@@ -34,29 +34,31 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
     this.logger = Logger.getLogger(EvaluationDaoMySql.class);
   }
 
-  private Optional<Evaluation> getEvaluationBySubjectIdAndStudentId(
+  private Evaluation getEvaluationBySubjectIdAndStudentId(
       final Long subjectId, final Long studentId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection();
          PreparedStatement statement = connection
              .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_SUBJECT_AND_STUDENT))) {
       statement.setLong(1, subjectId);
       statement.setLong(2, studentId);
-      return getEvaluationByStatement(statement).stream().findFirst();
+      return getEvaluationByStatement(statement).iterator().next();
     } catch (SQLException e) {
       logger.error(String.format("Cannot get evaluation by subject Id: %d and student Id: %d.",
-                                 subjectId, studentId), e);
+                                 subjectId, studentId),
+                   e
+      );
       throw new DaoException(String.format(
           "Cannot get evaluation by subject Id: %d and student Id: %d.", subjectId, studentId), e);
     }
   }
 
   @Override
-  public Optional<Evaluation> getEvaluationById(final Long evaluationId) throws DaoException {
+  public Evaluation getEvaluationById(final Long evaluationId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection();
          PreparedStatement statement = connection
              .prepareStatement(Sql.getInstance().get(Sql.GET_EVALUATION_BY_ID))) {
       statement.setLong(1, evaluationId);
-      return getEvaluationByStatement(statement).stream().findFirst();
+      return getEvaluationByStatement(statement).iterator().next();
     } catch (SQLException e) {
       logger.error(String.format("Cannot get evaluation by id: %d.", evaluationId), e);
       throw new DaoException(String.format("Cannot get evaluation by id: %d.", evaluationId), e);
@@ -97,7 +99,7 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
     Evaluation result;
     try {
       result = getEvaluationBySubjectIdAndStudentId(evaluation.getSubject().getId(),
-                                                    evaluation.getStudent().getId()).orElse(null);
+                                                    evaluation.getStudent().getId());
     } catch (DaoException e) {
       result = null;
     }
@@ -161,7 +163,7 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
   private Evaluation update(Evaluation evaluation) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      updeteAndCommitOrRollback(evaluation, connection);
+      updateAndCommitOrRollback(evaluation, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("Cannot update evaluation.", e);
@@ -170,7 +172,7 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
     return evaluation;
   }
 
-  private void updeteAndCommitOrRollback(Evaluation evaluation, Connection connection)
+  private void updateAndCommitOrRollback(Evaluation evaluation, Connection connection)
       throws SQLException, DaoException {
     try (PreparedStatement statement = connection
         .prepareStatement(Sql.getInstance().get(Sql.UPDATE_EVALUATION))) {
@@ -211,10 +213,8 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
 
   private Evaluation getEvaluation(ResultSet resultSet) throws SQLException {
     Evaluation evaluation = new Evaluation();
-    Subject subject = new Subject();
-    subject.setId(resultSet.getLong(SUBJECT_ID));
-    Student student = new Student();
-    student.setId(resultSet.getLong(STUDENT_ID));
+    Subject subject = new GetSubject(resultSet).get();
+    Student student = new GetStudent(resultSet).get();
     evaluation.setId(resultSet.getLong(ID));
     evaluation.setSubject(subject);
     evaluation.setStudent(student);

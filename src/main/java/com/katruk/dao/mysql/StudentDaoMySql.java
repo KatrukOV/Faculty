@@ -4,6 +4,7 @@ import static java.util.Objects.nonNull;
 import com.katruk.dao.StudentDao;
 import com.katruk.dao.UserDao;
 import com.katruk.dao.mysql.duplCode.CheckExecuteUpdate;
+import com.katruk.dao.mysql.duplCode.GetStudent;
 import com.katruk.dao.mysql.duplCode.GetUser;
 import com.katruk.entity.Student;
 import com.katruk.entity.User;
@@ -123,7 +124,7 @@ public final class StudentDaoMySql implements StudentDao, DataBaseNames {
     final Collection<Student> students = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
-        Student student = getStudent(resultSet);
+        Student student = new GetStudent(resultSet).get();
         students.add(student);
       }
     } catch (SQLException e) {
@@ -134,21 +135,5 @@ public final class StudentDaoMySql implements StudentDao, DataBaseNames {
       throw new DaoException("No students by statement.", new NoSuchElementException());
     }
     return students;
-  }
-
-  private Student getStudent(ResultSet resultSet) throws SQLException {
-    Student student = new Student();
-    User user = new GetUser(resultSet).get();
-    student.setUser(user);
-    student.setId(user.getId());
-    String form = resultSet.getString(FORM);
-    if (nonNull(form)) {
-      student.setForm(Student.Form.valueOf(form));
-    }
-    String contract = resultSet.getString(CONTRACT);
-    if (nonNull(contract)) {
-      student.setContract(Student.Contract.valueOf(contract));
-    }
-    return student;
   }
 }
