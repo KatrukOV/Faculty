@@ -38,45 +38,48 @@ public final class UserValidator {
     if (isNull(userDto.getLastName()) || isNull(userDto.getName())
         || isNull(userDto.getPatronymic()) || isNull(userDto.getUsername())
         || isNull(userDto.getPassword())) {
-      logger.info("Same field is empty");
-      throw new ValidateException("Same field is empty");
+      String message = "Same field is empty";
+      logger.info(message);
+      throw new ValidateException(message);
     }
   }
 
   private void validatePerson(UserDto userDto) throws ValidateException {
     if (userDto.getLastName().length() < MIN_SIZE_LAST_NAME) {
-      logger.info(String.format("LastName is short (mast be > %d)", MIN_SIZE_LAST_NAME));
-      throw new ValidateException(
-          String.format("LastName is short (mast be > %d)", MIN_SIZE_LAST_NAME));
+      String message = String.format("LastName is short (mast be > %d)", MIN_SIZE_LAST_NAME);
+      logger.info(message);
+      throw new ValidateException(message);
     }
     if (userDto.getName().length() < MIN_SIZE_NAME) {
-      logger.info(String.format("Name is short (mast be > %d)", MIN_SIZE_NAME));
-      throw new ValidateException(String.format("Name is short (mast be > %d)", MIN_SIZE_NAME));
+      String message = String.format("Name is short (mast be > %d)", MIN_SIZE_NAME);
+      logger.info(message);
+      throw new ValidateException(message);
     }
     if (userDto.getPatronymic().length() < MIN_SIZE_PATRONYMIC) {
-      logger.info(String.format("Patronymic is short (mast be > %d)", MIN_SIZE_PATRONYMIC));
-      throw new ValidateException(
-          String.format("Patronymic is short (mast be > %d)", MIN_SIZE_PATRONYMIC));
+      String message = String.format("Patronymic is short (mast be > %d)", MIN_SIZE_PATRONYMIC);
+      logger.info(message);
+      throw new ValidateException(message);
     }
   }
 
   private void validateUsername(UserDto userDto) throws ValidateException {
     if (userDto.getUsername().length() < MIN_SIZE_USERNAME) {
-      logger.info(String.format("Username is short (mast be > %d)", MIN_SIZE_USERNAME));
-      throw new ValidateException(
-          String.format("Username is short (mast be > %d)", MIN_SIZE_USERNAME));
+      String message = String.format("Username is short (mast be > %d)", MIN_SIZE_USERNAME);
+      logger.info(message);
+      throw new ValidateException(message);
     }
   }
 
   private void validatePassword(UserDto userDto) throws ValidateException {
     if (userDto.getPassword().length() < MIN_SIZE_PASSWORD) {
-      logger.info(String.format("Password is short (mast be > %d)", MIN_SIZE_PASSWORD));
-      throw new ValidateException(
-          String.format("Password is short (mast be > %d)", MIN_SIZE_PASSWORD));
+      String message = String.format("Password is short (mast be > %d)", MIN_SIZE_PASSWORD);
+      logger.info(message);
+      throw new ValidateException(message);
     }
     if (!userDto.getPassword().equals(userDto.getConfirmPassword())) {
-      logger.info("Passwords don't match");
-      throw new ValidateException("Passwords don't match");
+      String message = "Passwords don't match";
+      logger.info(message);
+      throw new ValidateException(message);
     }
   }
 
@@ -87,8 +90,8 @@ public final class UserValidator {
       logger.debug(String.format("User with USERNAME %s not exists yet", userDto.getUsername()));
       return;
     }
-    logger.info(String.format("User with USERNAME %s exists", userDto.getUsername()));
-    throw new ValidateException(
-        String.format("User with USERNAME %s exists", userDto.getUsername()));
+    String message = String.format("User with USERNAME %s exists", userDto.getUsername());
+    logger.info(message);
+    throw new ValidateException(message);
   }
 }
