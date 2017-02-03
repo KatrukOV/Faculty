@@ -4,12 +4,13 @@ import com.katruk.dao.PersonDao;
 import com.katruk.dao.UserDao;
 import com.katruk.dao.mysql.duplCode.CheckExecuteUpdate;
 import com.katruk.dao.mysql.duplCode.GetUser;
-import com.katruk.entity.Person;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
 import com.katruk.util.Sql;
+
 import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

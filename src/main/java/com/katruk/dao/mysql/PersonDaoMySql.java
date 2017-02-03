@@ -2,7 +2,6 @@ package com.katruk.dao.mysql;
 
 import static java.util.Objects.isNull;
 
-import com.katruk.dao.DataBaseNames;
 import com.katruk.dao.PersonDao;
 import com.katruk.dao.mysql.duplCode.CheckExecuteUpdate;
 import com.katruk.entity.Person;

@@ -9,8 +9,6 @@ import com.katruk.service.PeriodService;
 
 import org.apache.log4j.Logger;
 
-import java.util.NoSuchElementException;
-
 public final class PeriodServiceImpl implements PeriodService {
 
   private final Logger logger;
@@ -23,25 +21,21 @@ public final class PeriodServiceImpl implements PeriodService {
 
   @Override
   public Period getLastPeriod() throws ServiceException {
-    final Period period;
     try {
-      period = this.periodDao.getLastPeriod()
-          .orElseThrow(() -> new DaoException("Period not found", new NoSuchElementException()));
+      return this.periodDao.getLastPeriod();
     } catch (DaoException e) {
       logger.error("Cannot get last period.", e);
       throw new ServiceException("Cannot get last period.", e);
     }
-    return period;
   }
 
   @Override
   public Period save(Period period) throws ServiceException {
     try {
-      period = this.periodDao.save(period);
+      return this.periodDao.save(period);
     } catch (DaoException e) {
       logger.error("Cannot save period", e);
       throw new ServiceException("Cannot save period", e);
     }
-    return period;
   }
 }

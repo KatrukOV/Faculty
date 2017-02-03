@@ -2,19 +2,15 @@ package com.katruk.service.impl;
 
 import com.katruk.dao.SubjectDao;
 import com.katruk.dao.mysql.SubjectDaoMySql;
-import com.katruk.entity.Student;
 import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
 import com.katruk.exception.DaoException;
 import com.katruk.exception.ServiceException;
 import com.katruk.service.SubjectService;
-import com.katruk.service.TeacherService;
 
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public final class SubjectServiceImpl implements SubjectService {
 

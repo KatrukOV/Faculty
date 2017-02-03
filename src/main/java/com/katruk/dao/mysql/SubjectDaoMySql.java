@@ -1,15 +1,11 @@
 package com.katruk.dao.mysql;
 
 import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
 
 import com.katruk.dao.SubjectDao;
 import com.katruk.dao.mysql.duplCode.CheckExecuteUpdate;
 import com.katruk.dao.mysql.duplCode.GetSubject;
-import com.katruk.dao.mysql.duplCode.GetUser;
 import com.katruk.entity.Subject;
-import com.katruk.entity.Teacher;
-import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
 import com.katruk.util.Sql;
@@ -24,7 +20,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
 

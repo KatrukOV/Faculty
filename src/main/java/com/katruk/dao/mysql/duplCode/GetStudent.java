@@ -3,7 +3,6 @@ package com.katruk.dao.mysql.duplCode;
 import static java.util.Objects.nonNull;
 
 import com.katruk.dao.mysql.DataBaseNames;
-import com.katruk.entity.Person;
 import com.katruk.entity.Student;
 import com.katruk.entity.User;
 

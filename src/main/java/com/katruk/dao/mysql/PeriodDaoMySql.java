@@ -1,6 +1,5 @@
 package com.katruk.dao.mysql;
 
-import com.katruk.dao.DataBaseNames;
 import com.katruk.dao.PeriodDao;
 import com.katruk.dao.mysql.duplCode.CheckExecuteUpdate;
 import com.katruk.entity.Period;

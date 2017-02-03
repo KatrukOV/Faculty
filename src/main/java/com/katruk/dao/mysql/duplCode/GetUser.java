@@ -1,13 +1,11 @@
 package com.katruk.dao.mysql.duplCode;
 
-import static com.katruk.web.PageAttribute.LAST_NAME;
 import static java.util.Objects.nonNull;
 
 import com.katruk.dao.mysql.DataBaseNames;
 import com.katruk.entity.Person;
 import com.katruk.entity.User;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 

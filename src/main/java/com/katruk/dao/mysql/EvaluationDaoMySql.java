@@ -6,7 +6,6 @@ import static java.util.Objects.nonNull;
 import com.katruk.dao.EvaluationDao;
 import com.katruk.dao.mysql.duplCode.CheckExecuteUpdate;
 import com.katruk.dao.mysql.duplCode.GetStudent;
-import com.katruk.dao.mysql.duplCode.GetSubject;
 import com.katruk.entity.Evaluation;
 import com.katruk.entity.Student;
 import com.katruk.entity.Subject;

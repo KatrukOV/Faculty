@@ -14,7 +14,6 @@ import com.katruk.service.SubjectService;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public final class EvaluationServiceImpl implements EvaluationService {

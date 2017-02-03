@@ -4,7 +4,6 @@ import com.katruk.entity.Student;
 import com.katruk.exception.DaoException;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface StudentDao {
 
