@@ -44,9 +44,7 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
       return getEvaluationByStatement(statement).iterator().next();
     } catch (SQLException e) {
       logger.error(String.format("Cannot get evaluation by subject Id: %d and student Id: %d.",
-                                 subjectId, studentId),
-                   e
-      );
+                                 subjectId, studentId), e);
       throw new DaoException(String.format(
           "Cannot get evaluation by subject Id: %d and student Id: %d.", subjectId, studentId), e);
     }
@@ -214,6 +212,10 @@ public final class EvaluationDaoMySql implements EvaluationDao, DataBaseNames {
   private Evaluation getEvaluation(ResultSet resultSet) throws SQLException {
     Evaluation evaluation = new Evaluation();
     Subject subject = new GetSubject(resultSet).get();
+/*
+    Long subjectId = resultSet.getLong(SUBJECT_ID);
+    Subject subject = new BaseSubject(subjectId);
+ */
     Student student = new GetStudent(resultSet).get();
     evaluation.setId(resultSet.getLong(ID));
     evaluation.setSubject(subject);
