@@ -26,8 +26,9 @@ public final class UserServiceImpl implements UserService {
     try {
       return this.userDao.getAllUser();
     } catch (DaoException e) {
-      logger.error("Cannot get all users.", e);
-      throw new ServiceException("Cannot get all users.", e);
+      String message = "Cannot get all users.";
+      logger.error(message, e);
+      throw new ServiceException(message, e);
     }
   }
 
@@ -36,8 +37,9 @@ public final class UserServiceImpl implements UserService {
     try {
       return this.userDao.getUserByUsername(username);
     } catch (DaoException e) {
-      logger.error(String.format("Cannot get user by username: %s.", username), e);
-      throw new ServiceException(String.format("Cannot get user by username: %s.", username), e);
+      String message = String.format("Cannot get user by username: %s.", username);
+      logger.error(message, e);
+      throw new ServiceException(message, e);
     }
   }
 
@@ -46,8 +48,9 @@ public final class UserServiceImpl implements UserService {
     try {
       return this.userDao.getUserById(userId);
     } catch (DaoException e) {
-      logger.error(String.format("Cannot get user by id: %d.", userId), e);
-      throw new ServiceException(String.format("Cannot get user by id: %d.", userId), e);
+      String message = String.format("Cannot get user by id: %d.", userId);
+      logger.error(message, e);
+      throw new ServiceException(message, e);
     }
   }
 
@@ -56,8 +59,9 @@ public final class UserServiceImpl implements UserService {
     try {
       return this.userDao.save(user);
     } catch (DaoException e) {
-      logger.error("Cannot save user.", e);
-      throw new ServiceException("Cannot save user.", e);
+      String message = "Cannot save user.";
+      logger.error(message, e);
+      throw new ServiceException(message, e);
     }
   }
 }
