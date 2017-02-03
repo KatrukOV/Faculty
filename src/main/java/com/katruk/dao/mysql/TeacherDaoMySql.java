@@ -2,9 +2,10 @@ package com.katruk.dao.mysql;
 
 import static java.util.Objects.nonNull;
 
-import com.katruk.dao.DataBaseNames;
 import com.katruk.dao.TeacherDao;
+import com.katruk.dao.UserDao;
 import com.katruk.dao.mysql.duplCode.CheckExecuteUpdate;
+import com.katruk.dao.mysql.duplCode.GetUser;
 import com.katruk.entity.Teacher;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
@@ -19,25 +20,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
+  private final UserDao userDao;
 
   public TeacherDaoMySql() {
     this.connectionPool = ConnectionPool.getInstance();
     this.logger = Logger.getLogger(TeacherDaoMySql.class);
+    userDao = new UserDaoMySql();
   }
 
   @Override
-  public Optional<Teacher> getTeacherById(final Long teacherId) throws DaoException {
+  public Teacher getTeacherById(final Long teacherId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection();
          PreparedStatement statement = connection
              .prepareStatement(Sql.getInstance().get(Sql.GET_TEACHER_BY_ID))) {
       statement.setLong(1, teacherId);
-      return getTeacherByStatement(statement).stream().findFirst();
+      return getTeacherByStatement(statement).stream().iterator().next();
     } catch (SQLException e) {
       logger.error(String.format("Cannot get teacher by id: %d.", teacherId), e);
       throw new DaoException(String.format("Cannot get teacher by id: %d.", teacherId), e);
@@ -64,6 +67,7 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
       statement.setLong(1, teacher.getUser().getId());
       statement.setString(2, teacher.getPosition() != null ? teacher.getPosition().name() : null);
       new CheckExecuteUpdate(statement, "Replace teacher failed, no rows affected.").check();
+      this.userDao.save(teacher.getUser());
       connection.commit();
     } catch (SQLException e) {
       connection.rollback();
@@ -114,23 +118,25 @@ public final class TeacherDaoMySql implements TeacherDao, DataBaseNames {
 
   private Collection<Teacher> getTeacherByStatement(final PreparedStatement statement)
       throws DaoException {
-    final Collection<Teacher> result = new ArrayList<>();
+    final Collection<Teacher> teachers = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
         Teacher teacher = getTeacher(resultSet);
-        result.add(teacher);
+        teachers.add(teacher);
       }
     } catch (SQLException e) {
       logger.error("Cannot get teacher by statement.", e);
       throw new DaoException("Cannot get teacher by statement.", e);
     }
-    return result;
+    if (teachers.isEmpty()) {
+      throw new DaoException("No teachers by statement.", new NoSuchElementException());
+    }
+    return teachers;
   }
 
   private Teacher getTeacher(ResultSet resultSet) throws SQLException {
     Teacher teacher = new Teacher();
-    User user = new User();
-    user.setId(resultSet.getLong(USER_ID));
+    User user = new GetUser(resultSet).get();
     teacher.setId(user.getId());
     teacher.setUser(user);
     String position = resultSet.getString(POSITION);
