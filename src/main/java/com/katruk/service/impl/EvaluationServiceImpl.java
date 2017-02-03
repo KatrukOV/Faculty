@@ -34,9 +34,9 @@ public final class EvaluationServiceImpl implements EvaluationService {
     try {
       evaluation = this.evaluationDao.getEvaluationById(evaluationId);
     } catch (DaoException e) {
-      logger.error(String.format("Cannot get evaluation by id: %d.", evaluationId), e);
-      throw new ServiceException(
-          String.format("Cannot get evaluation by id: %d.", evaluationId), e);
+      String message = String.format("Cannot get evaluation by id: %d.", evaluationId);
+      logger.error(message, e);
+      throw new ServiceException(message, e);
     }
     final Subject subject = this.subjectService.getSubjectById(evaluation.getSubject().getId());
     evaluation.setSubject(subject);
@@ -50,9 +50,9 @@ public final class EvaluationServiceImpl implements EvaluationService {
     try {
       evaluations = this.evaluationDao.getEvaluationBySubject(subjectId);
     } catch (DaoException e) {
-      logger.error(String.format("Cannot get evaluations by subject with id: %d.", subjectId), e);
-      throw new ServiceException(
-          String.format("Cannot get evaluations by subject with id: %d.", subjectId), e);
+      String message = String.format("Cannot get evaluations by subject with id: %d.", subjectId);
+      logger.error(message, e);
+      throw new ServiceException(message, e);
     }
     if (!evaluations.isEmpty()) {
       Subject subject = this.subjectService.getSubjectById(subjectId);
@@ -70,9 +70,9 @@ public final class EvaluationServiceImpl implements EvaluationService {
     try {
       evaluations = this.evaluationDao.getEvaluationByStudent(studentId);
     } catch (DaoException e) {
-      logger.error(String.format("Cannot get evaluations by student with id: %d.", studentId), e);
-      throw new ServiceException(
-          String.format("Cannot get evaluations by student with id: %d.", studentId), e);
+      String message = String.format("Cannot get evaluations by student with id: %d.", studentId);
+      logger.error(message, e);
+      throw new ServiceException(message, e);
     }
     if (!evaluations.isEmpty()) {
       Subject subject = this.subjectService.getSubjectById(
@@ -88,11 +88,11 @@ public final class EvaluationServiceImpl implements EvaluationService {
   @Override
   public Evaluation save(final Evaluation evaluation) throws ServiceException {
     try {
-      this.evaluationDao.save(evaluation);
+      return this.evaluationDao.save(evaluation);
     } catch (DaoException e) {
-      logger.error("Cannot save evaluation.", e);
-      throw new ServiceException("Cannot save evaluation.", e);
+      String message = "Cannot save evaluation.";
+      logger.error(message, e);
+      throw new ServiceException(message, e);
     }
-    return evaluation;
   }
 }
