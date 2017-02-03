@@ -35,9 +35,7 @@ public final class EvaluationServiceImpl implements EvaluationService {
   public Evaluation getEvaluationById(Long evaluationId) throws ServiceException {
     final Evaluation evaluation;
     try {
-      evaluation = this.evaluationDao.getEvaluationById(evaluationId)
-          .orElseThrow(
-              () -> new DaoException("Evaluation not found", new NoSuchElementException()));
+      evaluation = this.evaluationDao.getEvaluationById(evaluationId);
     } catch (DaoException e) {
       logger.error(String.format("Cannot get evaluation by id: %d.", evaluationId), e);
       throw new ServiceException(

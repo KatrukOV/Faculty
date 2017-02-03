@@ -5,6 +5,7 @@ import static java.util.Objects.nonNull;
 
 import com.katruk.dao.SubjectDao;
 import com.katruk.dao.mysql.duplCode.CheckExecuteUpdate;
+import com.katruk.dao.mysql.duplCode.GetSubject;
 import com.katruk.dao.mysql.duplCode.GetUser;
 import com.katruk.entity.Subject;
 import com.katruk.entity.Teacher;
@@ -187,7 +188,7 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
     final Collection<Subject> subjects = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
-        Subject subject = getSubject(resultSet);
+        Subject subject = new GetSubject(resultSet).get();
         subjects.add(subject);
       }
     } catch (SQLException e) {
@@ -198,21 +199,5 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
       throw new DaoException("No subjects by statement.", new NoSuchElementException());
     }
     return subjects;
-  }
-
-  private Subject getSubject(ResultSet resultSet) throws SQLException {
-    Subject subject = new Subject();
-    Teacher teacher = new Teacher();
-    User user = new GetUser(resultSet).get();
-    teacher.setId(user.getId());
-    teacher.setUser(user);
-    String position = resultSet.getString(POSITION);
-    if (nonNull(position)) {
-      teacher.setPosition(Teacher.Position.valueOf(position));
-    }
-    subject.setTeacher(teacher);
-    subject.setTitle(resultSet.getString(TITLE));
-    subject.setId(resultSet.getLong(ID));
-    return subject;
   }
 }

@@ -18,73 +18,50 @@ import java.util.Objects;
 public final class UserServiceImpl implements UserService {
 
   private final Logger logger;
-  private final PersonService personService;
   private final UserDao userDao;
 
   public UserServiceImpl() {
     this.logger = Logger.getLogger(UserServiceImpl.class);
     this.userDao = new UserDaoMySql();
-    this.personService = new PersonServiceImpl();
   }
 
   @Override
   public Collection<User> getAll() throws ServiceException {
-    Collection<User> users;
     try {
-      users = this.userDao.getAllUser();
+      return this.userDao.getAllUser();
     } catch (DaoException e) {
       logger.error("Cannot get all users.", e);
       throw new ServiceException("Cannot get all users.", e);
     }
-    Collection<Person> persons = this.personService.getAll();
-    for (User user : users) {
-      persons.stream().filter(person -> Objects.equals(user.getId(), person.getId()))
-          .forEach(user::setPerson);
-    }
-    return users;
   }
 
   @Override
   public User getUserByUsername(final String username) throws ServiceException {
-    final User user;
     try {
-      user = this.userDao.getUserByUsername(username)
-          .orElseThrow(() -> new DaoException("User not found", new NoSuchElementException()));
+      return this.userDao.getUserByUsername(username);
     } catch (DaoException e) {
       logger.error(String.format("Cannot get user by username: %s.", username), e);
       throw new ServiceException(String.format("Cannot get user by username: %s.", username), e);
     }
-    final Person person = this.personService.getPersonById(user.getPerson().getId());
-    user.setPerson(person);
-    return user;
   }
 
   @Override
   public User getUserById(final Long userId) throws ServiceException {
-    final User user;
     try {
-      user = this.userDao.getUserById(userId)
-          .orElseThrow(() -> new DaoException("User not found", new NoSuchElementException()));
+      return this.userDao.getUserById(userId);
     } catch (DaoException e) {
       logger.error(String.format("Cannot get user by id: %d.", userId), e);
       throw new ServiceException(String.format("Cannot get user by id: %d.", userId), e);
     }
-    final Person person = this.personService.getPersonById(user.getPerson().getId());
-    user.setPerson(person);
-    return user;
   }
 
   @Override
   public User save(final User user) throws ServiceException {
-    final Person person = this.personService.save(user.getPerson());
-    user.setPerson(person);
-    user.setId(person.getId());
     try {
-      this.userDao.save(user);
+      return this.userDao.save(user);
     } catch (DaoException e) {
       logger.error("Cannot save user.", e);
       throw new ServiceException("Cannot save user.", e);
     }
-    return user;
   }
 }

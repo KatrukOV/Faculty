@@ -5,7 +5,7 @@ import com.katruk.exception.ServiceException;
 
 import java.util.Collection;
 
-public interface PersonService {
+interface PersonService {
 
   Person getPersonById(final Long personId) throws ServiceException;
 
