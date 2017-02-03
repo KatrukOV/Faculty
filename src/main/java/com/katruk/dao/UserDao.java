@@ -10,9 +10,9 @@ public interface UserDao {
 
   Collection<User> getAllUser() throws DaoException;
 
-  Optional<User> getUserByUsername(final String username) throws DaoException;
+  User getUserByUsername(final String username) throws DaoException;
 
-  Optional<User> getUserById(final Long userId) throws DaoException;
+  User getUserById(final Long userId) throws DaoException;
 
   User save(final User user) throws DaoException;
 }

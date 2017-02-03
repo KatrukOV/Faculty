@@ -2,6 +2,7 @@ package com.katruk.dao.mysql;
 
 import static java.util.Objects.nonNull;
 
+import com.katruk.dao.PersonDao;
 import com.katruk.dao.UserDao;
 import com.katruk.dao.mysql.checkExecute.CheckExecuteUpdate;
 import com.katruk.entity.Person;
@@ -18,61 +19,59 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public final class UserDaoMySql implements UserDao, DataBaseNames {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
+  private final PersonDao personDao;
 
   public UserDaoMySql() {
     this.connectionPool = ConnectionPool.getInstance();
     this.logger = Logger.getLogger(UserDaoMySql.class);
+    personDao = new PersonDaoMySql();
   }
 
   @Override
   public Collection<User> getAllUser() throws DaoException {
-    Collection<User> result;
     try (Connection connection = this.connectionPool.getConnection();
          PreparedStatement statement = connection
              .prepareStatement(Sql.getInstance().get(Sql.GET_ALL_USER))) {
-      result = getUserByStatement(statement);
+      return getUserByStatement(statement);
     } catch (SQLException e) {
-      logger.error("Cannot get all users.", e);
-      throw new DaoException("Cannot get all users.", e);
+      logger.error("Cannot load all users.", e);
+      throw new DaoException("Cannot load all users.", e);
     }
-    return result;
   }
 
-
   @Override
-  public Optional<User> getUserByUsername(final String username) throws DaoException {
-    final Optional<User> result;
+  public User getUserByUsername(final String username) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection();
          PreparedStatement statement = connection
              .prepareStatement(Sql.getInstance().get(Sql.GET_USER_BY_USERNAME))) {
       statement.setString(1, username);
-      result = getUserByStatement(statement).stream().findFirst();
+      return getUserByStatement(statement).stream().iterator().next();
     } catch (SQLException e) {
-      logger.error(String.format("Cannot get user by username: %s.", username), e);
-      throw new DaoException(String.format("Cannot get user by username: %s.", username), e);
+      String message = String.format("User not found by username: %s.", username);
+      logger.info(message);
+      throw new DaoException(message, new NoSuchElementException());
     }
-    return result;
   }
 
   @Override
-  public Optional<User> getUserById(final Long userId) throws DaoException {
-    final Optional<User> result;
+  public User getUserById(final Long userId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection();
          PreparedStatement statement = connection
              .prepareStatement(Sql.getInstance().get(Sql.GET_USER_BY_ID))) {
       statement.setLong(1, userId);
-      result = getUserByStatement(statement).stream().findFirst();
+      return getUserByStatement(statement).stream().iterator().next();
     } catch (SQLException e) {
-      logger.error(String.format("Cannot get user by id: %d.", userId), e);
-      throw new DaoException(String.format("Cannot get user by id: %d.", userId), e);
+      String message = String.format("User not found by id: %d.", userId);
+      logger.info(message);
+      throw new DaoException(message, new NoSuchElementException());
     }
-    return result;
   }
 
   @Override
@@ -94,6 +93,7 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
         .prepareStatement(Sql.getInstance().get(Sql.REPLACE_USER))) {
       fillSaveUserStatement(user, statement);
       new CheckExecuteUpdate(statement, "Replace user failed, no rows affected.").check();
+      this.personDao.save(user.getPerson());
       connection.commit();
     } catch (SQLException e) {
       connection.rollback();
@@ -111,17 +111,20 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
 
   private Collection<User> getUserByStatement(final PreparedStatement statement)
       throws DaoException {
-    Collection<User> result = new ArrayList<>();
+    final Collection<User> users = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
         User user = getUser(resultSet);
-        result.add(user);
+        users.add(user);
       }
     } catch (SQLException e) {
       logger.error("Cannot get user by statement.", e);
       throw new DaoException("Cannot get user by statement.", e);
     }
-    return result;
+    if (users.isEmpty()) {
+      throw new DaoException("No users by statement.", new NoSuchElementException());
+    }
+    return users;
   }
 
   private User getUser(ResultSet resultSet) throws SQLException {
