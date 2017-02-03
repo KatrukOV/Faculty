@@ -1,4 +1,4 @@
-package com.katruk.dao.mysql.checkExecute;
+package com.katruk.dao.mysql.duplCode;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

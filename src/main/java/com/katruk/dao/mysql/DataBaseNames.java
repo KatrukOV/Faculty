@@ -1,6 +1,6 @@
 package com.katruk.dao.mysql;
 
-interface DataBaseNames {
+public interface DataBaseNames {
 
   String ID = "id";
   String LAST_NAME = "lastName";

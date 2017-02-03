@@ -2,8 +2,9 @@ package com.katruk.dao.mysql;
 
 import static java.util.Objects.isNull;
 
+import com.katruk.dao.DataBaseNames;
 import com.katruk.dao.PersonDao;
-import com.katruk.dao.mysql.checkExecute.CheckExecuteUpdate;
+import com.katruk.dao.mysql.duplCode.CheckExecuteUpdate;
 import com.katruk.entity.Person;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
@@ -19,7 +20,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 public final class PersonDaoMySql implements PersonDao, DataBaseNames {
 

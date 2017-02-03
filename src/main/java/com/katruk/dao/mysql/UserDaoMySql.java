@@ -1,18 +1,15 @@
 package com.katruk.dao.mysql;
 
-import static java.util.Objects.nonNull;
-
 import com.katruk.dao.PersonDao;
 import com.katruk.dao.UserDao;
-import com.katruk.dao.mysql.checkExecute.CheckExecuteUpdate;
+import com.katruk.dao.mysql.duplCode.CheckExecuteUpdate;
+import com.katruk.dao.mysql.duplCode.GetUser;
 import com.katruk.entity.Person;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
 import com.katruk.util.Sql;
-
 import org.apache.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,7 +17,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 public final class UserDaoMySql implements UserDao, DataBaseNames {
 
@@ -114,7 +110,7 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
     final Collection<User> users = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
-        User user = getUser(resultSet);
+        User user = new GetUser(resultSet).get();
         users.add(user);
       }
     } catch (SQLException e) {
@@ -127,17 +123,4 @@ public final class UserDaoMySql implements UserDao, DataBaseNames {
     return users;
   }
 
-  private User getUser(ResultSet resultSet) throws SQLException {
-    User user = new User();
-    Person person = new Person();
-    person.setId(resultSet.getLong(PERSON_ID));
-    user.setId(person.getId());
-    user.setPerson(person);
-    user.setUsername(resultSet.getString(USERNAME));
-    user.setPassword(resultSet.getString(PASSWORD));
-    if (nonNull(resultSet.getString(ROLE))) {
-      user.setRole(User.Role.valueOf(resultSet.getString(ROLE)));
-    }
-    return user;
-  }
 }

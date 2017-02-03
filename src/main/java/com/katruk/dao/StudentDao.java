@@ -10,7 +10,7 @@ public interface StudentDao {
 
   Collection<Student> getAllStudent() throws DaoException;
 
-  Optional<Student> getStudentById(final Long studentId) throws DaoException;
+  Student getStudentById(final Long studentId) throws DaoException;
 
   Student save(final Student student) throws DaoException;
 

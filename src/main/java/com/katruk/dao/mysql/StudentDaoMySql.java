@@ -1,33 +1,34 @@
 package com.katruk.dao.mysql;
 
 import static java.util.Objects.nonNull;
-
 import com.katruk.dao.StudentDao;
-import com.katruk.dao.mysql.checkExecute.CheckExecuteUpdate;
+import com.katruk.dao.UserDao;
+import com.katruk.dao.mysql.duplCode.CheckExecuteUpdate;
+import com.katruk.dao.mysql.duplCode.GetUser;
 import com.katruk.entity.Student;
 import com.katruk.entity.User;
 import com.katruk.exception.DaoException;
 import com.katruk.util.ConnectionPool;
 import com.katruk.util.Sql;
-
 import org.apache.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 public final class StudentDaoMySql implements StudentDao, DataBaseNames {
 
   private final ConnectionPool connectionPool;
   private final Logger logger;
+  private final UserDao userDao;
 
   public StudentDaoMySql() {
     this.connectionPool = ConnectionPool.getInstance();
     this.logger = Logger.getLogger(StudentDaoMySql.class);
+    userDao = new UserDaoMySql();
   }
 
   @Override
@@ -44,12 +45,12 @@ public final class StudentDaoMySql implements StudentDao, DataBaseNames {
   }
 
   @Override
-  public Optional<Student> getStudentById(final Long studentId) throws DaoException {
+  public Student getStudentById(final Long studentId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection();
          PreparedStatement statement = connection
              .prepareStatement(Sql.getInstance().get(Sql.GET_STUDENT_BY_ID))) {
       statement.setLong(1, studentId);
-      return getStudentByStatement(statement).stream().findFirst();
+      return getStudentByStatement(statement).stream().iterator().next();
     } catch (SQLException e) {
       logger.error(String.format("Cannot get student by id: %d.", studentId), e);
       throw new DaoException(String.format("Cannot get student by id: %d.", studentId), e);
@@ -74,7 +75,8 @@ public final class StudentDaoMySql implements StudentDao, DataBaseNames {
     try (PreparedStatement statement = connection
         .prepareStatement(Sql.getInstance().get(Sql.REPLACE_STUDENT))) {
       fillSaveStudentStatement(student, statement);
-      statement.executeUpdate();
+      new CheckExecuteUpdate(statement, "Replace student failed, no rows affected.").check();
+      this.userDao.save(student.getUser());
       connection.commit();
     } catch (SQLException e) {
       connection.rollback();
@@ -83,7 +85,8 @@ public final class StudentDaoMySql implements StudentDao, DataBaseNames {
     }
   }
 
-  private void fillSaveStudentStatement(Student student, PreparedStatement statement) throws SQLException {
+  private void fillSaveStudentStatement(Student student, PreparedStatement statement)
+      throws SQLException {
     statement.setLong(1, student.getUser().getId());
     statement.setString(2, student.getForm() != null ? student.getForm().name() : null);
     statement.setString(3, student.getContract() != null ? student.getContract().name() : null);
@@ -117,23 +120,25 @@ public final class StudentDaoMySql implements StudentDao, DataBaseNames {
 
   private Collection<Student> getStudentByStatement(final PreparedStatement statement)
       throws DaoException {
-    final Collection<Student> result = new ArrayList<>();
+    final Collection<Student> students = new ArrayList<>();
     try (ResultSet resultSet = statement.executeQuery()) {
       while (resultSet.next()) {
         Student student = getStudent(resultSet);
-        result.add(student);
+        students.add(student);
       }
     } catch (SQLException e) {
       logger.error("Cannot get student by statement.", e);
       throw new DaoException("Cannot get student by statement.", e);
     }
-    return result;
+    if (students.isEmpty()) {
+      throw new DaoException("No students by statement.", new NoSuchElementException());
+    }
+    return students;
   }
 
   private Student getStudent(ResultSet resultSet) throws SQLException {
     Student student = new Student();
-    User user = new User();
-    user.setId(resultSet.getLong(USER_ID));
+    User user = new GetUser(resultSet).get();
     student.setUser(user);
     student.setId(user.getId());
     String form = resultSet.getString(FORM);
