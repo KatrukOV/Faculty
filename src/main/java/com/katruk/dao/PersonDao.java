@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface PersonDao {
 
-  Optional<Person> getPersonById(final Long personId) throws DaoException;
+  Person getPersonById(final Long personId) throws DaoException;
 
   Collection<Person> getAllPerson() throws DaoException;
 

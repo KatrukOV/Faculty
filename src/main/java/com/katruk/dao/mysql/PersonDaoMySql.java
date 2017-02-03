@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public final class PersonDaoMySql implements PersonDao, DataBaseNames {
@@ -31,12 +32,12 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
   }
 
   @Override
-  public Optional<Person> getPersonById(final Long personId) throws DaoException {
+  public Person getPersonById(final Long personId) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection();
          PreparedStatement statement = connection
              .prepareStatement(Sql.getInstance().get(Sql.GET_PERSON_BY_ID))) {
       statement.setLong(1, personId);
-      return getPersonByStatement(statement).stream().findFirst();
+      return getPersonByStatement(statement).stream().iterator().next();
     } catch (SQLException e) {
       logger.error(String.format("Cannot get person by id: %d.", personId), e);
       throw new DaoException(String.format("Cannot get person by id: %d.", personId), e);
@@ -69,7 +70,7 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
   private Person insert(Person person) throws DaoException {
     try (Connection connection = this.connectionPool.getConnection()) {
       connection.setAutoCommit(false);
-      insertAndCommitOrRollback(person, connection);
+      person = insertAndCommitOrRollback(person, connection);
       connection.setAutoCommit(true);
     } catch (SQLException e) {
       logger.error("Cannot insert person.", e);
@@ -78,7 +79,7 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
     return person;
   }
 
-  private void insertAndCommitOrRollback(Person person, Connection connection)
+  private Person insertAndCommitOrRollback(Person person, Connection connection)
       throws SQLException, DaoException {
     try (PreparedStatement statement = connection
         .prepareStatement(Sql.getInstance().get(Sql.CREATE_PERSON),
@@ -86,7 +87,7 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
       fillInsertPersonStatement(person, statement);
       new CheckExecuteUpdate(statement, "Creating person failed, no rows affected.").check();
       connection.commit();
-      getAndSetId(person, statement);
+      return getAndSetId(person, statement);
     } catch (SQLException e) {
       connection.rollback();
       logger.error("Cannot prepare statement.", e);
@@ -101,10 +102,11 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
     statement.setString(3, person.getPatronymic());
   }
 
-  private void getAndSetId(Person person, PreparedStatement statement) throws SQLException {
+  private Person getAndSetId(Person person, PreparedStatement statement) throws SQLException {
     ResultSet generatedKeys = statement.getGeneratedKeys();
     if (generatedKeys.next()) {
       person.setId(generatedKeys.getLong(1));
+      return person;
     } else {
       throw new SQLException("Creating person failed, no ID obtained.");
     }
@@ -155,6 +157,9 @@ public final class PersonDaoMySql implements PersonDao, DataBaseNames {
     } catch (SQLException e) {
       logger.error("Cannot get person by statement.", e);
       throw new DaoException("Cannot get person by statement.", e);
+    }
+    if (persons.isEmpty()) {
+      throw new DaoException("No persons by statement.", new NoSuchElementException());
     }
     return persons;
   }
