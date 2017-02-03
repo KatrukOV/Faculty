@@ -190,9 +190,6 @@ public final class SubjectDaoMySql implements SubjectDao, DataBaseNames {
       logger.error("Cannot get subject by statement.", e);
       throw new DaoException("Cannot get subject by statement.", e);
     }
-    if (subjects.isEmpty()) {
-      throw new DaoException("No subjects by statement.", new NoSuchElementException());
-    }
     return subjects;
   }
 }

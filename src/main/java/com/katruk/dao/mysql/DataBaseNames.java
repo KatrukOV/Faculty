@@ -3,7 +3,7 @@ package com.katruk.dao.mysql;
 public interface DataBaseNames {
 
   String ID = "id";
-  String LAST_NAME = "lastName";
+  String LAST_NAME = "last_name";
   String NAME = "name";
   String PATRONYMIC = "patronymic";
   String PERSON_ID = "person_id";
