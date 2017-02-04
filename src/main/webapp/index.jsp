@@ -1,6 +1,6 @@
 <%@ page pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="locate"
        value="${not empty param.locate ? param.locate : not empty locate ? locate : pageContext.request.locale}"
        scope="session"/>
@@ -10,21 +10,11 @@
 <head>
     <title><fmt:message key="index.title"/></title>
 </head>
-
+<body style="text-align:center;">
+<jsp:include page="/view/all/locate.jsp"/>
 <h3><fmt:message key="index.welcome"/></h3>
 <h3><fmt:message key="index.do"/></h3>
-
-<body style="text-align:center;">
-<form>
-    <select id="locate" name="locate" onchange="submit()">
-        <option value="en" ${locate == 'en' ? 'selected' : ''}>English</option>
-        <option value="ru" ${locate == 'ru' ? 'selected' : ''}>Russia</option>
-    </select>
-</form>
-<hr/>
-
 <jsp:include page="/view/all/message.jsp"/>
-
 <form action="/dispatcher" method="POST">
     <label for="username"><fmt:message key="index.username"/>: </label>
     <input type="text" id="username" name="username">
