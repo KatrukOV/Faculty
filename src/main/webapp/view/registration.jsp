@@ -6,7 +6,7 @@
        scope="session"/>
 <fmt:setLocale value="${locate}"/>
 <fmt:setBundle basename="text"/>
-<html lang="${locate}">
+<html>
 <head>
     <title><fmt:message key="registration.title"/></title>
 </head>

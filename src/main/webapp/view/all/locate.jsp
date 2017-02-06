@@ -2,8 +2,8 @@
 <body>
 <form>
     <select id="locate" name="locate" onchange="submit()">
-        <option value="en" ${locate == 'en' ? 'selected' : ''}>English</option>
-        <option value="ru" ${locate == 'ru' ? 'selected' : ''}>Russia</option>
+        <option value="en_EN" ${locate == 'en_EN' ? 'selected' : ''}>English</option>
+        <option value="ru_RU" ${locate == 'ru_RU' ? 'selected' : ''}>Russia</option>
     </select>
 </form>
 <hr/>

@@ -6,11 +6,12 @@
        scope="session"/>
 <fmt:setLocale value="${locate}"/>
 <fmt:setBundle basename="text"/>
-<html lang="${locate}">
+<html>
 <head>
     <title><fmt:message key="index.title"/></title>
 </head>
 <body style="text-align:center;">
+<H1>locate: ${locate}  </H1>
 <jsp:include page="/view/all/locate.jsp"/>
 <h3><fmt:message key="index.welcome"/></h3>
 <h3><fmt:message key="index.do"/></h3>
@@ -34,6 +35,5 @@
 <a href="view/registration.jsp">
     <input type="button" value="<fmt:message key="index.registration"/>"/>
 </a>
-
 </body>
 </html>
