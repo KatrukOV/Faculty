@@ -2,21 +2,21 @@ package com.katruk.util;
 
 import java.util.ResourceBundle;
 
-final class BaseConfig {
+final class DataBaseConfig {
 
-  private ResourceBundle configFile;
-  private static final BaseConfig INSTANCE = new BaseConfig();
-  private static final String BUNDLE_NAME = "database";
   static final String DRIVER = "driver";
   static final String URL = "url";
   static final String USERNAME = "username";
   static final String PASSWORD = "password";
+  private static final DataBaseConfig INSTANCE = new DataBaseConfig();
+  private static final String BUNDLE_NAME = "database";
+  private ResourceBundle configFile;
 
-  private BaseConfig() {
+  private DataBaseConfig() {
     configFile = ResourceBundle.getBundle(BUNDLE_NAME);
   }
 
-  public static BaseConfig getInstance() {
+  public static DataBaseConfig getInstance() {
     return INSTANCE;
   }
 
