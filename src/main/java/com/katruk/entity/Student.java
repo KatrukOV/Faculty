@@ -6,18 +6,6 @@ public final class Student extends Model {
   private Form form;
   private Contract contract;
 
-  public enum Form {
-    FULL_TAME,
-    EXTRAMURAL,
-    EVENING,
-    DISTANCE
-  }
-
-  public enum Contract {
-    STATE_ORDER,
-    CONTRACT
-  }
-
   public User getUser() {
     return user;
   }
@@ -40,5 +28,17 @@ public final class Student extends Model {
 
   public void setContract(Contract contract) {
     this.contract = contract;
+  }
+
+  public enum Form {
+    FULL_TIME,
+    EXTRAMURAL,
+    EVENING,
+    DISTANCE
+  }
+
+  public enum Contract {
+    STATE_ORDER,
+    CONTRACT
   }
 }
