@@ -6,7 +6,6 @@
        scope="session"/>
 <fmt:setLocale value="${locate}"/>
 <fmt:setBundle basename="text"/>
-
 <form style="text-align:right;" action="/dispatcher" method="POST">
     <input type="hidden" name="command" value="logout"/>
     <input type="submit" value="<fmt:message key="logout.button"/>"/>

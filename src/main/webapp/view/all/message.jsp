@@ -16,4 +16,3 @@
     <p><fmt:message key="message.error"/><c:out value="${error}"/><p>
     </c:if>
 </div>
-
