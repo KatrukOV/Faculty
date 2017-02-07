@@ -4,10 +4,7 @@
     <title><fmt:message key="error.title"/></title>
 </head>
 <body>
-<h3>
-    Sorry
-    Error: ${error}
-</h3>
-<a href="/index.jsp"><input type="button" value="back"/></a>
+<h3><fmt:message key="error.sorry"/> ${error}</h3>
+<a href="/"><input type="button" value="<fmt:message key="error.button.back"/>"/></a>
 </body>
 </html>
