@@ -1,22 +1,29 @@
+<%@ page pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="locate"
+       value="${not empty param.locate ? param.locate : not empty locate ? locate : pageContext.request.locale}"
+       scope="session"/>
+<fmt:setLocale value="${locate}"/>
+<fmt:setBundle basename="text"/>
 <html>
 <head>
-    <title>Subject</title>
+    <title><fmt:message key="teacher.evaluation.title"/></title>
 </head>
 <body style="text-align:center;">
-<h3>Subject: ${title}</h3>
+<h3><fmt:message key="teacher.evaluation.welcome"/> ${title}</h3>
 <jsp:include page="/view/all/message.jsp"/>
 <div align="center">
     <table border="1">
         <thead>
         <tr>
-            <th><b>Student</b></th>
+            <th><b><fmt:message key="teacher.evaluation.table.student"/></b></th>
             <c:if test="${periodStatus == 'DISTRIBUTION'}">
-                <th><b>Status</b></th>
-                <th><b>Confirm / Reject</b></th>
+                <th><b><fmt:message key="teacher.evaluation.table.status"/></b></th>
+                <th><b><fmt:message key="teacher.evaluation.table.confirm-reject"/></b></th>
             </c:if>
             <c:if test="${periodStatus == 'LEARNING'}">
-                <th><b>Evaluate</b></th>
+                <th><b><fmt:message key="teacher.evaluation.table.evaluate"/></b></th>
             </c:if>
         </tr>
         </thead>
@@ -36,16 +43,17 @@
                         <form action="/dispatcher" method="POST">
                             <select name="status">
                                 <option value="CONFIRMED" ${evaluation.status.equals('CONFIRMED') ? 'selected="selected"' : ''}>
-                                    CONFIRMED
+                                    <fmt:message key="teacher.evaluation.confirm"/>
                                 </option>
                                 <option value="REJECTED" ${evaluation.status.equals('REJECTED') ? 'selected="selected"' : ''}>
-                                    REJECTED
+                                    <fmt:message key="teacher.evaluation.reject"/>
                                 </option>
                             </select>
                             <input type="hidden" name="evaluationId"
                                    value="${evaluation.evaluationId}"/>
                             <input type="hidden" name="command" value="setConfirmOrReject"/>
-                            <input type="submit" value="Go"/>
+                            <input type="submit"
+                                   value="<fmt:message key="teacher.evaluation.button.go"/>"/>
                         </form>
                     </td>
                 </c:if>
@@ -55,7 +63,8 @@
                             <input type="hidden" name="evaluationId"
                                    value="${evaluation.evaluationId}"/>
                             <input type="hidden" name="command" value="toEvaluation"/>
-                            <input type="submit" value="Evaluate"/>
+                            <input type="submit"
+                                   value="<fmt:message key="teacher.evaluation.button.evaluate"/>"/>
                         </form>
                     </td>
                 </c:if>
