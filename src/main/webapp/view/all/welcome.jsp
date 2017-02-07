@@ -1,17 +1,21 @@
+<%@ page pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<html>
-<body style="text-align:center;">
+<c:set var="locate"
+       value="${not empty param.locate ? param.locate : not empty locate ? locate : pageContext.request.locale}"
+       scope="session"/>
+<fmt:setLocale value="${locate}"/>
+<fmt:setBundle basename="text"/>
 <div>
-    <h2>Hi, ${sessionScope.get("name")} ${sessionScope.get("lastName")}</h2>
-    <h3>Username: ${sessionScope.get("username")}</h3>
-    <h3>Role: ${sessionScope.get("role")}</h3>
+    <h2><fmt:message
+            key="welcome.hi"/> ${sessionScope.get("name")} ${sessionScope.get("lastName")}</h2>
+    <h3><fmt:message key="welcome.username"/> ${sessionScope.get("username")}</h3>
+    <h3><fmt:message key="welcome.role"/> ${sessionScope.get("role")}</h3>
     <c:if test="${role == 'TEACHER'}">
-        <h4>Position: ${sessionScope.get("position")}</h4>
+        <h2><fmt:message key="welcome.position"/> ${sessionScope.get("position")}</h2>
     </c:if>
     <c:if test="${role == 'STUDENT'}">
-        <h4>Contract: ${sessionScope.get("contract")}</h4>
-        <h4>Form: ${sessionScope.get("form")}</h4>
+        <h3><fmt:message key="welcome.contract"/> ${sessionScope.get("contract")}</h3>
+        <h3><fmt:message key="welcome.form"/>${sessionScope.get("form")}</h3>
     </c:if>
 </div>
-</body>
-</html>
