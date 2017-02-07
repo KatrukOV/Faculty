@@ -1,16 +1,24 @@
+<%@ page pageEncoding="UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="locate"
+       value="${not empty param.locate ? param.locate : not empty locate ? locate : pageContext.request.locale}"
+       scope="session"/>
+<fmt:setLocale value="${locate}"/>
+<fmt:setBundle basename="text"/>
 <html>
 <head>
-    <title>Evaluation</title>
+    <title><fmt:message key="evaluation.title"/></title>
 </head>
 <body style="text-align:center;">
-<h3>Create evaluation</h3>
-<h4>for student:
-<b>${evaluation.lastName}</b>
-<b>${evaluation.name}</b>
+<jsp:include page="/view/all/locate.jsp"/>
+<h3><fmt:message key="evaluation.welcome"/></h3>
+<h4><fmt:message key="evaluation.student"/>
+    <b>${evaluation.lastName}</b>
+    <b>${evaluation.name}</b>
 </h4>
-<%--<br/>--%>
-<b>rating: ${evaluation.rating}</b>
-<b>feedback: ${evaluation.feedback}</b>
+<b><fmt:message key="evaluation.rating"/> ${evaluation.rating}</b>
+<b><fmt:message key="evaluation.feedback"/> ${evaluation.feedback}</b>
 <hr/>
 <jsp:include page="/view/all/message.jsp"/>
 <form action="/dispatcher" method="POST">
@@ -37,12 +45,11 @@
             F
         </option>
     </select>
-    <%--<br>--%>
-    <label>Feedback: </label>
+    <label><fmt:message key="evaluation.addFeedback"/></label>
     <input type="text" name="feedback" placeholder="feedback"/>
     <input type="hidden" name="evaluationId" value="${evaluation.evaluationId}"/>
     <input type="hidden" name="command" value="evaluate"/>
-    <input type="submit" value="Confirm"/>
+    <input type="submit" value="<fmt:message key="evaluation.button.confirm"/>"/>
 </form>
 <hr/>
 <jsp:include page="/view/all/toProfile.jsp"/>
