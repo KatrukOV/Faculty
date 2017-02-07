@@ -11,7 +11,6 @@
     <title><fmt:message key="index.title"/></title>
 </head>
 <body style="text-align:center;">
-<H1>locate: ${locate}  </H1>
 <jsp:include page="/view/all/locate.jsp"/>
 <h3><fmt:message key="index.welcome"/></h3>
 <h3><fmt:message key="index.do"/></h3>
