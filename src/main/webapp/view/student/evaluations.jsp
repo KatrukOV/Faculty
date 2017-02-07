@@ -11,7 +11,6 @@
     <title><fmt:message key="evaluations.title"/></title>
 </head>
 <body style="text-align:center;">
-<jsp:include page="/view/all/locate.jsp"/>
 <h3><fmt:message key="evaluations.welcome"/>
     ${sessionScope.get("name")} ${sessionScope.get("lastName")}</h3>
 <jsp:include page="/view/all/message.jsp"/>

@@ -11,7 +11,13 @@
     <title><fmt:message key="index.title"/></title>
 </head>
 <body style="text-align:center;">
-<jsp:include page="/view/all/locate.jsp"/>
+<form>
+    <select id="locate" name="locate" onchange="submit()">
+        <option value="en_EN" ${locate == 'en_EN' ? 'selected' : ''}>English</option>
+        <option value="ru_RU" ${locate == 'ru_RU' ? 'selected' : ''}>Russia</option>
+    </select>
+</form>
+<hr/>
 <h3><fmt:message key="index.welcome"/></h3>
 <h3><fmt:message key="index.do"/></h3>
 <jsp:include page="/view/all/message.jsp"/>

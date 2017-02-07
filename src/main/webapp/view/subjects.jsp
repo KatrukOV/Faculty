@@ -11,7 +11,6 @@
     <title><fmt:message key="subject.title"/></title>
 </head>
 <body style="text-align:center;">
-<jsp:include page="/view/all/locate.jsp"/>
 <h3><fmt:message key="subject.welcome"/></h3>
 <jsp:include page="/view/all/message.jsp"/>
 <div align="center">

@@ -11,7 +11,6 @@
     <title><fmt:message key="registration.title"/></title>
 </head>
 <body style="text-align:center;">
-<jsp:include page="/view/all/locate.jsp"/>
 <h3><fmt:message key="registration.welcome"/></h3>
 <hr/>
 <jsp:include page="/view/all/message.jsp"/>

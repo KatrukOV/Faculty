@@ -11,7 +11,6 @@
     <title><fmt:message key="evaluation.title"/></title>
 </head>
 <body style="text-align:center;">
-<jsp:include page="/view/all/locate.jsp"/>
 <h3><fmt:message key="evaluation.welcome"/></h3>
 <h4><fmt:message key="evaluation.student"/>
     <b>${evaluation.lastName}</b>

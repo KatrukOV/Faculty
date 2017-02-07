@@ -11,7 +11,6 @@
     <title><fmt:message key="profile.title"/></title>
 </head>
 <body style="text-align:center;">
-<jsp:include page="/view/all/locate.jsp"/>
 <jsp:include page="/view/all/logout.jsp"/>
 <jsp:include page="/view/all/welcome.jsp"/>
 <jsp:include page="/view/all/message.jsp"/>
