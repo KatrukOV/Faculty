@@ -1,15 +1,6 @@
--- MySQL Workbench Forward Engineering
-
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
-
--- -----------------------------------------------------
--- Schema mydb
--- -----------------------------------------------------
--- -----------------------------------------------------
--- Schema faculty
--- -----------------------------------------------------
 
 -- -----------------------------------------------------
 -- Schema faculty
@@ -68,7 +59,6 @@ CREATE TABLE IF NOT EXISTS `faculty`.`student` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-
 -- -----------------------------------------------------
 -- Table `faculty`.`teacher`
 -- -----------------------------------------------------
@@ -83,7 +73,6 @@ CREATE TABLE IF NOT EXISTS `faculty`.`teacher` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
-
 
 -- -----------------------------------------------------
 -- Table `faculty`.`subject`
